@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.local-preview/
+test-results/
+playwright-report/
+*.log
+.review-baselines/
+.local-preview-v2/
+qa/visual/
+test-results-v2/

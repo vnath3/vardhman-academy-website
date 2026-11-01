@@ -1,0 +1,111 @@
+{
+  "schema_version": "1.0",
+  "project": "Vardhaman Academy",
+  "review_status": "internal_preview_only",
+  "academy": {
+    "name": "Vardhaman Academy",
+    "mentor_name": "Rushab Mutha",
+    "mentor_display": "Rushab Sir",
+    "grades": [5, 6, 7, 8, 9, 10],
+    "grade_label": "Classes 5–10",
+    "location_short": "Bansilal Nagar, Chhatrapati Sambhajinagar",
+    "supported_boards_unverified": ["CBSE", "ICSE", "SSC"],
+    "phone": null,
+    "whatsapp": null,
+    "admissions_open": null
+  },
+  "theme": {
+    "style": "warm, premium, approachable, restrained",
+    "tokens_provisional": {
+      "surface": "#F8F9F3",
+      "primary": "#147BA5",
+      "accent": "#83C448",
+      "ink": "#163448"
+    },
+    "official_logo_file": null,
+    "logo_reference_media_id": "IMG-01"
+  },
+  "hero": {
+    "eyebrow": "Vardhaman Academy · Classes 5–10",
+    "headline": "Every child learns differently. Every child deserves someone who understands.",
+    "body": "At Vardhaman Academy, Rushab Sir helps students build understanding, confidence and stronger learning habits.",
+    "media_id": "HERO-A",
+    "cta": {
+      "label": "Tell Us About Your Child",
+      "type": "anchor",
+      "target": "#contact",
+      "data_collection_enabled": false,
+      "integration_status": "pending_owner_approval"
+    },
+    "support_line": "Bansilal Nagar, Chhatrapati Sambhajinagar"
+  },
+  "sections": [
+    {
+      "id": "meet-mentor",
+      "title": "Meet Rushab Sir",
+      "purpose": "Introduce the genuine human guide behind the academy.",
+      "media_candidates": ["IMG-09", "IMG-12"],
+      "copy_requires_owner_review": true
+    },
+    {
+      "id": "parent-empathy",
+      "title": "Every learner has their own starting point",
+      "questions": [
+        "Does your child hesitate to ask questions?",
+        "Do lessons sometimes make sense in class but feel confusing later?",
+        "Would a more patient explanation make a difference?"
+      ],
+      "questions_are_marketing_copy_not_verified_diagnoses": true
+    },
+    {
+      "id": "learning-approach",
+      "title": "Learning that builds understanding",
+      "items_proposed_pending_mentor_confirmation": [
+        "Clear explanations",
+        "Room to ask questions",
+        "Practice and thoughtful feedback"
+      ]
+    },
+    {
+      "id": "student-journeys",
+      "title": "Their journeys matter",
+      "verified_stories": [],
+      "placeholder_guidance": "Do not fabricate student identities, percentages, professions or quotes."
+    },
+    {
+      "id": "beyond-books",
+      "title": "Learning beyond textbooks",
+      "description": "A glimpse of students participating in group activities and sport.",
+      "photo_media_candidates": ["IMG-14", "IMG-16"],
+      "video_media_candidates": ["VID-03", "VID-04", "VID-05", "VID-06", "VID-02"],
+      "public_release_requires_guardian_consent": true
+    },
+    {
+      "id": "achievements",
+      "title": "Moments worth celebrating",
+      "media_candidates": ["IMG-18", "IMG-19"],
+      "verified_achievement_records": [],
+      "public_release_requires_consent_and_verification": true
+    },
+    {
+      "id": "reviews",
+      "title": "Words from students and parents",
+      "verified_reviews": [],
+      "placeholder_guidance": "Use only real, approved testimonials."
+    },
+    {
+      "id": "contact",
+      "title": "Let's talk about your child's learning",
+      "body": "Find us in Bansilal Nagar, Chhatrapati Sambhajinagar. Contact options are being confirmed.",
+      "form_enabled": false,
+      "whatsapp_enabled": false
+    }
+  ],
+  "prohibited_unverified_claims": [
+    "Classes 1–12",
+    "XI–XII Maths and Physics",
+    "100% results",
+    "Scholarship up to 80%",
+    "Guaranteed grades or careers"
+  ]
+}

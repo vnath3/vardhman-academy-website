@@ -1,0 +1,26 @@
+{
+  "name": "vardhaman-academy",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/serve-v2.mjs",
+    "dev:v1": "node scripts/serve.mjs",
+    "dev:reference": "python -m http.server 4173 --bind 127.0.0.1 --directory .review-baselines/v2-handoff/reference_site",
+    "build:v2": "node scripts/build-v2.mjs --private-review",
+    "build": "node scripts/build.mjs",
+    "preview": "node scripts/serve.mjs --production",
+    "test": "node --test tests/contracts.test.mjs",
+    "test:browser": "playwright test",
+    "test:v2": "node --test tests/v2.contracts.test.mjs",
+    "test:browser:v2": "playwright test --config playwright.v2.config.mjs",
+    "compare:v2": "node scripts/compare-v2.mjs",
+    "compare:v2:details": "node scripts/compare-v2-details.mjs",
+    "check": "node scripts/check.mjs"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.10.2",
+    "@playwright/test": "1.56.1",
+    "sharp": "0.35.5"
+  }
+}

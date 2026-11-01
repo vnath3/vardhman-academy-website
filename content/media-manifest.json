@@ -1,0 +1,177 @@
+{
+  "schema_version": "1.0",
+  "asset_root_within_zip": "assets",
+  "proposed_public_base_path": "/media/vardhaman",
+  "release_policy": "default_deny",
+  "assets": [
+    {
+      "id": "IMG-01",
+      "type": "image",
+      "path": "assets/brand/legacy-brand-poster-img-01.jpeg",
+      "source": "WhatsApp Image 2026-10-28 at 11.23.57 AM (1).jpeg",
+      "category": "brand-reference",
+      "title": "Legacy brand flyer",
+      "publish_status": "reference_only",
+      "notes": "Official blue-green logo direction; contains outdated grade claims. Do not embed as current promotional art."
+    },
+    {
+      "id": "IMG-02",
+      "type": "image",
+      "path": "assets/brand/legacy-results-poster-img-02.jpeg",
+      "source": "WhatsApp Image 2026-10-28 at 11.23.57 AM.jpeg",
+      "category": "brand-reference",
+      "title": "Legacy results flyer",
+      "publish_status": "reference_only",
+      "notes": "Historical poster; old class ranges and old board-result claims not approved for reuse."
+    },
+    {
+      "id": "HERO-A",
+      "type": "image",
+      "path": "assets/hero/rushab-warm-hero-v1.png",
+      "source": "AI-edited composite based on IMG-09",
+      "category": "hero",
+      "title": "Rushab Sir — warm mentor portrait",
+      "alt": "Rushab Sir speaking into a microphone against a blue-green abstract backdrop",
+      "publish_status": "pending_likeness_approval",
+      "notes": "Chosen Option A. Abstract marketing image, not a documentary record of seminar location."
+    },
+    {
+      "id": "IMG-09",
+      "type": "image",
+      "path": "assets/mentor/rushab-seminar-img-09.jpeg",
+      "source": "WhatsApp Image 2026-10-31 at 12.44.58 PM (1).jpeg",
+      "category": "mentor",
+      "title": "Rushab speaking at an external educational seminar",
+      "alt": "Rushab Sir addressing an educational seminar with a microphone",
+      "publish_status": "caption_and_rights_review",
+      "notes": "Original unedited photograph; projected screen is Aurangabad Public School, not Vardhaman."
+    },
+    {
+      "id": "IMG-12",
+      "type": "image",
+      "path": "assets/mentor/rushab-seminar-img-12.jpeg",
+      "source": "WhatsApp Image 2026-10-31 at 12.44.58 PM.jpeg",
+      "category": "mentor",
+      "title": "Rushab speaking at a lectern",
+      "alt": "Rushab Sir speaking during an educational seminar",
+      "publish_status": "caption_and_rights_review",
+      "notes": "Original unedited photo. Event was external; make no affiliation claim."
+    },
+    {
+      "id": "IMG-14",
+      "type": "image",
+      "path": "assets/gallery/cricket-img-14.jpeg",
+      "source": "WhatsApp Image 2026-10-31 at 12.47.31 PM.jpeg",
+      "category": "activities",
+      "title": "Cricket with friends",
+      "alt": "Students participating in a cricket game on a turf field",
+      "publish_status": "guardian_consent_required",
+      "notes": "Good sports gallery candidate; minor identities visible."
+    },
+    {
+      "id": "IMG-16",
+      "type": "image",
+      "path": "assets/gallery/cricket-img-16.jpeg",
+      "source": "WhatsApp Image 2026-10-31 at 12.47.32 PM.jpeg",
+      "category": "activities",
+      "title": "Cricket in action",
+      "alt": "Student preparing to bat while friends gather on a cricket field",
+      "publish_status": "guardian_consent_required",
+      "notes": "Alternate sports image."
+    },
+    {
+      "id": "IMG-17",
+      "type": "image",
+      "path": "assets/gallery/academy-event-img-17.jpeg",
+      "source": "WhatsApp Image 2026-10-31 at 12.47.53 PM.jpeg",
+      "category": "community",
+      "title": "Academy community event",
+      "alt": "People standing beside a Vardhaman Academy banner at an event",
+      "publish_status": "reference_only",
+      "notes": "Printed banner includes outdated classes 1–12 and XI–XII. Avoid publication as-is."
+    },
+    {
+      "id": "IMG-18",
+      "type": "image",
+      "path": "assets/review/olympiad-medal-img-18.jpeg",
+      "source": "WhatsApp Image 2026-10-31 at 12.56.44 PM.jpeg",
+      "category": "achievements",
+      "title": "Student with medal and certificate",
+      "alt": "Student holding a medal and achievement certificate",
+      "publish_status": "guardian_consent_and_achievement_verification_required",
+      "notes": "Do not invent student name, placement, subject, year, award affiliation or academy attribution."
+    },
+    {
+      "id": "IMG-19",
+      "type": "image",
+      "path": "assets/review/certificate-img-19.jpeg",
+      "source": "WhatsApp Image 2026-10-31 at 12.57.48 PM.jpeg",
+      "category": "achievements",
+      "title": "Student with certificate",
+      "alt": "Student holding a framed recognition certificate",
+      "publish_status": "guardian_consent_and_achievement_verification_required",
+      "notes": "Certificate contains details. Verify story and obtain permission before web publication."
+    },
+    {
+      "id": "VID-02",
+      "type": "video",
+      "path": "assets/video/tug-of-war-vid-02.mp4",
+      "poster_path": "assets/video-posters/vid-02.jpg",
+      "source": "WhatsApp Video 2026-10-31 at 12.22.31 PM.mp4",
+      "duration_seconds": 57.4,
+      "category": "activities",
+      "title": "Outdoor tug-of-war — extended scene",
+      "publish_status": "guardian_consent_required",
+      "priority": "secondary"
+    },
+    {
+      "id": "VID-03",
+      "type": "video",
+      "path": "assets/video/tug-of-war-vid-03.mp4",
+      "poster_path": "assets/video-posters/vid-03.jpg",
+      "source": "WhatsApp Video 2026-10-31 at 12.22.31 PM (1).mp4",
+      "duration_seconds": 25.9,
+      "category": "activities",
+      "title": "Students playing tug-of-war",
+      "publish_status": "guardian_consent_required",
+      "priority": "primary"
+    },
+    {
+      "id": "VID-04",
+      "type": "video",
+      "path": "assets/video/outdoor-event-vid-04.mp4",
+      "poster_path": "assets/video-posters/vid-04.jpg",
+      "source": "WhatsApp Video 2026-10-31 at 12.23.31 PM (2).mp4",
+      "duration_seconds": 53.7,
+      "category": "activities",
+      "title": "Group event at academy setting",
+      "publish_status": "guardian_consent_required",
+      "priority": "secondary",
+      "notes": "Check device rotation/orientation during full playback."
+    },
+    {
+      "id": "VID-05",
+      "type": "video",
+      "path": "assets/video/football-vid-05.mp4",
+      "poster_path": "assets/video-posters/vid-05.jpg",
+      "source": "WhatsApp Video 2026-10-31 at 12.47.32 PM (3).mp4",
+      "duration_seconds": 8.1,
+      "category": "activities",
+      "title": "Football play",
+      "publish_status": "guardian_consent_required",
+      "priority": "primary"
+    },
+    {
+      "id": "VID-06",
+      "type": "video",
+      "path": "assets/video/cricket-vid-06.mp4",
+      "poster_path": "assets/video-posters/vid-06.jpg",
+      "source": "WhatsApp Video 2026-10-31 at 12.47.32 PM (1).mp4",
+      "duration_seconds": 3.6,
+      "category": "activities",
+      "title": "Cricket moment",
+      "publish_status": "guardian_consent_required",
+      "priority": "supporting"
+    }
+  ]
+}
