@@ -37,12 +37,11 @@ test('V2 source preserves illustrative stories, demo enquiry, exact logo crop an
   assert.match(styles, /prefers-reduced-motion/);
 });
 
-test('V2 build requires explicit private review and cannot produce a production release', async () => {
-  await assert.rejects(buildV2(), /not cleared for production/);
+test('V2 private review remains explicit and is refused in production environments', async () => {
   const previousNodeEnv = process.env.NODE_ENV;
   try {
     process.env.NODE_ENV = 'production';
-    await assert.rejects(buildV2({ privateReview: true }), /not cleared for production/);
+    await assert.rejects(buildV2({ privateReview: true }), /cannot be built in production mode/);
   } finally {
     if (previousNodeEnv === undefined) delete process.env.NODE_ENV;
     else process.env.NODE_ENV = previousNodeEnv;

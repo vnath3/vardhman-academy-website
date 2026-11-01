@@ -1,16 +1,11 @@
-import { readFile, writeFile, mkdir, cp, rm } from 'node:fs/promises';
+import { writeFile, mkdir, cp, rm } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { renderPage } from '../src/sections.mjs';
 import { canPublish, selectMedia, toCard, mediaUrl } from '../src/media.mjs';
 import { optimiseImages } from './images.mjs';
-
-export const root = fileURLToPath(new URL('../', import.meta.url));
-export async function readContracts() {
-  const [content, manifest] = await Promise.all(['site-content', 'media-manifest'].map(name =>
-    readFile(path.join(root, 'content', `${name}.json`), 'utf8').then(JSON.parse)));
-  return { content, manifest };
-}
+import { root, readContracts } from './contracts.mjs';
+export { root, readContracts } from './contracts.mjs';
 
 export async function build({ localReview = false, output = path.join(root, localReview ? '.local-preview' : 'dist') } = {}) {
   // Only these generated directories may be cleared; the source media archive is never touched.

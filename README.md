@@ -1,64 +1,48 @@
-# Vardhaman Academy V2 - Milestone 1
+# Vardhaman Academy V2
 
-The active `npm.cmd run dev` command now opens the actual interactive V2 integration at http://127.0.0.1:5173. It is strictly a local/private review; no production release is configured for V2.
+V2 is the active design for development and production. Static HTML, CSS and browser JavaScript; Node 22.12+ is used for builds and tests. There is no runtime server, framework or external font dependency.
 
-```powershell
-npm.cmd ci
-npm.cmd run dev
-```
-
-V2 checks: `npm.cmd run test:v2` and `npm.cmd run test:browser:v2`. Private review build: `npm.cmd run build:v2`.
-
-Reports: [integration](docs/V2_INTEGRATION_REPORT.md), [visual parity](docs/V2_VISUAL_PARITY_REPORT.md), [QA and known defects](qa/V2_TEST_REPORT.md).
-
-The original V1 implementation and tests are retained. Use `npm.cmd run dev:v1` for its preview; `test`, `test:browser`, `build` and `preview` retain their V1 meanings. The V1 README follows unchanged below, and its original `run dev` instruction should now be read as `run dev:v1`.
-
----
-
-# Vardhaman Academy
-
-Local review implementation of the supplied 2026-11-01 handoff. Nothing has been committed, pushed or deployed.
-
-The supplied checkout was an unborn `master` branch containing only `.git`; `origin` also advertised no branches. There was no application, framework, existing logo or unrelated source work to preserve. This implementation uses static HTML generated from the supplied JSON, CSS and browser JavaScript, with a Node development/build toolchain. No runtime framework or external services are needed.
-
-## Run locally
-
-Use Node 22.12 or later. In PowerShell:
+## Local V2 review
 
 ```powershell
 npm.cmd ci
 npm.cmd run dev
 ```
 
-Open **http://127.0.0.1:5173**. Stop with Ctrl+C. Restart the command after source edits to regenerate the preview.
+Open http://127.0.0.1:5173. This loopback-only review includes the original private media and a review notice. Restart after source edits. It is separate from the public artifact.
 
-The local preview shows Option A for likeness review. The **Show media for private review** checkbox starts OFF. Turn it on to inspect the activity, achievement and external seminar catalogue. This serves only on the loopback interface, uses a same-origin review session and resets on page reload. Turning the checkbox off removes the media and revokes direct access to student images, videos, posters and resized copies. Historical reference posters never enter the gallery.
+## Production build and verification
 
 ```powershell
 npm.cmd run check
 npm.cmd test
-npm.cmd run test:browser
 npm.cmd run build
+npm.cmd run verify:production
+npm.cmd run test:browser:production
 npm.cmd run preview
 ```
 
-Production preview: **http://127.0.0.1:4173**. `build` writes only approved media into `dist/`. The supplied manifest currently approves **zero** assets for public release, so production uses a neutral mentor placeholder and an empty gallery. It contains no review checkbox and cannot enable private review. Both previews keep robots indexing disabled pending launch approval.
+`npm run build` and `npm run build:v2` both build V2 into `dist/`. `npm run preview` serves the existing `dist/` at http://127.0.0.1:4173; it never rebuilds or serves the source media archive. `npm run build:review:v2` creates the separate `.local-preview-v2/` review artifact. Private review is refused when `NODE_ENV=production`.
 
-Browser tests use installed Google Chrome. If Chrome is unavailable, install a Playwright browser and adjust `launchOptions.channel` in `playwright.config.mjs` to use it. These development dependencies are not needed to host the static output.
+Only assets with the exact `approved_for_public` status in `content/media-manifest.json` enter production. Currently zero assets have that status. Production therefore uses the existing text brand/neutral mentor placeholders and an empty gallery message, without requesting denied media. Local review keeps its full catalogue. Original media and approval statuses are unchanged.
 
-## Content and media
+Production code, fonts, font licences, approved media, `robots.txt` and Netlify `_headers` are packaged in `dist/`. Never publish the repository root or `.local-preview-v2/`. Rebuild after every media approval or revocation; the build clears stale output. The verifier rejects extra files, private catalogues, source mismatches and missing assets.
 
-- `content/site-content.json`: original content contract. Mentor details, board list, contact destinations and approved stories should be confirmed here before adding functionality.
-- `content/media-manifest.json`: original stable IDs, filenames, categories and release status.
-- `media/vardhaman/`: exact supplied originals, outside the public output. `assets/<rest>` maps to `/media/vardhaman/<rest>` at serve/build time.
-- `src/sections.mjs`: semantic page sections and metadata. `src/styles.css`: responsive blue-green/ivory design. `src/app.js`: gallery filters, click-to-play, focus and pause behavior.
-- `src/media.mjs`: path validation, release allowlist and gallery adapter. A media item's status must equal `approved_for_public` to enter a production build. Its poster and WebP derivatives inherit the same gate.
-- `scripts/`: build, local serving, responsive image-copy generation and syntax checks. Originals are never overwritten. Local generated files live in `.local-preview/`; production files live in `dist/`.
-- `docs/handoff/`: all original handoff documents, unchanged. [Approval checklist](docs/handoff/APPROVALS.md).
-- `tests/`: content/path/build/access controls and browser smoke checks. Local screenshots are generated under ignored `test-results/`.
+## Netlify
 
-Original media and `docs/handoff` are private review material; a future static deployment must publish only `dist/`, never the repository root. A release approval is a content decision, not a file deletion: retain the original archive and update manifest statuses only after approval.
+The root `netlify.toml` sets base `.`, publish directory `dist`, Node 22, and build command `npm run check && npm run build && npm run verify:production`. These checks run before Netlify publishes a successful artifact. No SPA rewrite is needed because navigation uses section anchors. A manual upload must contain the contents of the verified `dist/` at its root, including `index.html`.
 
-WhatsApp, admissions and YouTube are intentionally unconfigured. The primary CTA links to the informative contact section; no form, phone number, enquiry transmission, tracking, third-party font or external media embed is added. The isolated official logo remains missing, so the header uses a text label rather than a recreated symbol.
+No deployment was performed as part of this change. See [deployment-readiness report](docs/V2_DEPLOYMENT_READINESS.md) for verification evidence and remaining launch issues. Indexing stays disabled until the launch/SEO decision is made. A working production build does not fix the documented accessibility or content gaps.
 
-See [implementation and QA handoff](docs/IMPLEMENTATION.md) for results and remaining approvals. Do not publish until the owner reviews `docs/handoff/APPROVALS.md` and explicitly authorizes deployment.
+## Source and regression checks
+
+- `src/v2/`: current V2 HTML, styles, interactions, fonts and licences.
+- `src/v2-media.mjs`: retained media presentation metadata; the builder filters it before writing browser data.
+- `content/media-manifest.json`: media release allowlist; do not infer approval from the design decision.
+- `scripts/build-v2.mjs`: production/private V2 packaging. `scripts/verify-production.mjs`: public artifact checks.
+- `npm test`: V1 and V2 contracts plus production packaging/privacy regressions, run sequentially so V1 tests cannot leave `dist/` containing V1.
+- `npm run test:browser:production`: tests the already-built production artifact in Chrome (1440/768/390/320px) and Edge (390px).
+- `npm run test:browser:v2`: retained private V2 interaction/media regressions. `npm run test:browser`: retained V1 browser suite.
+- `npm run dev:v1`: retained V1 preview. Its legacy builder remains `scripts/build.mjs`; running that file directly overwrites `dist/` with V1, so rebuild V2 afterwards. It is not used by Netlify or the production preview.
+
+The enquiry remains a browser-only message preparation/copy demo, with no working admissions submission, WhatsApp destination, analytics or external video embed. Student stories are labelled illustrative. Original handoffs and historical QA are in `docs/handoff/`, `docs/handoff-v2/`, `docs/V2_INTEGRATION_REPORT.md` and `qa/V2_TEST_REPORT.md`; their Milestone 1 production-build descriptions are superseded by this README and the current readiness report.

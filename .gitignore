@@ -8,3 +8,4 @@ playwright-report/
 .local-preview-v2/
 qa/visual/
 test-results-v2/
+test-results-production/

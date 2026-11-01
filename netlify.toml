@@ -1,0 +1,10 @@
+[build]
+  base = "."
+  command = "npm run check && npm run build && npm run verify:production"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Navigation uses #section anchors. Unknown paths should return a real 404;
+# a catch-all SPA rewrite would also hide missing media and asset errors.
