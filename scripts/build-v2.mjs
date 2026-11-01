@@ -1,8 +1,9 @@
 import { cp, mkdir, readFile, writeFile, rm, realpath } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { root, readV2Manifest } from './contracts.mjs';
+import { root, readV2Manifest, readV2Settings } from './contracts.mjs';
 import { planMedia } from '../src/v2-media.mjs';
+import { siteRuntime, renderSiteHtml, robotsFile, productionHeaders } from '../src/v2-settings.mjs';
 export { planMedia } from '../src/v2-media.mjs';
 
 export const v2Output = path.join(root, '.local-preview-v2');
@@ -19,6 +20,8 @@ export async function buildV2({ privateReview = false } = {}) {
     throw new Error('Private V2 media cannot be built in production mode.');
   }
   const manifest = await readV2Manifest();
+  const settings = await readV2Settings();
+  const runtimeSettings = siteRuntime(settings, { privateReview });
   const plan = planMedia(manifest, { privateReview });
   const archive = await realpath(path.join(root, 'media', 'vardhaman'));
   for (const asset of plan.copies) {
@@ -29,12 +32,17 @@ export async function buildV2({ privateReview = false } = {}) {
   // Both paths are fixed generated directories inside this checkout.
   await rm(output, { recursive: true, force: true });
   await mkdir(output, { recursive: true });
-  for (const file of ['index.html', 'base.css', 'v2.css', 'concept.js', 'v2.js', 'fonts.css', 'fonts']) {
+  for (const file of ['base.css', 'v2.css', 'concept.js', 'v2.js', 'enquiry.js', 'dialogs.js', 'fonts.css', 'fonts']) {
     await cp(path.join(v2Source, file), path.join(output, file), { recursive: true });
+  }
+  await writeFile(path.join(output, 'index.html'), renderSiteHtml(await readFile(path.join(v2Source, 'index.html'), 'utf8'), settings, { privateReview, media: planMedia(manifest).runtime }));
+  await writeFile(path.join(output, 'site-settings.js'), `window.VARDHAMAN_SITE = ${JSON.stringify(runtimeSettings).replaceAll('<', '\\u003c')};\n`);
+  if (!privateReview) {
+    await cp(path.join(v2Source, 'analytics.js'), path.join(output, 'analytics.js'));
   }
   await writeFile(path.join(output, 'media-data.js'),
     `window.VARDHAMAN_MEDIA = ${JSON.stringify(plan.runtime).replaceAll('<', '\\u003c')};\n`);
-  await writeFile(path.join(output, 'robots.txt'), 'User-agent: *\nDisallow: /\n');
+  await writeFile(path.join(output, 'robots.txt'), robotsFile(settings, { privateReview }));
   if (privateReview) await writeFile(path.join(output, 'media-review.html'), renderMediaReview(manifest));
   if (!privateReview) {
     for (const asset of plan.copies) {
@@ -43,7 +51,7 @@ export async function buildV2({ privateReview = false } = {}) {
       await cp(path.join(root, asset.source_path), destination);
     }
     // Also supports manual dist/ uploads; Netlify reads these headers itself.
-    await cp(path.join(root, 'config', 'production-headers.txt'), path.join(output, '_headers'));
+    await writeFile(path.join(output, '_headers'), productionHeaders(await readFile(path.join(root, 'config', 'production-headers.txt'), 'utf8'), settings));
   }
   return { output, html: await readFile(path.join(output, 'index.html'), 'utf8'), mediaFiles: privateReview ? [] : plan.files };
 }

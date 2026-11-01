@@ -19,7 +19,7 @@ test('V2 has stable correct identity/grades, with the original reference present
   assert.doesNotMatch(concept, /milestones=\{1:/);
   assert.doesNotMatch(enhancements, /if\(index<4\)|gradeBtns.slice\(0,4\)/);
   for (const file of ['base.css', 'v2.css', 'concept.js', 'v2.js', 'fonts.css']) assert.ok(html.includes(`./${file}`));
-  assert.doesNotMatch(html, /https:\/\/fonts\.|wa\.me|youtube\.com|gtag|<form/);
+  assert.doesNotMatch(html, /https:\/\/fonts\.|wa\.me|youtube\.com|<form/);
 });
 
 test('V2 source preserves illustrative stories, demo enquiry, exact logo crop and media paths', async () => {
@@ -27,7 +27,7 @@ test('V2 source preserves illustrative stories, demo enquiry, exact logo crop an
   const styles = await readFile(path.join(v2Source, 'v2.css'), 'utf8');
   const script = await readFile(path.join(v2Source, 'v2.js'), 'utf8');
   assert.match(html, /illustrative sample content, not verified alumni testimonials/);
-  assert.match(html, /Interactive demo · no details sent/);
+  assert.match(html, /Prepare an enquiry · not sent automatically/);
   assert.match(html, /id="childNote"/);
   assert.doesNotMatch(html, /type="(email|tel)"|name="(email|phone)"/);
   assert.match(styles, /background-position: -152px -20px/);
@@ -49,6 +49,7 @@ test('V2 private review remains explicit and is refused in production environmen
   const result = await buildV2({ privateReview: true });
   assert.equal(path.basename(result.output), '.local-preview-v2');
   assert.match(result.html, /noindex, nofollow/);
+  assert.doesNotMatch(result.html, /googletagmanager|analytics\.js/);
   assert.equal(await readFile(path.join(result.output, 'robots.txt'), 'utf8'), 'User-agent: *\nDisallow: /\n');
 });
 

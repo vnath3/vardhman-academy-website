@@ -2,6 +2,8 @@
 
 Date: 2026-11-01 (Asia/Calcutta). Work is local and uncommitted. No commit, push or deployment was performed.
 
+Subsequent owner-requested update: production now includes Google tag `G-4F7P27EQSF`. The private review preview omits analytics. The original no-external-request audit below predates this addition; current browser regression tests stub Google requests to keep test traffic out of the live property. Media approvals and exclusions are unchanged.
+
 ## Result
 
 The production build now restores the authentic blue-green logo, supplied HERO-A artwork and original IMG-12 seminar photograph. These three assets were individually approved by the owner in this task. The gallery remains in its existing empty state publicly because no gallery photographs, videos or thumbnails have been individually approved. The complete original V2 gallery remains available locally, with all supplied media also accessible through a private review index.

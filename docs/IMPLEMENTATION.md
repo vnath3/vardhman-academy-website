@@ -1,5 +1,43 @@
 # Implementation and QA handoff
 
+## Current V2 production-readiness refinement - 2026-11-01
+
+The existing static V2 website is retained in this repository. No deployment, commit, push or new media approval is included. The previously requested Google tag changes are preserved. The historical V1 implementation notes are retained below; their zero-media/no-analytics descriptions do not describe current V2.
+
+### Enquiry workflow
+
+`content/v2-settings.json` contains the owner-managed site URL, SEO settings and WhatsApp destination. The four-step wizard remains: class 5-10, learning concern, optional 350-character goal and a reviewable message. `src/v2/enquiry.js` generates the summary as text, supports edit/back/copy and opens WhatsApp only through an explicit button click after review.
+
+The WhatsApp number is intentionally null until the owner supplies a public-contact-approved number. Set international digits without `+`, spaces or punctuation, set `number_approved` only after confirmation, and record `approved_by`, `approved_on` and `evidence`. Invalid destinations or missing approval evidence fail the build. Private review never opens a real WhatsApp destination. Legacy flyer numbers are not reused.
+
+The draft stays in page memory. No names, phone fields, database, lead endpoint, persistence or automatic message submission was added. Privacy text explains that opening WhatsApp shares the draft with WhatsApp and that the parent must press Send there. Copying is reported only as copying; the site never claims delivery or successful submission. The draft URL is constructed inside a button action rather than placed in an outbound link attribute, to keep free text out of Google Analytics outbound `link_url` events. No enquiry text is passed to `gtag` or `dataLayer`.
+
+WhatsApp format follows [the official click-to-chat guide](https://faq.whatsapp.com/5913398998672934). The analytics consideration follows [Google's enhanced-measurement documentation](https://support.google.com/analytics/answer/9216061?hl=en).
+
+### Media and content
+
+`content/v2-media-manifest.json` remains the sole V2 approval register. Its approved list is unchanged: LOGO-V2, HERO-A and IMG-12, including the owner's prior explicit consent confirmation for students embedded in IMG-12's projected display. No gallery image, video or poster was newly approved. Pending/rejected assets remain physically absent from `dist/`; gallery filters and controls work against the approved registry. All supplied media stays available only in the loopback private preview and its media-review index.
+
+The five sample stories retain individual sample labels and their original carousel/dialog interactions. Section and modal copy now makes clear that they are illustrative rather than verified alumni accounts or promised outcomes. No testimonials, percentages, names, careers, contact details or award claims were invented. Board/subject, 500+ and precise address verification remain owner work. Historical banners remain excluded.
+
+### SEO, sharing and indexing
+
+Build-time metadata uses the configured title, description and canonical `https://va-academy.netlify.app/`. Open Graph metadata and a large-image sharing card reference the already-approved HERO-A. The favicon reuses the already-approved authentic logo PNG, so no new public image or missing favicon path is introduced. If these media permissions are revoked, the related sharing/icon references are omitted.
+
+Indexing remains disabled. `seo.indexing_enabled: true` requires a completed `launch_approval` record. HTML robots metadata, robots.txt and Netlify's X-Robots-Tag are derived together from that validated setting. Private previews always remain noindex, even when a future production launch is approved. This does not change hosting or publish the site.
+
+### Accessibility and build verification
+
+`src/v2/dialogs.js` contains focus within gallery/story dialogs, makes the background inert and restores trigger focus on close. Existing Escape, pause and close controls remain. Enquiry choices expose pressed state; validation/status feedback is announced and step headings receive focus. The four progress dots have a named progressbar with the current step. Small-text colours were darkened within the V2 palette for contrast, including revealed sections and quiz feedback/results. The mentor section's existing single-column mobile rule was restored after a later desktop rule overrode it. Component shapes, typography and the desktop layout remain V2.
+
+The production builder renders metadata/settings, retains the approved-media copy gate and produces the same static deployment structure. The verifier checks every declared script, style, font and media path, generated settings/metadata/robots/headers, exact approved output membership and source byte identity. Automated WhatsApp tests use a fictional example number and intercept all navigation; Google requests are stubbed during browser tests. No test contacts a parent or creates real Analytics traffic.
+
+Final verification: 19 contract/settings/build tests, 17 production browser tests, 12 private V2 browser tests and 8 retained V1 browser tests passed. Additional local accessibility checks cover revealed content, story dialogs, quiz feedback/results and enquiry validation/review. Screenshots and local performance measurements are recorded in the report below; they do not replace production or physical-device review.
+
+See [the current approval register](APPROVALS.md) and [concise refinement test report](V2_REFINEMENT_TEST_REPORT.md) for results and launch blockers. Prior design/media evidence remains in the V2 integration and restoration reports. Local commands remain `npm.cmd run dev` for private review and `npm.cmd run preview` after a verified build for the production artifact.
+
+## Historical V1 handoff
+
 Prepared 2026-11-01. Status: local review; no commit, push, external media upload, deployment or domain change.
 
 ## Repository audit and changes

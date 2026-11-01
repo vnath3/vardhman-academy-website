@@ -11,9 +11,7 @@
   const privateReview = mediaConfig.privateReview === true;
   const escapeText = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[char]));
 
-  document.title = 'Vardhaman Academy — Every Child Deserves Someone Who Understands';
-  const meta = q('meta[name="description"]');
-  if (meta) meta.content = 'Vardhaman Academy, Bansilal Nagar. Classes 5–10. Meet Rushab Sir, explore learning journeys, activities and a personal parent enquiry guide.';
+  // Metadata is rendered during the build from the owner's site settings.
 
   // Accurate brand name and grades throughout the pre-existing source copy.
   const replacements = [
@@ -182,7 +180,7 @@
   modal.innerHTML='<div class="media-modal-panel"><button type="button" class="media-modal-close" aria-label="Close preview">×</button><div class="media-modal-stage" id="mediaModalStage"></div><div class="media-modal-caption" id="mediaModalCaption"></div></div>';
   document.body.append(modal);
   let lastFocused=null;
-  function closeMedia(){const video=q('#mediaModalStage video');if(video)video.pause();q('#mediaModalStage').replaceChildren();modal.classList.remove('open');document.body.style.overflow='';lastFocused?.focus();}
+  function closeMedia(){const video=q('#mediaModalStage video');if(video)video.pause();q('#mediaModalStage').replaceChildren();modal.classList.remove('open');document.body.style.overflow='';window.VardhamanDialogs.close(modal);}
   function openMedia(id){const item=media.find(x=>x.id===id);if(!item)return;lastFocused=document.activeElement;const stage=q('#mediaModalStage');stage.replaceChildren();let el;
     if(item.type==='video'){
       el=document.createElement('video');el.controls=true;el.playsInline=true;el.preload='metadata';if(item.poster)el.poster=item.poster;el.src=item.src;
@@ -190,7 +188,12 @@
     }else{
       el=document.createElement('img');el.src=item.src;el.alt=item.alt||item.title;
     }
-    stage.append(el);q('#mediaModalCaption').innerHTML=`<strong>${escapeText(item.title)}</strong><p>${escapeText(item.desc)}${privateReview?' · Private preview only; permission review pending.':''}</p>`;modal.classList.add('open');document.body.style.overflow='hidden';q('.media-modal-close')?.focus();
+    stage.append(el);q('#mediaModalCaption').innerHTML=`<strong>${escapeText(item.title)}</strong><p>${escapeText(item.desc)}${privateReview?' · Private preview only; permission review pending.':''}</p>`;modal.classList.add('open');document.body.style.overflow='hidden';q('.media-modal-close')?.focus();window.VardhamanDialogs.open(modal,lastFocused);
+    el.addEventListener('error', () => {
+      const error=document.createElement('p');error.setAttribute('role','alert');
+      error.textContent='This media could not be loaded. Please close the preview and try again later.';
+      q('#mediaModalCaption').append(error);
+    }, { once: true });
   }
   qa('[data-media]').forEach(button=>button.addEventListener('click',()=>openMedia(button.dataset.media)));
   q('.media-modal-close')?.addEventListener('click',closeMedia);

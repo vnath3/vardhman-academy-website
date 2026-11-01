@@ -1,5 +1,7 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { readV2Settings } from '../../scripts/contracts.mjs';
+const siteSettings = await readV2Settings();
 import { mkdir, writeFile } from 'node:fs/promises';
 
 for (const width of [1440, 768, 390, 320]) {
@@ -10,7 +12,7 @@ for (const width of [1440, 768, 390, 320]) {
     page.on('request', request => requests.push({ url: request.url(), method: request.method() }));
     page.on('response', response => { if (response.status() >= 400) failures.push(response.url()); });
     await page.goto('/');
-    await expect(page).toHaveTitle('Vardhaman Academy — Every Child Deserves Someone Who Understands');
+    await expect(page).toHaveTitle(siteSettings.seo.title);
     await expect(page.locator('.official-logo-crop').first()).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(width);
     await expect(page.locator('.gallery-card')).toHaveCount(10);
@@ -158,17 +160,16 @@ test('four-step parent demo validates, supports back/edit/copy and transmits no 
   await expect(page.locator('#childNote')).toHaveValue('');
 });
 
-test('KNOWN DEFECT: gallery dialog traps keyboard focus', async ({ page }) => {
-  test.fail(true, 'Inherited reference defect: modal lacks a focus trap and background inertness; deferred to Milestone 2.');
+test('gallery dialog traps keyboard focus', async ({ page }) => {
   await page.goto('/');
   await page.locator('[data-media="IMG-14"]').click();
   await page.keyboard.press('Tab');
   expect(await page.locator('#mediaModal').evaluate(item => item.contains(document.activeElement))).toBeTruthy();
 });
 
-test('KNOWN DEFECT: V2 meets automated WCAG contrast checks', async ({ page }) => {
-  test.fail(true, 'Inherited reference contrast defects retained for visual parity; the full audit is saved for Milestone 2.');
+test('V2 meets automated WCAG checks across revealed sections', async ({ page }) => {
   await page.goto('/');
+  for (const reveal of await page.locator('.reveal').all()) await reveal.scrollIntoViewIfNeeded();
   const result = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
   await mkdir('qa/visual', { recursive: true });
   await writeFile('qa/visual/v2-axe-final.json', JSON.stringify(result, null, 2));

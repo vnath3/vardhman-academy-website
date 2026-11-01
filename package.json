@@ -11,7 +11,7 @@
     "build:review:v2": "node scripts/build-v2.mjs --private-review",
     "build": "node scripts/build-v2.mjs",
     "preview": "node scripts/preview-production.mjs",
-    "test": "node --test --test-concurrency=1 tests/contracts.test.mjs tests/v2.contracts.test.mjs tests/v2.production.test.mjs",
+    "test": "node --test --test-concurrency=1 tests/contracts.test.mjs tests/v2.contracts.test.mjs tests/v2.settings.test.mjs tests/v2.production.test.mjs",
     "test:browser": "playwright test",
     "test:v2": "node --test tests/v2.contracts.test.mjs",
     "test:production": "node --test tests/v2.production.test.mjs",

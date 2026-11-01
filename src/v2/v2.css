@@ -151,6 +151,8 @@ body { background: #fbfbf7; }
 }
 @media(max-width:780px) {
   .nav{height:75px}.nav-links{top:75px}
+  /* The later desktop concept layer overrides its earlier mobile grid rule. */
+  .teacher-grid{grid-template-columns:1fr}
   .hero-parent .hero-grid{grid-template-columns:1fr;gap:8px}.hero-parent .hero-copy{text-align:left}.hero-parent h1{font-size:clamp(45px,8vw,64px)}
   .mentor-hero{height:430px}.portrait-shell{inset:6px 43px 40px 59px}
   .v2-gallery{padding:75px 0}.v2-gallery .gallery-intro{display:block}
@@ -173,3 +175,21 @@ body { background: #fbfbf7; }
 .logo-text-fallback .brand { display: block; }
 .portrait-field.media-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .gallery-empty { padding: 24px 0; }
+.enquiry-whatsapp[hidden] { display: none; }
+.mentor-handnote small, .mentor-nameplate small { color: #536b60; }
+/* Improve small-text contrast within the existing V2 palette and geometry. */
+:root { --muted: #52676f; }
+.worry-list > p, .teacher .placeholder { color: #536b60; }
+.feature-card p, .quiz-meta, .form-step p, .story-body .small, .story-body p, .modal p, .media-modal-caption p { color: #566379; }
+.grade-dot:not([aria-pressed="true"]) { color: #526079; }
+#prevGrade, .form-lead .eyebrow, .gallery-category { color: #126c8d; }
+.gallery-body p { color: #52676f; }
+.gallery-consent { color: #86602b; }
+.privacy-note { color: #526379 !important; }
+.form-buttons { flex-wrap: wrap; }
+.form-buttons .enquiry-whatsapp { min-width: 150px; }
+.feature-card .num { color: #718096; }
+.form-step .validation { color: #ad334a; }
+.quiz-feedback.good { color: #23774d; }
+.quiz-feedback.try { color: #975746; }
+.quiz-result p { color: #566379; }

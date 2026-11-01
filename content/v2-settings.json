@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "site_url": "https://va-academy.netlify.app/",
+  "seo": {
+    "title": "Vardhaman Academy | Classes 5–10 in Bansilal Nagar",
+    "description": "Meet Rushab Sir at Vardhaman Academy in Bansilal Nagar, Chhatrapati Sambhajinagar. Explore Classes 5–10 and prepare a parent enquiry.",
+    "indexing_enabled": false,
+    "launch_approval": null
+  },
+  "enquiry": {
+    "whatsapp_number": null,
+    "number_approved": false,
+    "approval_record": null
+  }
+}

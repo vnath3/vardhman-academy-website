@@ -3,6 +3,9 @@ import { access } from 'node:fs/promises';
 import path from 'node:path';
 import { root, readV2Manifest } from '../../scripts/contracts.mjs';
 import { planMedia } from '../../src/v2-media.mjs';
+import { stubAnalytics } from './analytics.mjs';
+
+test.beforeEach(async ({ page }) => { await stubAnalytics(page); });
 
 for (const width of [1440, 390]) {
   test(`manifest-only future media activation preserves filters and controls at ${width}px`, async ({ page }) => {
