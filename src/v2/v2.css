@@ -22,7 +22,9 @@ body { background: #fbfbf7; }
   height: 74px;
   background-image: var(--v2-logo-image, none);
   background-size: 580px 580px;
+  background-size: var(--v2-logo-size, 580px 580px);
   background-position: -152px -20px;
+  background-position: var(--v2-logo-position, -152px -20px);
   background-repeat: no-repeat;
   flex: none;
   display: block;

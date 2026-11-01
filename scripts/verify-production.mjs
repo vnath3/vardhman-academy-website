@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFile, readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { root, readContracts } from './contracts.mjs';
+import { root, readV2Manifest } from './contracts.mjs';
 import { planMedia, v2Source } from './build-v2.mjs';
 
 export async function listFiles(directory, prefix = '') {
@@ -18,8 +18,8 @@ export async function listFiles(directory, prefix = '') {
 
 export async function verifyProduction() {
   const output = path.join(root, 'dist');
-  const { manifest } = await readContracts();
-  const { runtime, files: mediaFiles } = planMedia(manifest.assets);
+  const manifest = await readV2Manifest();
+  const { runtime, files: mediaFiles, copies } = planMedia(manifest);
   const sourceFiles = ['index.html', 'base.css', 'v2.css', 'concept.js', 'v2.js', 'fonts.css',
     ...(await listFiles(path.join(v2Source, 'fonts'))).map(file => 'fonts/' + file)];
   const expected = [...sourceFiles, 'media-data.js', 'robots.txt', '_headers', ...mediaFiles.map(file => 'media/' + file)].sort();
@@ -33,8 +33,8 @@ export async function verifyProduction() {
   const generated = JSON.parse(data.slice('window.VARDHAMAN_MEDIA = '.length, -2));
   assert.deepEqual(generated, JSON.parse(JSON.stringify(runtime)), 'Browser media data must match the public allowlist.');
   assert.equal(generated.privateReview, false);
-  for (const file of mediaFiles) {
-    assert.deepEqual(await readFile(path.join(output, 'media', file)), await readFile(path.join(root, 'media', 'vardhaman', file)), `Media mismatch: ${file}`);
+  for (const asset of copies) {
+    assert.deepEqual(await readFile(path.join(output, asset.production_path)), await readFile(path.join(root, asset.source_path)), `Media mismatch: ${asset.id}`);
   }
   assert.equal(await readFile(path.join(output, '_headers'), 'utf8'), await readFile(path.join(root, 'config', 'production-headers.txt'), 'utf8'));
   const checkUrl = async (url, from) => {

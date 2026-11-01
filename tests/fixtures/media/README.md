@@ -1,0 +1,1 @@
+Synthetic one-pixel PNG used only in local browser tests. No academy or student media is included in this fixture. Video playback regression uses the unchanged local private-review archive through Playwright interception; it is never copied into dist.

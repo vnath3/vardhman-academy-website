@@ -9,6 +9,7 @@
   // Missing build data fails closed: no private media or review mode.
   const mediaConfig = window.VARDHAMAN_MEDIA || { privateReview: false, gallery: [] };
   const privateReview = mediaConfig.privateReview === true;
+  const escapeText = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[char]));
 
   document.title = 'Vardhaman Academy — Every Child Deserves Someone Who Understands';
   const meta = q('meta[name="description"]');
@@ -38,10 +39,14 @@
     link.setAttribute('aria-label','Vardhaman Academy home');
     if (!mediaConfig.logo) { link.classList.add('logo-text-fallback'); return; }
     document.documentElement.style.setProperty('--v2-logo-image', `url("${mediaConfig.logo}")`);
+    if (mediaConfig.logoLayout) {
+      document.documentElement.style.setProperty('--v2-logo-size', mediaConfig.logoLayout.size);
+      document.documentElement.style.setProperty('--v2-logo-position', mediaConfig.logoLayout.position);
+    }
     const crop=document.createElement('span');
     crop.className='official-logo-crop';
     crop.setAttribute('role','img');
-    crop.setAttribute('aria-label','Vardhaman Academy official blue-green wordmark');
+    crop.setAttribute('aria-label',mediaConfig.logoAlt || 'Vardhaman Academy official blue-green wordmark');
     link.append(crop);
     if(index>0) link.style.minWidth='0';
   });
@@ -64,7 +69,7 @@
   if(heroTrust) heroTrust.innerHTML='<strong>500+ students taught — as shared by the academy</strong><br>Classes 5–10 · Bansilal Nagar';
 
   const portrait=q('.portrait-field');
-  if(portrait && mediaConfig.hero) portrait.innerHTML=`<img class="mentor-portrait" src="${mediaConfig.hero}" alt="Rushab Sir speaking with a microphone in a warm Vardhaman-themed portrait" loading="eager" fetchpriority="high">`;
+  if(portrait && mediaConfig.hero) portrait.innerHTML=`<img class="mentor-portrait" src="${mediaConfig.hero}" alt="${escapeText(mediaConfig.heroAlt || 'Rushab Sir speaking with a microphone in a warm Vardhaman-themed portrait')}" loading="eager" fetchpriority="high">`;
   else portrait?.classList.add('media-placeholder');
   const heroArt=q('.mentor-hero');
   if(heroArt) heroArt.setAttribute('aria-label',mediaConfig.hero ? 'Portrait of Rushab Sir' : 'Rushab Sir portrait placeholder');
@@ -72,7 +77,7 @@
   if(plate) plate.textContent='Vardhaman Academy';
 
   const teacherArt=q('.teacher-art');
-  if(teacherArt && mediaConfig.mentor) teacherArt.innerHTML=`<img class="mentor-event-photo" src="${mediaConfig.mentor}" alt="Rushab Sir speaking during an external educational seminar" loading="lazy"><div class="teacher-photo-note">A real educational seminar appearance · External event, not hosted by Vardhaman Academy</div>`;
+  if(teacherArt && mediaConfig.mentor) teacherArt.innerHTML=`<img class="mentor-event-photo" src="${mediaConfig.mentor}" alt="${escapeText(mediaConfig.mentorAlt || 'Rushab Sir speaking during an external educational seminar')}" loading="lazy"><div class="teacher-photo-note">${escapeText(mediaConfig.mentorCaption || 'A real educational seminar appearance · External event, not hosted by Vardhaman Academy')}</div>`;
   else if(teacherArt) teacherArt.innerHTML='<span class="portrait-monogram" aria-hidden="true">RM</span><span class="teacher-photo-note">Meet Rushab Sir · Vardhaman Academy</span>';
   const teacherPreview=q('.teacher .placeholder');
   if(teacherPreview) teacherPreview.textContent=privateReview ? 'Real seminar photography. Authentic student reviews and quotations will be added after verification and permission.' : 'Student stories and photographs will be shared with permission.';
@@ -141,9 +146,9 @@
   const grid=gallery.querySelector('#galleryGrid');
   grid.innerHTML=media.map(item=>`
     <article class="gallery-card" data-category="${item.category}" data-type="${item.category==='achievements'?'achievement':item.type}">
-      <button type="button" class="gallery-action" data-media="${item.id}" aria-label="${item.type==='video'?'Play video':'View photo'}: ${item.title}">
-        <div class="gallery-media-wrap"><img class="gallery-media" src="${item.poster||item.src}" alt="${item.alt||item.title}" loading="lazy">${item.type==='video'?'<span class="gallery-play" aria-hidden="true">▶</span>':''}</div>
-        <div class="gallery-body"><span class="gallery-category">${item.category}${item.duration?' · '+item.duration:''}</span><strong>${item.title}</strong><p>${item.desc}</p><div class="gallery-card-bottom"><span class="gallery-consent">${privateReview?'Owner review · Consent pending':'Shared with permission'}</span><span class="gallery-arrow" aria-hidden="true">↗</span></div></div>
+      <button type="button" class="gallery-action" data-media="${item.id}" aria-label="${item.type==='video'?'Play video':'View photo'}: ${escapeText(item.title)}">
+        <div class="gallery-media-wrap"><img class="gallery-media" src="${item.poster||item.src}" alt="${escapeText(item.alt||item.title)}" loading="lazy">${item.type==='video'?'<span class="gallery-play" aria-hidden="true">▶</span>':''}</div>
+        <div class="gallery-body"><span class="gallery-category">${item.category}${item.duration?' · '+item.duration:''}</span><strong>${escapeText(item.title)}</strong><p>${escapeText(item.desc)}</p><div class="gallery-card-bottom"><span class="gallery-consent">${privateReview?'Owner review · Consent pending':'Shared with permission'}</span><span class="gallery-arrow" aria-hidden="true">↗</span></div></div>
       </button>
     </article>`).join('');
 
@@ -185,7 +190,7 @@
     }else{
       el=document.createElement('img');el.src=item.src;el.alt=item.alt||item.title;
     }
-    stage.append(el);q('#mediaModalCaption').innerHTML=`<strong>${item.title}</strong><p>${item.desc}${privateReview?' · Private preview only; permission review pending.':''}</p>`;modal.classList.add('open');document.body.style.overflow='hidden';q('.media-modal-close')?.focus();
+    stage.append(el);q('#mediaModalCaption').innerHTML=`<strong>${escapeText(item.title)}</strong><p>${escapeText(item.desc)}${privateReview?' · Private preview only; permission review pending.':''}</p>`;modal.classList.add('open');document.body.style.overflow='hidden';q('.media-modal-close')?.focus();
   }
   qa('[data-media]').forEach(button=>button.addEventListener('click',()=>openMedia(button.dataset.media)));
   q('.media-modal-close')?.addEventListener('click',closeMedia);

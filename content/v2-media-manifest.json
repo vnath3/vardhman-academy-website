@@ -1,0 +1,632 @@
+{
+  "schema_version": "2.0",
+  "release_policy": "default_deny",
+  "description": "Authoritative V2 publication approvals and display metadata. Legacy media-manifest.json is retained only for V1.",
+  "slots": {
+    "logo": {
+      "review": "IMG-01",
+      "public": "LOGO-V2"
+    },
+    "hero": {
+      "review": "HERO-A",
+      "public": "HERO-A"
+    },
+    "mentor": {
+      "review": "IMG-12",
+      "public": "IMG-12"
+    }
+  },
+  "assets": [
+    {
+      "id": "IMG-01",
+      "type": "image",
+      "original_filename": "legacy-brand-poster-img-01.jpeg",
+      "supplied_filename": "WhatsApp Image 2026-10-28 at 11.23.57 AM (1).jpeg",
+      "source_path": "media/vardhaman/brand/legacy-brand-poster-img-01.jpeg",
+      "production_path": "media/brand/legacy-brand-poster-img-01.jpeg",
+      "section": "archive",
+      "category": "brand-reference",
+      "approval_status": "rejected",
+      "required_verifications": [
+        "usage_rights",
+        "guardian_consent"
+      ],
+      "verified": {
+        "usage_rights": false,
+        "guardian_consent": false
+      },
+      "approval_record": null,
+      "title": "Legacy brand flyer",
+      "alt": "Legacy brand flyer",
+      "caption": "Legacy brand flyer",
+      "review_caption": "Official blue-green logo direction; contains outdated grade claims. Do not embed as current promotional art.",
+      "notes": "Official blue-green logo direction; contains outdated grade claims. Do not embed as current promotional art.",
+      "legacy_status": "reference_only",
+      "contains_identifiable_students": true
+    },
+    {
+      "id": "IMG-02",
+      "type": "image",
+      "original_filename": "legacy-results-poster-img-02.jpeg",
+      "supplied_filename": "WhatsApp Image 2026-10-28 at 11.23.57 AM.jpeg",
+      "source_path": "media/vardhaman/brand/legacy-results-poster-img-02.jpeg",
+      "production_path": "media/brand/legacy-results-poster-img-02.jpeg",
+      "section": "archive",
+      "category": "brand-reference",
+      "approval_status": "rejected",
+      "required_verifications": [
+        "usage_rights",
+        "guardian_consent"
+      ],
+      "verified": {
+        "usage_rights": false,
+        "guardian_consent": false
+      },
+      "approval_record": null,
+      "title": "Legacy results flyer",
+      "alt": "Legacy results flyer",
+      "caption": "Legacy results flyer",
+      "review_caption": "Historical poster; old class ranges and old board-result claims not approved for reuse.",
+      "notes": "Historical poster; old class ranges and old board-result claims not approved for reuse.",
+      "legacy_status": "reference_only",
+      "contains_identifiable_students": true
+    },
+    {
+      "id": "HERO-A",
+      "type": "image",
+      "original_filename": "rushab-warm-hero-v1.png",
+      "supplied_filename": "AI-edited composite based on IMG-09",
+      "source_path": "media/vardhaman/hero/rushab-warm-hero-v1.png",
+      "production_path": "media/hero/rushab-warm-hero-v1.png",
+      "section": "hero",
+      "category": "hero",
+      "approval_status": "approved",
+      "required_verifications": [
+        "usage_rights",
+        "likeness"
+      ],
+      "verified": {
+        "usage_rights": true,
+        "likeness": true
+      },
+      "approval_record": {
+        "approved_by": "Academy owner via chat confirmation",
+        "approved_on": "2026-11-01",
+        "evidence": "Owner approved HERO-A and confirmed likeness/publication rights."
+      },
+      "title": "Rushab Sir — warm mentor portrait",
+      "alt": "Rushab Sir speaking into a microphone against a blue-green abstract backdrop",
+      "caption": "Rushab Sir — warm mentor portrait",
+      "review_caption": "Chosen Option A. Abstract marketing image, not a documentary record of seminar location.",
+      "notes": "Chosen Option A. Abstract marketing image, not a documentary record of seminar location.",
+      "legacy_status": "pending_likeness_approval",
+      "contains_identifiable_students": false
+    },
+    {
+      "id": "IMG-09",
+      "type": "image",
+      "original_filename": "rushab-seminar-img-09.jpeg",
+      "supplied_filename": "WhatsApp Image 2026-10-31 at 12.44.58 PM (1).jpeg",
+      "source_path": "media/vardhaman/mentor/rushab-seminar-img-09.jpeg",
+      "production_path": "media/mentor/rushab-seminar-img-09.jpeg",
+      "section": "archive",
+      "category": "mentor",
+      "approval_status": "pending",
+      "required_verifications": [
+        "usage_rights",
+        "guardian_consent"
+      ],
+      "verified": {
+        "usage_rights": false,
+        "guardian_consent": false
+      },
+      "approval_record": null,
+      "title": "Rushab speaking at an external educational seminar",
+      "alt": "Rushab Sir addressing an educational seminar with a microphone",
+      "caption": "Rushab speaking at an external educational seminar",
+      "review_caption": "Original unedited photograph; projected screen is Aurangabad Public School, not Vardhaman.",
+      "notes": "Original unedited photograph; projected screen is Aurangabad Public School, not Vardhaman.",
+      "legacy_status": "caption_and_rights_review",
+      "contains_identifiable_students": true
+    },
+    {
+      "id": "IMG-12",
+      "type": "image",
+      "original_filename": "rushab-seminar-img-12.jpeg",
+      "supplied_filename": "WhatsApp Image 2026-10-31 at 12.44.58 PM.jpeg",
+      "source_path": "media/vardhaman/mentor/rushab-seminar-img-12.jpeg",
+      "production_path": "media/mentor/rushab-seminar-img-12.jpeg",
+      "section": "mentor",
+      "category": "mentor",
+      "approval_status": "approved",
+      "required_verifications": [
+        "usage_rights",
+        "guardian_consent"
+      ],
+      "verified": {
+        "usage_rights": true,
+        "guardian_consent": true
+      },
+      "approval_record": {
+        "approved_by": "Academy owner via chat confirmation",
+        "approved_on": "2026-11-01",
+        "evidence": "Owner approved IMG-12 and publication rights, then explicitly confirmed guardian consent covers every embedded student on the projected display."
+      },
+      "title": "Rushab speaking at a lectern",
+      "alt": "Rushab Sir speaking during an educational seminar",
+      "caption": "A real educational seminar appearance · External event, not hosted by Vardhaman Academy",
+      "review_caption": "Original unedited photo. Event was external; make no affiliation claim.",
+      "notes": "Original unedited photo. Event was external; make no affiliation claim.",
+      "legacy_status": "caption_and_rights_review",
+      "contains_identifiable_students": true
+    },
+    {
+      "id": "IMG-14",
+      "type": "image",
+      "original_filename": "cricket-img-14.jpeg",
+      "supplied_filename": "WhatsApp Image 2026-10-31 at 12.47.31 PM.jpeg",
+      "source_path": "media/vardhaman/gallery/cricket-img-14.jpeg",
+      "production_path": "media/gallery/cricket-img-14.jpeg",
+      "section": "gallery",
+      "category": "activities",
+      "approval_status": "pending",
+      "required_verifications": [
+        "usage_rights",
+        "guardian_consent"
+      ],
+      "verified": {
+        "usage_rights": false,
+        "guardian_consent": false
+      },
+      "approval_record": null,
+      "title": "A game of cricket",
+      "alt": "Students playing cricket together on a turf ground",
+      "caption": "Friends, teamwork and time outside the classroom.",
+      "review_caption": "Friends, teamwork and time outside the classroom.",
+      "notes": "Good sports gallery candidate; minor identities visible.",
+      "legacy_status": "guardian_consent_required",
+      "gallery_order": 0,
+      "contains_identifiable_students": true
+    },
+    {
+      "id": "IMG-16",
+      "type": "image",
+      "original_filename": "cricket-img-16.jpeg",
+      "supplied_filename": "WhatsApp Image 2026-10-31 at 12.47.32 PM.jpeg",
+      "source_path": "media/vardhaman/gallery/cricket-img-16.jpeg",
+      "production_path": "media/gallery/cricket-img-16.jpeg",
+      "section": "gallery",
+      "category": "activities",
+      "approval_status": "pending",
+      "required_verifications": [
+        "usage_rights",
+        "guardian_consent"
+      ],
+      "verified": {
+        "usage_rights": false,
+        "guardian_consent": false
+      },
+      "approval_record": null,
+      "title": "Ready for the next ball",
+      "alt": "Students gathered on a cricket field",
+      "caption": "Learning sportsmanship one playful moment at a time.",
+      "review_caption": "Learning sportsmanship one playful moment at a time.",
+      "notes": "Alternate sports image.",
+      "legacy_status": "guardian_consent_required",
+      "gallery_order": 6,
+      "contains_identifiable_students": true
+    },
+    {
+      "id": "IMG-17",
+      "type": "image",
+      "original_filename": "academy-event-img-17.jpeg",
+      "supplied_filename": "WhatsApp Image 2026-10-31 at 12.47.53 PM.jpeg",
+      "source_path": "media/vardhaman/gallery/academy-event-img-17.jpeg",
+      "production_path": "media/gallery/academy-event-img-17.jpeg",
+      "section": "gallery",
+      "category": "community",
+      "approval_status": "rejected",
+      "required_verifications": [
+        "usage_rights",
+        "guardian_consent",
+        "historical_context"
+      ],
+      "verified": {
+        "usage_rights": false,
+        "guardian_consent": false,
+        "historical_context": false
+      },
+      "approval_record": null,
+      "title": "A community moment",
+      "alt": "A small group at a Vardhaman Academy community event",
+      "caption": "An academy gathering; the legacy printed banner is not a current course list.",
+      "review_caption": "An academy gathering; the legacy printed banner is not a current course list.",
+      "notes": "Printed banner includes outdated classes 1–12 and XI–XII. Avoid publication as-is.",
+      "legacy_status": "reference_only",
+      "gallery_order": 9,
+      "contains_identifiable_students": true
+    },
+    {
+      "id": "IMG-18",
+      "type": "image",
+      "original_filename": "olympiad-medal-img-18.jpeg",
+      "supplied_filename": "WhatsApp Image 2026-10-31 at 12.56.44 PM.jpeg",
+      "source_path": "media/vardhaman/review/olympiad-medal-img-18.jpeg",
+      "production_path": "media/review/olympiad-medal-img-18.jpeg",
+      "section": "gallery",
+      "category": "achievements",
+      "approval_status": "pending",
+      "required_verifications": [
+        "usage_rights",
+        "guardian_consent",
+        "achievement_verification"
+      ],
+      "verified": {
+        "usage_rights": false,
+        "guardian_consent": false,
+        "achievement_verification": false
+      },
+      "approval_record": null,
+      "title": "A moment of recognition",
+      "alt": "Student holding a medal and certificate",
+      "caption": "A student recognition photograph shared with permission.",
+      "review_caption": "An award photograph awaiting the student’s approved story.",
+      "notes": "Do not invent student name, placement, subject, year, award affiliation or academy attribution.",
+      "legacy_status": "guardian_consent_and_achievement_verification_required",
+      "gallery_order": 3,
+      "contains_identifiable_students": true
+    },
+    {
+      "id": "IMG-19",
+      "type": "image",
+      "original_filename": "certificate-img-19.jpeg",
+      "supplied_filename": "WhatsApp Image 2026-10-31 at 12.57.48 PM.jpeg",
+      "source_path": "media/vardhaman/review/certificate-img-19.jpeg",
+      "production_path": "media/review/certificate-img-19.jpeg",
+      "section": "gallery",
+      "category": "achievements",
+      "approval_status": "pending",
+      "required_verifications": [
+        "usage_rights",
+        "guardian_consent",
+        "achievement_verification"
+      ],
+      "verified": {
+        "usage_rights": false,
+        "guardian_consent": false,
+        "achievement_verification": false
+      },
+      "approval_record": null,
+      "title": "A proud milestone",
+      "alt": "Student holding a framed award certificate",
+      "caption": "A student recognition photograph shared with permission.",
+      "review_caption": "An authentic certificate photograph; details pending verification.",
+      "notes": "Certificate contains details. Verify story and obtain permission before web publication.",
+      "legacy_status": "guardian_consent_and_achievement_verification_required",
+      "gallery_order": 4,
+      "contains_identifiable_students": true
+    },
+    {
+      "id": "VID-02",
+      "type": "video",
+      "original_filename": "tug-of-war-vid-02.mp4",
+      "supplied_filename": "WhatsApp Video 2026-10-31 at 12.22.31 PM.mp4",
+      "source_path": "media/vardhaman/video/tug-of-war-vid-02.mp4",
+      "production_path": "media/video/tug-of-war-vid-02.mp4",
+      "section": "gallery",
+      "category": "activities",
+      "approval_status": "pending",
+      "required_verifications": [
+        "usage_rights",
+        "guardian_consent"
+      ],
+      "verified": {
+        "usage_rights": false,
+        "guardian_consent": false
+      },
+      "approval_record": null,
+      "title": "Tug-of-war, from another angle",
+      "alt": "Outdoor tug-of-war — extended scene",
+      "caption": "Extended footage from the outdoor group activity.",
+      "review_caption": "Extended footage from the outdoor group activity.",
+      "notes": "",
+      "legacy_status": "guardian_consent_required",
+      "gallery_order": 7,
+      "duration_seconds": 57.4,
+      "poster_id": "VID-02-POSTER",
+      "contains_identifiable_students": true,
+      "contains_student_voices": true
+    },
+    {
+      "id": "VID-02-POSTER",
+      "type": "image",
+      "original_filename": "vid-02.jpg",
+      "supplied_filename": "Video poster supplied in V2 handoff",
+      "source_path": "media/vardhaman/video-posters/vid-02.jpg",
+      "production_path": "media/video-posters/vid-02.jpg",
+      "section": "poster",
+      "parent_id": "VID-02",
+      "category": "activities",
+      "approval_status": "pending",
+      "required_verifications": [
+        "usage_rights",
+        "guardian_consent"
+      ],
+      "verified": {
+        "usage_rights": false,
+        "guardian_consent": false
+      },
+      "approval_record": null,
+      "title": "Tug-of-war, from another angle - video poster",
+      "alt": "Tug-of-war, from another angle - video thumbnail",
+      "caption": "Poster for Tug-of-war, from another angle.",
+      "contains_identifiable_students": true
+    },
+    {
+      "id": "VID-03",
+      "type": "video",
+      "original_filename": "tug-of-war-vid-03.mp4",
+      "supplied_filename": "WhatsApp Video 2026-10-31 at 12.22.31 PM (1).mp4",
+      "source_path": "media/vardhaman/video/tug-of-war-vid-03.mp4",
+      "production_path": "media/video/tug-of-war-vid-03.mp4",
+      "section": "gallery",
+      "category": "activities",
+      "approval_status": "pending",
+      "required_verifications": [
+        "usage_rights",
+        "guardian_consent"
+      ],
+      "verified": {
+        "usage_rights": false,
+        "guardian_consent": false
+      },
+      "approval_record": null,
+      "title": "A little teamwork goes a long way",
+      "alt": "Students playing tug-of-war",
+      "caption": "A lively tug-of-war moment during a group activity.",
+      "review_caption": "A lively tug-of-war moment during a group activity.",
+      "notes": "",
+      "legacy_status": "guardian_consent_required",
+      "gallery_order": 1,
+      "duration_seconds": 25.9,
+      "poster_id": "VID-03-POSTER",
+      "contains_identifiable_students": true,
+      "contains_student_voices": true
+    },
+    {
+      "id": "VID-03-POSTER",
+      "type": "image",
+      "original_filename": "vid-03.jpg",
+      "supplied_filename": "Video poster supplied in V2 handoff",
+      "source_path": "media/vardhaman/video-posters/vid-03.jpg",
+      "production_path": "media/video-posters/vid-03.jpg",
+      "section": "poster",
+      "parent_id": "VID-03",
+      "category": "activities",
+      "approval_status": "pending",
+      "required_verifications": [
+        "usage_rights",
+        "guardian_consent"
+      ],
+      "verified": {
+        "usage_rights": false,
+        "guardian_consent": false
+      },
+      "approval_record": null,
+      "title": "A little teamwork goes a long way - video poster",
+      "alt": "A little teamwork goes a long way - video thumbnail",
+      "caption": "Poster for A little teamwork goes a long way.",
+      "contains_identifiable_students": true
+    },
+    {
+      "id": "VID-04",
+      "type": "video",
+      "original_filename": "outdoor-event-vid-04.mp4",
+      "supplied_filename": "WhatsApp Video 2026-10-31 at 12.23.31 PM (2).mp4",
+      "source_path": "media/vardhaman/video/outdoor-event-vid-04.mp4",
+      "production_path": "media/video/outdoor-event-vid-04.mp4",
+      "section": "gallery",
+      "category": "activities",
+      "approval_status": "pending",
+      "required_verifications": [
+        "usage_rights",
+        "guardian_consent",
+        "orientation_review"
+      ],
+      "verified": {
+        "usage_rights": false,
+        "guardian_consent": false,
+        "orientation_review": false
+      },
+      "approval_record": null,
+      "title": "A day together",
+      "alt": "Group event at academy setting",
+      "caption": "A wider view of the group event outside the academy.",
+      "review_caption": "A wider view of the group event outside the academy.",
+      "notes": "Check device rotation/orientation during full playback.",
+      "legacy_status": "guardian_consent_required",
+      "gallery_order": 5,
+      "duration_seconds": 53.7,
+      "poster_id": "VID-04-POSTER",
+      "contains_identifiable_students": true,
+      "contains_student_voices": true
+    },
+    {
+      "id": "VID-04-POSTER",
+      "type": "image",
+      "original_filename": "vid-04.jpg",
+      "supplied_filename": "Video poster supplied in V2 handoff",
+      "source_path": "media/vardhaman/video-posters/vid-04.jpg",
+      "production_path": "media/video-posters/vid-04.jpg",
+      "section": "poster",
+      "parent_id": "VID-04",
+      "category": "activities",
+      "approval_status": "pending",
+      "required_verifications": [
+        "usage_rights",
+        "guardian_consent"
+      ],
+      "verified": {
+        "usage_rights": false,
+        "guardian_consent": false
+      },
+      "approval_record": null,
+      "title": "A day together - video poster",
+      "alt": "A day together - video thumbnail",
+      "caption": "Poster for A day together.",
+      "contains_identifiable_students": true
+    },
+    {
+      "id": "VID-05",
+      "type": "video",
+      "original_filename": "football-vid-05.mp4",
+      "supplied_filename": "WhatsApp Video 2026-10-31 at 12.47.32 PM (3).mp4",
+      "source_path": "media/vardhaman/video/football-vid-05.mp4",
+      "production_path": "media/video/football-vid-05.mp4",
+      "section": "gallery",
+      "category": "activities",
+      "approval_status": "pending",
+      "required_verifications": [
+        "usage_rights",
+        "guardian_consent"
+      ],
+      "verified": {
+        "usage_rights": false,
+        "guardian_consent": false
+      },
+      "approval_record": null,
+      "title": "Football and friendship",
+      "alt": "Football play",
+      "caption": "A short, joyful glimpse of students at play.",
+      "review_caption": "A short, joyful glimpse of students at play.",
+      "notes": "",
+      "legacy_status": "guardian_consent_required",
+      "gallery_order": 2,
+      "duration_seconds": 8.1,
+      "poster_id": "VID-05-POSTER",
+      "contains_identifiable_students": true,
+      "contains_student_voices": true
+    },
+    {
+      "id": "VID-05-POSTER",
+      "type": "image",
+      "original_filename": "vid-05.jpg",
+      "supplied_filename": "Video poster supplied in V2 handoff",
+      "source_path": "media/vardhaman/video-posters/vid-05.jpg",
+      "production_path": "media/video-posters/vid-05.jpg",
+      "section": "poster",
+      "parent_id": "VID-05",
+      "category": "activities",
+      "approval_status": "pending",
+      "required_verifications": [
+        "usage_rights",
+        "guardian_consent"
+      ],
+      "verified": {
+        "usage_rights": false,
+        "guardian_consent": false
+      },
+      "approval_record": null,
+      "title": "Football and friendship - video poster",
+      "alt": "Football and friendship - video thumbnail",
+      "caption": "Poster for Football and friendship.",
+      "contains_identifiable_students": true
+    },
+    {
+      "id": "VID-06",
+      "type": "video",
+      "original_filename": "cricket-vid-06.mp4",
+      "supplied_filename": "WhatsApp Video 2026-10-31 at 12.47.32 PM (1).mp4",
+      "source_path": "media/vardhaman/video/cricket-vid-06.mp4",
+      "production_path": "media/video/cricket-vid-06.mp4",
+      "section": "gallery",
+      "category": "activities",
+      "approval_status": "pending",
+      "required_verifications": [
+        "usage_rights",
+        "guardian_consent"
+      ],
+      "verified": {
+        "usage_rights": false,
+        "guardian_consent": false
+      },
+      "approval_record": null,
+      "title": "Cricket in motion",
+      "alt": "Cricket moment",
+      "caption": "A quick glimpse of a cricket game.",
+      "review_caption": "A quick glimpse of a cricket game.",
+      "notes": "",
+      "legacy_status": "guardian_consent_required",
+      "gallery_order": 8,
+      "duration_seconds": 3.6,
+      "poster_id": "VID-06-POSTER",
+      "contains_identifiable_students": true,
+      "contains_student_voices": true
+    },
+    {
+      "id": "VID-06-POSTER",
+      "type": "image",
+      "original_filename": "vid-06.jpg",
+      "supplied_filename": "Video poster supplied in V2 handoff",
+      "source_path": "media/vardhaman/video-posters/vid-06.jpg",
+      "production_path": "media/video-posters/vid-06.jpg",
+      "section": "poster",
+      "parent_id": "VID-06",
+      "category": "activities",
+      "approval_status": "pending",
+      "required_verifications": [
+        "usage_rights",
+        "guardian_consent"
+      ],
+      "verified": {
+        "usage_rights": false,
+        "guardian_consent": false
+      },
+      "approval_record": null,
+      "title": "Cricket in motion - video poster",
+      "alt": "Cricket in motion - video thumbnail",
+      "caption": "Poster for Cricket in motion.",
+      "contains_identifiable_students": true
+    },
+    {
+      "id": "LOGO-V2",
+      "type": "image",
+      "original_filename": "vardhaman-logo.png",
+      "supplied_filename": "Logo-only crop of supplied IMG-01",
+      "source_path": "media/vardhaman/brand/vardhaman-logo.png",
+      "production_path": "media/brand/vardhaman-logo.png",
+      "section": "logo",
+      "category": "branding",
+      "approval_status": "approved",
+      "required_verifications": [
+        "usage_rights",
+        "logo_crop"
+      ],
+      "verified": {
+        "usage_rights": true,
+        "logo_crop": true
+      },
+      "approval_record": {
+        "approved_by": "Academy owner via chat confirmation",
+        "approved_on": "2026-11-01",
+        "evidence": "Owner approved a pixel-preserving logo-only crop using Sharp for production; full historical flyer remains excluded."
+      },
+      "title": "Vardhaman Academy authentic logo",
+      "alt": "Vardhaman Academy blue-green book and learner symbol with original wordmark",
+      "caption": "Authentic supplied Vardhaman Academy symbol and wordmark.",
+      "derivation": {
+        "parent_id": "IMG-01",
+        "method": "lossless pixel crop",
+        "rectangle": {
+          "left": 335,
+          "top": 44,
+          "width": 615,
+          "height": 165
+        },
+        "display_background_size": "278.671875px 74.765625px",
+        "display_background_position": "-0.203125px -0.0625px"
+      },
+      "contains_identifiable_students": false
+    }
+  ]
+}

@@ -2,6 +2,8 @@
 
 Date: 2026-11-01 (Asia/Calcutta).
 
+Historical pipeline verification. Media approvals and the current output are now documented in [V2_MEDIA_RESTORATION_REPORT.md](V2_MEDIA_RESTORATION_REPORT.md); the zero-media counts below describe the previous build.
+
 ## Decision
 
 **The V2 production pipeline is verified locally and configured for Netlify. No deployment was performed.** The output can be hosted as a static site, but the remaining accessibility, content and enquiry limitations below prevent an unconditional claim of public launch readiness.

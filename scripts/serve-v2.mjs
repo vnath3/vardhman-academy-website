@@ -1,14 +1,17 @@
 import http from 'node:http';
 import { createReadStream } from 'node:fs';
-import { stat } from 'node:fs/promises';
+import { stat, realpath } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { buildV2, v2MediaPaths } from './build-v2.mjs';
-import { root } from './build.mjs';
+import { buildV2 } from './build-v2.mjs';
+import { root, readV2Manifest } from './contracts.mjs';
 
 const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.txt': 'text/plain', '.png': 'image/png', '.jpeg': 'image/jpeg', '.jpg': 'image/jpeg', '.woff2': 'font/woff2', '.mp4': 'video/mp4' };
 export async function createV2Server({ port = 5173 } = {}) {
   const { output } = await buildV2({ privateReview: true });
+  const manifest = await readV2Manifest();
+  const archive = await realpath(path.join(root, 'media', 'vardhaman'));
+  const sources = new Map(manifest.assets.map(asset => [asset.production_path, asset.source_path]));
   const server = http.createServer(async (req, res) => {
     res.setHeader('Cache-Control', 'no-store');
     res.setHeader('X-Robots-Tag', 'noindex, nofollow');
@@ -25,9 +28,9 @@ export async function createV2Server({ port = 5173 } = {}) {
       const relative = decodeURIComponent(url.pathname === '/' ? 'index.html' : url.pathname.slice(1));
       let target;
       if (relative.startsWith('media/')) {
-        const mediaPath = relative.slice('media/'.length);
-        if (!v2MediaPaths.includes(mediaPath)) { res.writeHead(404).end(); return; }
-        target = path.join(root, 'media', 'vardhaman', mediaPath);
+        if (!sources.has(relative)) { res.writeHead(404).end(); return; }
+        target = await realpath(path.join(root, sources.get(relative)));
+        if (!target.startsWith(archive + path.sep)) { res.writeHead(404).end(); return; }
       } else {
         target = path.resolve(output, relative);
         if (!target.startsWith(output + path.sep)) { res.writeHead(404).end(); return; }

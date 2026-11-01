@@ -60,6 +60,12 @@ test('V2 serves selected originals on loopback, supports video ranges and reject
   assert.equal(page.status, 200);
   await page.text();
   assert.ok(page.headers.get('content-security-policy').includes("form-action 'none'"));
+  const index = await fetch(`${base}/media-review.html`);
+  assert.equal(index.status, 200);
+  const reviewHtml = await index.text();
+  assert.match(reviewHtml, /IMG-02/);
+  assert.match(reviewHtml, /IMG-09/);
+  assert.match(reviewHtml, /rejected/);
   for (const file of v2MediaPaths) {
     const response = await fetch(`${base}/media/${file}`, { method: 'HEAD' });
     assert.equal(response.status, 200, file);

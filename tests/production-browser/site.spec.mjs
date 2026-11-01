@@ -1,6 +1,10 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { mkdir, writeFile } from 'node:fs/promises';
+import { readV2Manifest } from '../../scripts/contracts.mjs';
+import { planMedia } from '../../src/v2-media.mjs';
+
+const publicPlan = planMedia(await readV2Manifest());
 
 for (const width of [1440, 768, 390, 320]) {
   test(`production V2 loads all assets and retains its interactions at ${width}px`, async ({ page, context }) => {
@@ -16,16 +20,26 @@ for (const width of [1440, 768, 390, 320]) {
     await page.goto('/');
     await expect(page).toHaveTitle(/Vardhaman Academy/);
     await expect(page.locator('html')).toHaveAttribute('data-media-review', 'approved-only');
-    await expect(page.locator('.logo .brand').first()).toBeVisible();
+    await expect(page.locator('.official-logo-crop').first()).toBeVisible();
+    await expect(page.locator('.mentor-portrait')).toBeVisible();
+    await expect(page.locator('.mentor-event-photo')).toBeVisible();
+    await expect(page.locator('.teacher-photo-note')).toContainText('External event, not hosted by Vardhaman Academy');
+    await expect(page.locator('.portrait-monogram')).toHaveCount(0);
     await expect(page.locator('.v2-review-flag')).toHaveCount(0);
     await expect(page.locator('.gallery-footnote')).toHaveCount(0);
-    await expect(page.locator('.gallery-card')).toHaveCount(0);
-    await expect(page.locator('.gallery-empty')).toContainText('shared here with permission');
+    await expect(page.locator('.gallery-card')).toHaveCount(publicPlan.runtime.gallery.length);
+    if (!publicPlan.runtime.gallery.length) await expect(page.locator('.gallery-empty')).toContainText('shared here with permission');
     for (const selector of ['#home', '#parents', '#about', '#life-at-vardhaman', '#stories', '#approach', '#journey', '#brainlab', '#enquiry', '.faq', '.footer']) {
       await page.locator(selector).scrollIntoViewIfNeeded();
       await expect(page.locator(selector)).toBeVisible();
     }
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(width);
+    for (const img of await page.locator('img').all()) {
+      await img.scrollIntoViewIfNeeded();
+      await expect.poll(() => img.evaluate(item => item.complete && item.naturalWidth > 0)).toBeTruthy();
+    }
+    expect(await page.locator('.mentor-portrait').evaluate(item => getComputedStyle(item).objectPosition)).toBe('9% 50%');
+    expect(await page.locator('.mentor-event-photo').evaluate(item => getComputedStyle(item).objectPosition)).toBe('30% 50%');
     const loadedFonts = await page.evaluate(async () => {
       // Explicitly load the checked weights: unused faces remain unloaded even
       // after fonts.ready, while the page legitimately uses Outfit 800/900.
@@ -37,7 +51,9 @@ for (const width of [1440, 768, 390, 320]) {
       const tab = page.locator(`.gallery-tab[data-category="${category}"]`);
       await tab.click();
       await expect(tab).toHaveAttribute('aria-pressed', 'true');
-      await expect(page.locator('.gallery-empty')).toBeVisible();
+      const count = publicPlan.runtime.gallery.filter(item => category === 'all' || item.category === category).length;
+      await expect(page.locator('.gallery-card:visible')).toHaveCount(count);
+      if (!count) await expect(page.locator('.gallery-empty')).toBeVisible();
     }
     await page.evaluate(() => scrollTo(0, 0));
     if (width <= 780) {
@@ -85,7 +101,8 @@ for (const width of [1440, 768, 390, 320]) {
     await expect(page.locator('.faq-item button').nth(2)).toHaveAttribute('aria-expanded', 'true');
     expect(await page.evaluate(() => ({ local: localStorage.length, session: sessionStorage.length, cookies: document.cookie }))).toEqual({ local: 0, session: 0, cookies: '' });
     expect(requests.every(request => request.method === 'GET' && request.url.startsWith('http://127.0.0.1:5178/'))).toBeTruthy();
-    expect(requests.filter(request => request.url.includes('/media/'))).toEqual([]);
+    const approvedUrls = publicPlan.copies.map(asset => `http://127.0.0.1:5178/${asset.production_path}`);
+    expect(requests.filter(request => request.url.includes('/media/')).every(request => approvedUrls.includes(request.url))).toBeTruthy();
     expect(errors).toEqual([]); expect(failures).toEqual([]); expect(csp).toEqual([]);
     await page.reload();
     await expect(page.locator('#childNote')).toHaveValue('');
