@@ -67,7 +67,7 @@
       {type:'Confidence journey',title:'From hesitant to fearless',subtitle:'Not every victory needs a trophy.',symbol:'🌟',theme:'#ffdf88',start:'A child hesitant to answer in class.',now:'More willing to ask, try and participate.',desc:'A growth story does not have to end with a prestigious job. A parent may recognise their own child in this example of growing confidence and willingness to learn.'},
       {type:'Creative journey',title:'Ideas become possibilities',subtitle:'The confidence to think differently.',symbol:'🎨',theme:'#b6eed6',start:'A curious child who liked creating things.',now:'Exploring a design-focused direction.',desc:'This placeholder demonstrates that successful students can choose creative fields, too. The real version should use authentic student achievements and permissioned materials.'}
     ];
-    const track=$('#storyTrack'),storyGroups={all:[0,1,2,3,4],stem:[0,1,2],personal:[3,4]};
+    const track=$('#storyTrack'),storyViewport=track.closest('.story-viewport'),storyGroups={all:[0,1,2,3,4],stem:[0,1,2],personal:[3,4]};
     let visibleStoryIds=storyGroups.all,storyIndex=0;
     function slidesPerView(){return window.innerWidth<=520?1:window.innerWidth<=1050?2:3;}
     function maxStoryIndex(){return Math.max(0,visibleStoryIds.length-slidesPerView());}
@@ -75,6 +75,9 @@
       storyIndex=Math.max(0,Math.min(maxStoryIndex(),n));
       const first=track.querySelector('.story-card');if(!first)return;
       const shift=first.getBoundingClientRect().width+19;track.style.transform=`translateX(${-storyIndex*shift}px)`;
+      // The transform owns horizontal position. Native focus scrolling must
+      // not add a second offset that can leave the viewport blank.
+      storyViewport.scrollLeft=0;
       $('#storyDots').innerHTML='';
       for(let i=0;i<=maxStoryIndex();i++){const b=document.createElement('button');b.setAttribute('aria-label',`View story group ${i+1}`);b.className=i===storyIndex?'active':'';b.addEventListener('click',()=>showStory(i));$('#storyDots').append(b);}
       $('#storyPrev').disabled=storyIndex===0;$('#storyNext').disabled=storyIndex===maxStoryIndex();
@@ -90,8 +93,19 @@
     $$('#storyFilters button').forEach(b=>b.addEventListener('click',()=>renderStories(b.dataset.filter)));
     $('#storyPrev').addEventListener('click',()=>showStory(storyIndex-1));
     $('#storyNext').addEventListener('click',()=>showStory(storyIndex+1));
-    window.addEventListener('resize',()=>showStory(storyIndex));
+    function syncStoryFocus(target){
+      const card=target.closest?.('.story-card');
+      const index=Array.from(track.children).indexOf(card);
+      let nextIndex=Math.min(storyIndex,maxStoryIndex());
+      if(index>=0){
+        if(index<nextIndex)nextIndex=index;
+        else if(index>=nextIndex+slidesPerView())nextIndex=index-slidesPerView()+1;
+      }
+      showStory(nextIndex);
+    }
+    track.addEventListener('focusin',event=>syncStoryFocus(event.target));
+    storyViewport.addEventListener('scroll',()=>{if(storyViewport.scrollLeft)storyViewport.scrollLeft=0;});
+    window.addEventListener('resize',()=>syncStoryFocus(document.activeElement));
     renderStories('all');
     let lastFocus=null;function openStory(i){const s=stories[i];lastFocus=document.activeElement;$('#modalSymbol').textContent=s.symbol;$('#modalTitle').textContent=s.title;$('#modalDesc').textContent=s.desc;$('#modalStart').textContent=s.start;$('#modalNow').textContent=s.now;$('#storyModal').classList.add('open');document.body.style.overflow='hidden';$('#modalClose').focus();window.VardhamanDialogs.open($('#storyModal'),lastFocus);}function closeStory(){$('#storyModal').classList.remove('open');document.body.style.overflow='';window.VardhamanDialogs.close($('#storyModal'));}track.addEventListener('click',e=>{const card=e.target.closest('[data-story]');if(card)openStory(Number(card.dataset.story));});$('#modalClose').addEventListener('click',closeStory);$('#modalEnd').addEventListener('click',closeStory);$('#storyModal').addEventListener('click',e=>{if(e.target===$('#storyModal'))closeStory();});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#storyModal').classList.contains('open'))closeStory();});
     $$('.faq-item button').forEach(b=>b.addEventListener('click',()=>{const p=b.closest('.faq-item');const next=!p.classList.contains('open');p.classList.toggle('open',next);b.setAttribute('aria-expanded',String(next));}));
-  

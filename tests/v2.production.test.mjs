@@ -48,6 +48,7 @@ test('invalid states, missing rights/guardian evidence, duplicate paths and trav
   const changed = clone();
   const student = changed.assets.find(asset => asset.id === 'IMG-14');
   student.approval_status = 'approved';
+  student.verified.usage_rights = false;
   assert.throws(() => planMedia(changed), /Unverified/);
   approve(student); student.verified.guardian_consent = false;
   assert.throws(() => planMedia(changed), /Unverified guardian_consent/);
@@ -119,6 +120,7 @@ test('isolated production CLI copies approvals, removes revoked files, verifies 
   await save(); await build(); await verify();
   await assert.rejects(access(approved), { code: 'ENOENT' });
   approve(changed.assets.find(asset => asset.id === 'IMG-19'));
+  changed.assets.find(asset => asset.id === 'IMG-19').source_path = 'media/vardhaman/review/missing-approved-source.jpeg';
   await save();
   await assert.rejects(build(), /ENOENT/);
 });
@@ -143,7 +145,13 @@ test('production artifact includes all approved bytes, excludes all other files 
     assert.equal(response.status, expected.copies.some(copy => copy.id === asset.id) ? 200 : 404, asset.id);
     if (response.ok) {
       assert.deepEqual(Buffer.from(await response.arrayBuffer()), await readFile(path.join(root, asset.source_path)));
-      assert.equal(response.headers.get('content-type'), asset.production_path.endsWith('.png') ? 'image/png' : 'image/jpeg');
+      assert.equal(response.headers.get('content-type'), { '.png': 'image/png', '.jpeg': 'image/jpeg', '.jpg': 'image/jpeg', '.mp4': 'video/mp4' }[path.extname(asset.production_path)]);
+      if (asset.type === 'video') {
+        const partial = await fetch(base + '/' + asset.production_path, { headers: { Range: 'bytes=0-63' } });
+        assert.equal(partial.status, 206, asset.id);
+        assert.equal(partial.headers.get('content-type'), 'video/mp4');
+        assert.equal((await partial.arrayBuffer()).byteLength, 64);
+      }
     }
   }
   for (const route of ['/media-review.html', '/content/v2-media-manifest.json', '/content/media-manifest.json', '/.git/config', '/media/vardhaman/gallery/cricket-img-14.jpeg', '/docs/handoff-v2/README.md', '/__review', '/v2', '/missing.js']) assert.equal((await fetch(base + route)).status, 404, route);

@@ -3,7 +3,7 @@
   const q = selector => document.querySelector(selector);
   const qa = selector => [...document.querySelectorAll(selector)];
   const settings = window.VARDHAMAN_SITE || {};
-  const number = typeof settings.whatsappNumber === 'string' && /^[1-9]\d{7,14}$/.test(settings.whatsappNumber) ? settings.whatsappNumber : null;
+  const number = settings.privateReview !== true && typeof settings.whatsappNumber === 'string' && /^[1-9]\d{7,14}$/.test(settings.whatsappNumber) ? settings.whatsappNumber : null;
   const concerns = [
     ['concepts', '🧩', 'Understanding concepts is difficult'],
     ['marks', '📈', 'Better marks and exam preparation'],
@@ -32,7 +32,8 @@
     });
     // Keep the draft out of link attributes: outbound-link analytics must not
     // receive an enquiry as a link_url parameter.
-    whatsapp.hidden = index !== 3 || !number;
+    whatsapp.hidden = index !== 3;
+    whatsapp.disabled = index !== 3 || !number;
     const heading = steps[index].querySelector('h3');
     heading.tabIndex = -1;
     heading.focus({ preventScroll: true });
@@ -89,7 +90,7 @@
     }
   });
   whatsapp.addEventListener('click', event => {
-    if (!number || !message) { event.preventDefault(); return; }
+    if (!number || !message || whatsapp.disabled || !steps[3].classList.contains('active')) { event.preventDefault(); return; }
     window.open(`https://wa.me/${number}?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
     q('#whatsappStatus').textContent = 'Review and send your draft in WhatsApp. This page cannot confirm delivery.';
   });

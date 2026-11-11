@@ -146,7 +146,7 @@
     <article class="gallery-card" data-category="${item.category}" data-type="${item.category==='achievements'?'achievement':item.type}">
       <button type="button" class="gallery-action" data-media="${item.id}" aria-label="${item.type==='video'?'Play video':'View photo'}: ${escapeText(item.title)}">
         <div class="gallery-media-wrap"><img class="gallery-media" src="${item.poster||item.src}" alt="${escapeText(item.alt||item.title)}" loading="lazy">${item.type==='video'?'<span class="gallery-play" aria-hidden="true">▶</span>':''}</div>
-        <div class="gallery-body"><span class="gallery-category">${item.category}${item.duration?' · '+item.duration:''}</span><strong>${escapeText(item.title)}</strong><p>${escapeText(item.desc)}</p><div class="gallery-card-bottom"><span class="gallery-consent">${privateReview?'Owner review · Consent pending':'Shared with permission'}</span><span class="gallery-arrow" aria-hidden="true">↗</span></div></div>
+        <div class="gallery-body"><span class="gallery-category">${item.category}${item.duration?' · '+item.duration:''}</span><strong>${escapeText(item.title)}</strong><p>${escapeText(item.desc)}</p><div class="gallery-card-bottom"><span class="gallery-consent">${privateReview?'Owner review · Not published':'Shared with permission'}</span><span class="gallery-arrow" aria-hidden="true">↗</span></div></div>
       </button>
     </article>`).join('');
 

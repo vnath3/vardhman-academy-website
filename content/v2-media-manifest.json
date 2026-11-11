@@ -26,21 +26,25 @@
       "production_path": "media/brand/legacy-brand-poster-img-01.jpeg",
       "section": "archive",
       "category": "brand-reference",
-      "approval_status": "rejected",
+      "approval_status": "approved",
       "required_verifications": [
         "usage_rights",
         "guardian_consent"
       ],
       "verified": {
-        "usage_rights": false,
-        "guardian_consent": false
+        "usage_rights": true,
+        "guardian_consent": true
       },
-      "approval_record": null,
+      "approval_record": {
+        "approved_by": "Academy owner via chat confirmation",
+        "approved_on": "2026-11-11",
+        "evidence": "Owner approved all supplied videos and images, then explicitly confirmed usage rights and guardian consent for every identifiable child image and voice, including posters and projected student results. Historical flyer remains an unused archive reference; approval does not verify its obsolete promotional claims."
+      },
       "title": "Legacy brand flyer",
       "alt": "Legacy brand flyer",
       "caption": "Legacy brand flyer",
       "review_caption": "Official blue-green logo direction; contains outdated grade claims. Do not embed as current promotional art.",
-      "notes": "Official blue-green logo direction; contains outdated grade claims. Do not embed as current promotional art.",
+      "notes": "Owner approved media rights/consent. Retained as an archive reference only: outdated course, scholarship and result claims are not current website offers. This archive record is not selected for the production artifact.",
       "legacy_status": "reference_only",
       "contains_identifiable_students": true
     },
@@ -53,21 +57,25 @@
       "production_path": "media/brand/legacy-results-poster-img-02.jpeg",
       "section": "archive",
       "category": "brand-reference",
-      "approval_status": "rejected",
+      "approval_status": "approved",
       "required_verifications": [
         "usage_rights",
         "guardian_consent"
       ],
       "verified": {
-        "usage_rights": false,
-        "guardian_consent": false
+        "usage_rights": true,
+        "guardian_consent": true
       },
-      "approval_record": null,
+      "approval_record": {
+        "approved_by": "Academy owner via chat confirmation",
+        "approved_on": "2026-11-11",
+        "evidence": "Owner approved all supplied videos and images, then explicitly confirmed usage rights and guardian consent for every identifiable child image and voice, including posters and projected student results. Historical flyer remains an unused archive reference; approval does not verify its obsolete promotional claims."
+      },
       "title": "Legacy results flyer",
       "alt": "Legacy results flyer",
       "caption": "Legacy results flyer",
       "review_caption": "Historical poster; old class ranges and old board-result claims not approved for reuse.",
-      "notes": "Historical poster; old class ranges and old board-result claims not approved for reuse.",
+      "notes": "Owner approved media rights/consent. Retained as an archive reference only: outdated course, scholarship and result claims are not current website offers. This archive record is not selected for the production artifact.",
       "legacy_status": "reference_only",
       "contains_identifiable_students": true
     },
@@ -111,16 +119,20 @@
       "production_path": "media/mentor/rushab-seminar-img-09.jpeg",
       "section": "archive",
       "category": "mentor",
-      "approval_status": "pending",
+      "approval_status": "approved",
       "required_verifications": [
         "usage_rights",
         "guardian_consent"
       ],
       "verified": {
-        "usage_rights": false,
-        "guardian_consent": false
+        "usage_rights": true,
+        "guardian_consent": true
       },
-      "approval_record": null,
+      "approval_record": {
+        "approved_by": "Academy owner via chat confirmation",
+        "approved_on": "2026-11-11",
+        "evidence": "Owner approved all supplied videos and images, then explicitly confirmed usage rights and guardian consent for every identifiable child image and voice, including posters and projected student results."
+      },
       "title": "Rushab speaking at an external educational seminar",
       "alt": "Rushab Sir addressing an educational seminar with a microphone",
       "caption": "Rushab speaking at an external educational seminar",
@@ -169,16 +181,20 @@
       "production_path": "media/gallery/cricket-img-14.jpeg",
       "section": "gallery",
       "category": "activities",
-      "approval_status": "pending",
+      "approval_status": "approved",
       "required_verifications": [
         "usage_rights",
         "guardian_consent"
       ],
       "verified": {
-        "usage_rights": false,
-        "guardian_consent": false
+        "usage_rights": true,
+        "guardian_consent": true
       },
-      "approval_record": null,
+      "approval_record": {
+        "approved_by": "Academy owner via chat confirmation",
+        "approved_on": "2026-11-11",
+        "evidence": "Owner approved all supplied videos and images, then explicitly confirmed usage rights and guardian consent for every identifiable child image and voice, including posters and projected student results."
+      },
       "title": "A game of cricket",
       "alt": "Students playing cricket together on a turf ground",
       "caption": "Friends, teamwork and time outside the classroom.",
@@ -197,16 +213,20 @@
       "production_path": "media/gallery/cricket-img-16.jpeg",
       "section": "gallery",
       "category": "activities",
-      "approval_status": "pending",
+      "approval_status": "approved",
       "required_verifications": [
         "usage_rights",
         "guardian_consent"
       ],
       "verified": {
-        "usage_rights": false,
-        "guardian_consent": false
+        "usage_rights": true,
+        "guardian_consent": true
       },
-      "approval_record": null,
+      "approval_record": {
+        "approved_by": "Academy owner via chat confirmation",
+        "approved_on": "2026-11-11",
+        "evidence": "Owner approved all supplied videos and images, then explicitly confirmed usage rights and guardian consent for every identifiable child image and voice, including posters and projected student results."
+      },
       "title": "Ready for the next ball",
       "alt": "Students gathered on a cricket field",
       "caption": "Learning sportsmanship one playful moment at a time.",
@@ -225,23 +245,27 @@
       "production_path": "media/gallery/academy-event-img-17.jpeg",
       "section": "gallery",
       "category": "community",
-      "approval_status": "rejected",
+      "approval_status": "approved",
       "required_verifications": [
         "usage_rights",
         "guardian_consent",
         "historical_context"
       ],
       "verified": {
-        "usage_rights": false,
-        "guardian_consent": false,
-        "historical_context": false
+        "usage_rights": true,
+        "guardian_consent": true,
+        "historical_context": true
       },
-      "approval_record": null,
+      "approval_record": {
+        "approved_by": "Academy owner via chat confirmation",
+        "approved_on": "2026-11-11",
+        "evidence": "Owner approved all supplied videos and images, then explicitly confirmed usage rights and guardian consent for every identifiable child image and voice, including posters and projected student results. Historical banner context was reviewed; the public caption explicitly disclaims the printed legacy course list as current."
+      },
       "title": "A community moment",
       "alt": "A small group at a Vardhaman Academy community event",
       "caption": "An academy gathering; the legacy printed banner is not a current course list.",
       "review_caption": "An academy gathering; the legacy printed banner is not a current course list.",
-      "notes": "Printed banner includes outdated classes 1–12 and XI–XII. Avoid publication as-is.",
+      "notes": "Owner approved the historical event image and confirmed rights/guardian consent. The visible banner has outdated classes 1-12 and XI-XII; the existing historical-context caption must remain and is not a current course offer.",
       "legacy_status": "reference_only",
       "gallery_order": 9,
       "contains_identifiable_students": true
@@ -255,18 +279,22 @@
       "production_path": "media/review/olympiad-medal-img-18.jpeg",
       "section": "gallery",
       "category": "achievements",
-      "approval_status": "pending",
+      "approval_status": "approved",
       "required_verifications": [
         "usage_rights",
         "guardian_consent",
         "achievement_verification"
       ],
       "verified": {
-        "usage_rights": false,
-        "guardian_consent": false,
-        "achievement_verification": false
+        "usage_rights": true,
+        "guardian_consent": true,
+        "achievement_verification": true
       },
-      "approval_record": null,
+      "approval_record": {
+        "approved_by": "Academy owner via chat confirmation",
+        "approved_on": "2026-11-11",
+        "evidence": "Owner approved all supplied videos and images, then explicitly confirmed usage rights and guardian consent for every identifiable child image and voice, including posters and projected student results. Owner explicitly confirmed both awards and their academy-student connection. Captions remain neutral; no award name, rank, score or outcome is asserted."
+      },
       "title": "A moment of recognition",
       "alt": "Student holding a medal and certificate",
       "caption": "A student recognition photograph shared with permission.",
@@ -285,18 +313,22 @@
       "production_path": "media/review/certificate-img-19.jpeg",
       "section": "gallery",
       "category": "achievements",
-      "approval_status": "pending",
+      "approval_status": "approved",
       "required_verifications": [
         "usage_rights",
         "guardian_consent",
         "achievement_verification"
       ],
       "verified": {
-        "usage_rights": false,
-        "guardian_consent": false,
-        "achievement_verification": false
+        "usage_rights": true,
+        "guardian_consent": true,
+        "achievement_verification": true
       },
-      "approval_record": null,
+      "approval_record": {
+        "approved_by": "Academy owner via chat confirmation",
+        "approved_on": "2026-11-11",
+        "evidence": "Owner approved all supplied videos and images, then explicitly confirmed usage rights and guardian consent for every identifiable child image and voice, including posters and projected student results. Owner explicitly confirmed both awards and their academy-student connection. Captions remain neutral; no award name, rank, score or outcome is asserted."
+      },
       "title": "A proud milestone",
       "alt": "Student holding a framed award certificate",
       "caption": "A student recognition photograph shared with permission.",
@@ -315,16 +347,20 @@
       "production_path": "media/video/tug-of-war-vid-02.mp4",
       "section": "gallery",
       "category": "activities",
-      "approval_status": "pending",
+      "approval_status": "approved",
       "required_verifications": [
         "usage_rights",
         "guardian_consent"
       ],
       "verified": {
-        "usage_rights": false,
-        "guardian_consent": false
+        "usage_rights": true,
+        "guardian_consent": true
       },
-      "approval_record": null,
+      "approval_record": {
+        "approved_by": "Academy owner via chat confirmation",
+        "approved_on": "2026-11-11",
+        "evidence": "Owner approved all supplied videos and images, then explicitly confirmed usage rights and guardian consent for every identifiable child image and voice, including posters and projected student results."
+      },
       "title": "Tug-of-war, from another angle",
       "alt": "Outdoor tug-of-war — extended scene",
       "caption": "Extended footage from the outdoor group activity.",
@@ -347,16 +383,20 @@
       "section": "poster",
       "parent_id": "VID-02",
       "category": "activities",
-      "approval_status": "pending",
+      "approval_status": "approved",
       "required_verifications": [
         "usage_rights",
         "guardian_consent"
       ],
       "verified": {
-        "usage_rights": false,
-        "guardian_consent": false
+        "usage_rights": true,
+        "guardian_consent": true
       },
-      "approval_record": null,
+      "approval_record": {
+        "approved_by": "Academy owner via chat confirmation",
+        "approved_on": "2026-11-11",
+        "evidence": "Owner approved all supplied videos and images, then explicitly confirmed usage rights and guardian consent for every identifiable child image and voice, including posters and projected student results."
+      },
       "title": "Tug-of-war, from another angle - video poster",
       "alt": "Tug-of-war, from another angle - video thumbnail",
       "caption": "Poster for Tug-of-war, from another angle.",
@@ -371,16 +411,20 @@
       "production_path": "media/video/tug-of-war-vid-03.mp4",
       "section": "gallery",
       "category": "activities",
-      "approval_status": "pending",
+      "approval_status": "approved",
       "required_verifications": [
         "usage_rights",
         "guardian_consent"
       ],
       "verified": {
-        "usage_rights": false,
-        "guardian_consent": false
+        "usage_rights": true,
+        "guardian_consent": true
       },
-      "approval_record": null,
+      "approval_record": {
+        "approved_by": "Academy owner via chat confirmation",
+        "approved_on": "2026-11-11",
+        "evidence": "Owner approved all supplied videos and images, then explicitly confirmed usage rights and guardian consent for every identifiable child image and voice, including posters and projected student results."
+      },
       "title": "A little teamwork goes a long way",
       "alt": "Students playing tug-of-war",
       "caption": "A lively tug-of-war moment during a group activity.",
@@ -403,16 +447,20 @@
       "section": "poster",
       "parent_id": "VID-03",
       "category": "activities",
-      "approval_status": "pending",
+      "approval_status": "approved",
       "required_verifications": [
         "usage_rights",
         "guardian_consent"
       ],
       "verified": {
-        "usage_rights": false,
-        "guardian_consent": false
+        "usage_rights": true,
+        "guardian_consent": true
       },
-      "approval_record": null,
+      "approval_record": {
+        "approved_by": "Academy owner via chat confirmation",
+        "approved_on": "2026-11-11",
+        "evidence": "Owner approved all supplied videos and images, then explicitly confirmed usage rights and guardian consent for every identifiable child image and voice, including posters and projected student results."
+      },
       "title": "A little teamwork goes a long way - video poster",
       "alt": "A little teamwork goes a long way - video thumbnail",
       "caption": "Poster for A little teamwork goes a long way.",
@@ -427,23 +475,27 @@
       "production_path": "media/video/outdoor-event-vid-04.mp4",
       "section": "gallery",
       "category": "activities",
-      "approval_status": "pending",
+      "approval_status": "approved",
       "required_verifications": [
         "usage_rights",
         "guardian_consent",
         "orientation_review"
       ],
       "verified": {
-        "usage_rights": false,
-        "guardian_consent": false,
-        "orientation_review": false
+        "usage_rights": true,
+        "guardian_consent": true,
+        "orientation_review": true
       },
-      "approval_record": null,
+      "approval_record": {
+        "approved_by": "Academy owner via chat confirmation",
+        "approved_on": "2026-11-11",
+        "evidence": "Owner approved all supplied videos and images, then explicitly confirmed usage rights and guardian consent for every identifiable child image and voice, including posters and projected student results. Orientation review is complete, not a claim that the sideways ending is corrected. The disclosed original clip is retained under the owner approval."
+      },
       "title": "A day together",
       "alt": "Group event at academy setting",
       "caption": "A wider view of the group event outside the academy.",
       "review_caption": "A wider view of the group event outside the academy.",
-      "notes": "Check device rotation/orientation during full playback.",
+      "notes": "Orientation reviewed at the beginning and near the end: the original recording turns sideways near its ending. Owner approved all supplied videos after this issue was disclosed. Original retained unchanged; no global rotation or trim applied.",
       "legacy_status": "guardian_consent_required",
       "gallery_order": 5,
       "duration_seconds": 53.7,
@@ -461,16 +513,20 @@
       "section": "poster",
       "parent_id": "VID-04",
       "category": "activities",
-      "approval_status": "pending",
+      "approval_status": "approved",
       "required_verifications": [
         "usage_rights",
         "guardian_consent"
       ],
       "verified": {
-        "usage_rights": false,
-        "guardian_consent": false
+        "usage_rights": true,
+        "guardian_consent": true
       },
-      "approval_record": null,
+      "approval_record": {
+        "approved_by": "Academy owner via chat confirmation",
+        "approved_on": "2026-11-11",
+        "evidence": "Owner approved all supplied videos and images, then explicitly confirmed usage rights and guardian consent for every identifiable child image and voice, including posters and projected student results."
+      },
       "title": "A day together - video poster",
       "alt": "A day together - video thumbnail",
       "caption": "Poster for A day together.",
@@ -485,16 +541,20 @@
       "production_path": "media/video/football-vid-05.mp4",
       "section": "gallery",
       "category": "activities",
-      "approval_status": "pending",
+      "approval_status": "approved",
       "required_verifications": [
         "usage_rights",
         "guardian_consent"
       ],
       "verified": {
-        "usage_rights": false,
-        "guardian_consent": false
+        "usage_rights": true,
+        "guardian_consent": true
       },
-      "approval_record": null,
+      "approval_record": {
+        "approved_by": "Academy owner via chat confirmation",
+        "approved_on": "2026-11-11",
+        "evidence": "Owner approved all supplied videos and images, then explicitly confirmed usage rights and guardian consent for every identifiable child image and voice, including posters and projected student results."
+      },
       "title": "Football and friendship",
       "alt": "Football play",
       "caption": "A short, joyful glimpse of students at play.",
@@ -517,16 +577,20 @@
       "section": "poster",
       "parent_id": "VID-05",
       "category": "activities",
-      "approval_status": "pending",
+      "approval_status": "approved",
       "required_verifications": [
         "usage_rights",
         "guardian_consent"
       ],
       "verified": {
-        "usage_rights": false,
-        "guardian_consent": false
+        "usage_rights": true,
+        "guardian_consent": true
       },
-      "approval_record": null,
+      "approval_record": {
+        "approved_by": "Academy owner via chat confirmation",
+        "approved_on": "2026-11-11",
+        "evidence": "Owner approved all supplied videos and images, then explicitly confirmed usage rights and guardian consent for every identifiable child image and voice, including posters and projected student results."
+      },
       "title": "Football and friendship - video poster",
       "alt": "Football and friendship - video thumbnail",
       "caption": "Poster for Football and friendship.",
@@ -541,16 +605,20 @@
       "production_path": "media/video/cricket-vid-06.mp4",
       "section": "gallery",
       "category": "activities",
-      "approval_status": "pending",
+      "approval_status": "approved",
       "required_verifications": [
         "usage_rights",
         "guardian_consent"
       ],
       "verified": {
-        "usage_rights": false,
-        "guardian_consent": false
+        "usage_rights": true,
+        "guardian_consent": true
       },
-      "approval_record": null,
+      "approval_record": {
+        "approved_by": "Academy owner via chat confirmation",
+        "approved_on": "2026-11-11",
+        "evidence": "Owner approved all supplied videos and images, then explicitly confirmed usage rights and guardian consent for every identifiable child image and voice, including posters and projected student results."
+      },
       "title": "Cricket in motion",
       "alt": "Cricket moment",
       "caption": "A quick glimpse of a cricket game.",
@@ -573,16 +641,20 @@
       "section": "poster",
       "parent_id": "VID-06",
       "category": "activities",
-      "approval_status": "pending",
+      "approval_status": "approved",
       "required_verifications": [
         "usage_rights",
         "guardian_consent"
       ],
       "verified": {
-        "usage_rights": false,
-        "guardian_consent": false
+        "usage_rights": true,
+        "guardian_consent": true
       },
-      "approval_record": null,
+      "approval_record": {
+        "approved_by": "Academy owner via chat confirmation",
+        "approved_on": "2026-11-11",
+        "evidence": "Owner approved all supplied videos and images, then explicitly confirmed usage rights and guardian consent for every identifiable child image and voice, including posters and projected student results."
+      },
       "title": "Cricket in motion - video poster",
       "alt": "Cricket in motion - video thumbnail",
       "caption": "Poster for Cricket in motion.",

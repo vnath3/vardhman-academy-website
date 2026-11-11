@@ -1,6 +1,14 @@
 # Implementation and QA handoff
 
-## Current V2 production-readiness refinement - 2026-11-01
+## Batch 1 follow-up - 2026-11-11
+
+The owner supplied and approved 8830499339 for parent enquiries. It matches the printed contact in the retained IMG-01/02 source flyers; the live page/settings exposed no contact number at verification. `content/v2-settings.json` now records the international destination `918830499339` and approval evidence. Actual owner receipt remains untested; automated navigation is intercepted before contacting WhatsApp. The parent must still press Send, and copying remains available.
+
+The owner also approved all supplied images/videos and explicitly confirmed usage rights, guardian consent for every child image/voice (including posters/projected results), and IMG-18/19 award provenance. The 21 V2 manifest records now carry completed checks/evidence. The existing display plan selects 18 media files and 10 gallery cards. Historical flyers and the unused seminar image stay in the archive. IMG-17 keeps its historical-banner disclaimer; VID-04 remains unedited with its disclosed sideways ending. No approval gate was weakened, and no source media was altered.
+
+Batch 1 preserves the four-step wizard and V2 appearance, displays a disabled contact action when unavailable, and fixes story focus/scroll synchronization. See [the Batch 1 test report](BATCH1_TEST_REPORT.md) and [current approval register](APPROVALS.md). No commit, push, deployment or indexing activation occurred. The prior null-contact/empty-gallery descriptions below are historical.
+
+## Prior V2 production-readiness refinement - 2026-11-01
 
 The existing static V2 website is retained in this repository. No deployment, commit, push or new media approval is included. The previously requested Google tag changes are preserved. The historical V1 implementation notes are retained below; their zero-media/no-analytics descriptions do not describe current V2.
 

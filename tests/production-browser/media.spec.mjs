@@ -8,6 +8,43 @@ import { stubAnalytics } from './analytics.mjs';
 test.beforeEach(async ({ page }) => { await stubAnalytics(page); });
 
 for (const width of [1440, 390]) {
+  test(`approved production gallery loads photos and plays packaged videos at ${width}px`, async ({ page }) => {
+    const gallery = planMedia(await readV2Manifest()).runtime.gallery;
+    const videoRequests = [], errors = [], failures = [];
+    page.on('request', request => { if (request.url().includes('.mp4')) videoRequests.push(request.url()); });
+    page.on('pageerror', error => errors.push(error.message));
+    page.on('response', response => { if (response.status() >= 400) failures.push(response.url()); });
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/');
+    await expect(page.locator('.gallery-card')).toHaveCount(gallery.length);
+    expect(videoRequests).toEqual([]);
+    for (const category of ['activities', 'achievements', 'community', 'all']) {
+      await page.locator(`.gallery-tab[data-category="${category}"]`).click();
+      await expect(page.locator('.gallery-card:visible')).toHaveCount(gallery.filter(item => category === 'all' || item.category === category).length);
+    }
+    for (const item of gallery) {
+      const trigger = page.locator(`[data-media="${item.id}"]`);
+      await trigger.click();
+      await expect(page.locator('#mediaModalCaption')).toContainText(item.desc);
+      if (item.type === 'video') {
+        const video = page.locator('#mediaModal video');
+        await expect.poll(() => video.evaluate(element => element.readyState)).toBeGreaterThanOrEqual(2);
+        expect(await video.evaluate(element => element.controls && element.playsInline && element.paused && !element.autoplay)).toBeTruthy();
+        const handle = await video.elementHandle();
+        await video.evaluate(element => element.play());
+        await expect.poll(() => video.evaluate(element => element.currentTime)).toBeGreaterThan(0);
+        await page.keyboard.press('Escape');
+        expect(await handle.evaluate(element => element.paused)).toBeTruthy();
+      } else {
+        await expect.poll(() => page.locator('#mediaModal img').evaluate(image => image.complete && image.naturalWidth > 0)).toBeTruthy();
+        await page.keyboard.press('Escape');
+      }
+      await expect(trigger).toBeFocused();
+    }
+    expect(errors).toEqual([]); expect(failures).toEqual([]);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(width);
+  });
+
   test(`manifest-only future media activation preserves filters and controls at ${width}px`, async ({ page }) => {
     // Browser-only fixtures. No real release statuses or dist files are changed.
     const manifest = structuredClone(await readV2Manifest());
@@ -28,8 +65,8 @@ for (const width of [1440, 390]) {
     page.on('response', response => { if (response.status() >= 400) failures.push(response.url()); });
     await page.route('**/media-data.js', route => route.fulfill({ contentType: 'text/javascript', body: `window.VARDHAMAN_MEDIA=${JSON.stringify(runtime).replaceAll('<', '\\u003c')};` }));
     await page.route('**/media/fixtures/*.png', route => route.fulfill({ contentType: 'image/png', path: 'tests/fixtures/media/synthetic-image.png' }));
-    // The existing local review clip exercises decoding; it is not copied into
-    // public output, and its real pending permission record is never changed.
+    // Intercept a local clip to exercise fixture decoding without changing the
+    // real manifest or adding these synthetic paths to the public artifact.
     await page.route('**/media/fixtures/video.mp4', route => route.fulfill({ contentType: 'video/mp4', path: 'media/vardhaman/video/football-vid-05.mp4' }));
     await page.setViewportSize({ width, height: 900 });
     await page.goto('/');

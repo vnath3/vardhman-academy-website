@@ -176,6 +176,7 @@ body { background: #fbfbf7; }
 .portrait-field.media-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .gallery-empty { padding: 24px 0; }
 .enquiry-whatsapp[hidden] { display: none; }
+.enquiry-whatsapp:disabled { opacity: .55; cursor: not-allowed; transform: none; box-shadow: none; }
 .mentor-handnote small, .mentor-nameplate small { color: #536b60; }
 /* Improve small-text contrast within the existing V2 palette and geometry. */
 :root { --muted: #52676f; }

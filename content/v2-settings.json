@@ -8,8 +8,12 @@
     "launch_approval": null
   },
   "enquiry": {
-    "whatsapp_number": null,
-    "number_approved": false,
-    "approval_record": null
+    "whatsapp_number": "918830499339",
+    "number_approved": true,
+    "approval_record": {
+      "approved_by": "Academy owner via chat confirmation",
+      "approved_on": "2026-11-11",
+      "evidence": "Owner supplied 8830499339 and instructed its use for parent enquiries. The same number is printed in source assets media/vardhaman/brand/legacy-brand-poster-img-01.jpeg and legacy-results-poster-img-02.jpeg. Normalized with India's +91 country code; no other flyer number was selected."
+    }
   }
 }
