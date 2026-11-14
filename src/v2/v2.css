@@ -237,22 +237,32 @@ body { background: #fbfbf7; }
 .reveal, .reveal.visible { opacity: 1; transform: none; transition: none; }
 .reveal { --reveal-distance: 16px; --reveal-duration: 600ms; --reveal-delay: 0ms; }
 .reveal.visible:not(.motion-instant) { animation: section-entrance var(--reveal-duration) cubic-bezier(.22,.61,.36,1) var(--reveal-delay) backwards; }
-.reveal-concern { --reveal-distance: 12px; --reveal-duration: 460ms; --reveal-delay: calc(260ms + var(--reveal-order) * 80ms); }
+.reveal-parent { --reveal-distance: 26px; --reveal-duration: 640ms; }
+.reveal-parent:not(.visible) { opacity: .85; transform: translate3d(0,var(--reveal-distance),0); }
+.reveal-parent.visible:not(.motion-instant) { animation-name: parent-entrance; }
+.reveal-concern { --reveal-distance: 14px; --reveal-duration: 440ms; --reveal-delay: calc(var(--reveal-order) * 90ms); }
+.reveal-concern:not(.visible) { opacity: .85; transform: translate3d(0,var(--reveal-distance),0); }
+.reveal-concern.visible:not(.motion-instant) { animation-name: concern-entrance; }
 .reveal-mentor { --reveal-distance: 10px; --reveal-duration: 480ms; }
 .reveal-gallery { --reveal-distance: 8px; --reveal-duration: 380ms; --reveal-delay: calc(var(--reveal-order) * 55ms); }
-.reveal-parent.visible:not(.motion-instant) .become-word::after { animation: become-underline 420ms cubic-bezier(.22,.61,.36,1) 180ms backwards; }
+.reveal-mentor.visible:not(.motion-instant), .reveal-gallery.visible:not(.motion-instant) { animation-name: quiet-entrance; }
+.parent-scroll .become-word::after { transform: scaleX(var(--underline-progress, 1)); }
 .gallery-toolbar[hidden] { display: none; }
 /* Match the live order even before scripts run. */
 main > .v2-gallery { order: 3; }
 @keyframes section-entrance { from { opacity: .25; transform: translate3d(0,var(--reveal-distance),0); } to { opacity: 1; transform: none; } }
-@keyframes become-underline { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes parent-entrance { from { opacity: .85; transform: translate3d(0,var(--reveal-distance),0); } to { opacity: 1; transform: none; } }
+@keyframes concern-entrance { from { opacity: .85; transform: translate3d(0,var(--reveal-distance),0); } to { opacity: 1; transform: none; } }
+@keyframes quiet-entrance { from { opacity: .8; transform: translate3d(0,var(--reveal-distance),0); } to { opacity: 1; transform: none; } }
 @media(max-width:780px) {
   .reveal { --reveal-distance: 8px; --reveal-duration: 360ms; }
-  .reveal-concern { --reveal-distance: 6px; --reveal-duration: 300ms; --reveal-delay: calc(50ms + var(--reveal-order) * 35ms); }
+  .reveal-parent { --reveal-distance: 16px; --reveal-duration: 460ms; }
+  .reveal-concern { --reveal-distance: 10px; --reveal-duration: 340ms; --reveal-delay: calc(var(--reveal-order) * 60ms); }
   .reveal-mentor, .reveal-gallery { --reveal-distance: 5px; --reveal-duration: 300ms; }
   .reveal-gallery { --reveal-delay: calc(var(--reveal-order) * 25ms); }
-  .reveal-parent.visible:not(.motion-instant) .become-word::after { animation-duration: 260ms; animation-delay: 80ms; }
 }
 @media(prefers-reduced-motion:reduce) {
-  .reveal.visible:not(.motion-instant), .reveal-parent.visible:not(.motion-instant) .become-word::after { animation: none !important; }
+  .reveal.visible:not(.motion-instant) { animation: none !important; }
+  .reveal-parent, .reveal-concern { opacity: 1 !important; transform: none !important; }
+  .parent-scroll .become-word::after { transform: none; }
 }

@@ -1,6 +1,9 @@
 import { test, expect } from '@playwright/test';
 import { mkdir } from 'node:fs/promises';
+import { slowScrollUntil } from './scroll-input.mjs';
+import { stubAnalytics } from '../production-browser/analytics.mjs';
 test.use({ hasTouch: true });
+test.beforeEach(async ({ page }) => { await stubAnalytics(page); });
 
 const targets = '#parents h2, #parents .worry-item, #about .teacher-art, #about h2, .reveal-gallery';
 const readable = async locator => {
@@ -10,18 +13,9 @@ const readable = async locator => {
   }))).toBe(true);
 };
 
-// Approach from outside the observer margin, then scroll at a reading pace.
-async function slowEnter(page, selector) {
-  await page.locator(selector).first().evaluate(element => scrollTo({ top: scrollY + element.getBoundingClientRect().top - innerHeight - 100, behavior: 'instant' }));
-  await page.waitForTimeout(250); // Let the deliberate positioning jump settle.
-  for (let i = 0; i < 12; i++) {
-    await page.evaluate(() => scrollBy({ top: 16, behavior: 'instant' }));
-    await page.waitForTimeout(45);
-  }
-}
-
 for (const width of [1440, 390]) {
-  test(`slow entrances play once with no nested reveal at ${width}px`, async ({ page }) => {
+  test(`natural scroll shows the parent sequence in view and never replays at ${width}px`, async ({ page }) => {
+    test.setTimeout(60000);
     await page.setViewportSize({ width, height: 900 });
     await page.emulateMedia({ reducedMotion: 'no-preference' });
     await page.goto('/');
@@ -29,35 +23,50 @@ for (const width of [1440, 390]) {
     await page.evaluate(() => {
       window.entrances = [];
       document.addEventListener('animationstart', event => {
-        if (['section-entrance', 'become-underline'].includes(event.animationName) && event.target.matches('#parents h2, .become-word, #parents .worry-item, #about .teacher-art, #about h2, .reveal-gallery')) window.entrances.push({ name: event.animationName, className: event.target.className, time: performance.now() });
+        if (event.target.closest('#parents')) window.entrances.push({ name: event.animationName, time: performance.now(), bottom: event.target.getBoundingClientRect().bottom });
       });
     });
-    for (const selector of ['#parents h2', '#parents .worry-item', '#about .teacher-art', '#about h2', '.reveal-gallery']) {
-      // Desktop pairs can already have entered together.
-      if (!await page.locator(selector).first().evaluate(element => element.classList.contains('visible'))) await slowEnter(page, selector);
-      await expect(page.locator(selector).first()).toHaveClass(/visible/);
-      if (selector === '#parents h2') await expect(page.locator(selector)).not.toHaveClass(/motion-instant/);
-      if (selector === '#parents .worry-item') await expect.poll(() => page.locator('#parents .reveal.visible').evaluateAll(elements => elements.every(element => element.getAnimations({ subtree: true }).length === 0))).toBe(true);
-    }
+    const mobile = width === 390;
+    await slowScrollUntil(page, () => document.querySelector('#parents h2').classList.contains('visible'), mobile);
     const heading = page.locator('#parents h2');
-    expect(await heading.evaluate(element => element.closest('.reveal') === element && !element.parentElement.closest('.reveal'))).toBe(true);
+    await expect(heading).not.toHaveClass(/motion-instant/);
+    expect(await heading.evaluate(element => element.getBoundingClientRect().bottom)).toBeLessThan(900);
+    await slowScrollUntil(page, () => Number(document.querySelector('#parents h2').style.getPropertyValue('--underline-progress')) >= .3, mobile);
+    const progress = () => heading.evaluate(element => Number(element.style.getPropertyValue('--underline-progress')));
+    const partial = await progress();
+    expect(partial).toBeLessThan(.8);
+    const word = page.locator('.become-word');
+    expect(await word.evaluate(element => element.getBoundingClientRect().bottom)).toBeLessThan(900 * .79);
+    await page.waitForTimeout(500);
+    expect(Math.abs(await progress() - partial)).toBeLessThan(.02);
+    // Starting a new touch on the section must not skip the remaining sequence.
+    const box = await word.boundingBox();
+    await page.touchscreen.tap(box.x + box.width / 2, box.y + box.height / 2);
+    await expect(heading).not.toHaveClass(/motion-instant/);
+    expect(Math.abs(await progress() - partial)).toBeLessThan(.02);
+    await slowScrollUntil(page, () => [...document.querySelectorAll('#parents .worry-item')].every(element => element.classList.contains('visible')), mobile);
+    await expect.poll(() => page.locator('#parents .reveal').evaluateAll(elements => elements.every(element => element.getAnimations().length === 0))).toBe(true);
+    expect(await progress()).toBe(1);
+    await expect(page.locator('#parents .motion-instant')).toHaveCount(0);
+    await readable(page.locator('#parents .reveal'));
+    expect(await heading.evaluate(element => !element.parentElement.closest('.reveal'))).toBe(true);
     expect(await page.locator('#about .teacher-grid').getAttribute('class')).not.toMatch(/reveal/);
-    await expect(page.locator('.reveal-gallery')).toHaveCount(width === 390 ? 1 : 3);
-    await expect.poll(() => page.evaluate(() => window.entrances.some(event => event.name === 'become-underline'))).toBe(true);
-    const sequence = await page.evaluate(() => ({
-      underline: window.entrances.find(event => event.name === 'become-underline').time,
-      card: window.entrances.find(event => event.className.includes('reveal-concern'))?.time
-    }));
-    expect(sequence.card - sequence.underline).toBeGreaterThanOrEqual((width === 390 ? 260 : 420) - 50);
-    await expect.poll(() => page.locator(targets).evaluateAll(elements => elements.every(element => element.getAnimations().length === 0))).toBe(true);
-    const count = await page.evaluate(() => window.entrances.length);
-    await page.evaluate(() => scrollTo({ top: document.body.scrollHeight, behavior: 'instant' }));
-    await page.evaluate(() => scrollTo({ top: 0, behavior: 'instant' }));
-    await page.locator('#parents').scrollIntoViewIfNeeded();
-    await readable(page.locator('#parents h2, #parents .worry-item'));
-    expect(await page.evaluate(() => window.entrances.length)).toBe(count);
+    await expect(page.locator('.reveal-gallery')).toHaveCount(mobile ? 1 : 3);
+    const starts = await page.evaluate(() => window.entrances);
+    expect(starts.filter(event => event.name === 'parent-entrance')).toHaveLength(1);
+    const cards = starts.filter(event => event.name === 'concern-entrance');
+    expect(cards).toHaveLength(3);
+    expect(cards[1].time).toBeGreaterThan(cards[0].time + 30);
+    expect(cards[2].time).toBeGreaterThan(cards[1].time + 30);
     await mkdir('qa/visual', { recursive: true });
     await page.screenshot({ path: `qa/visual/scroll-parent-${width}.png` });
+    await page.mouse.wheel(0, -4000);
+    await expect.poll(() => page.evaluate(() => scrollY)).toBe(0);
+    await page.waitForTimeout(300);
+    await slowScrollUntil(page, () => document.querySelector('.become-word').getBoundingClientRect().bottom < innerHeight * .7, mobile);
+    expect(await progress()).toBe(1);
+    expect(await page.evaluate(() => window.entrances.length)).toBe(starts.length);
+    await readable(page.locator('#parents .reveal'));
   });
 
   test(`menu jumps and initial hashes land on readable content at ${width}px`, async ({ page }) => {
@@ -80,23 +89,25 @@ for (const width of [1440, 390]) {
 
   test(`reduced motion and changing the preference show everything at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
+    await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/');
+    expect(await page.evaluate(() => matchMedia('(prefers-reduced-motion: reduce)').matches)).toBe(true);
     await readable(page.locator(targets));
     expect(await page.locator('.become-word').evaluate(element => getComputedStyle(element, '::after').animationName)).toBe('none');
     await page.emulateMedia({ reducedMotion: 'no-preference' });
     await page.locator('#parents').scrollIntoViewIfNeeded();
     await readable(page.locator(targets));
     await page.reload();
-    await slowEnter(page, '#parents h2');
+    await slowScrollUntil(page, () => document.querySelector('#parents h2').classList.contains('visible'), width === 390);
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await readable(page.locator(targets));
   });
 
-  test(`without JavaScript the sections and all gallery media remain available at ${width}px`, async ({ browser }) => {
+  test(`without JavaScript the sections and all gallery media remain available at ${width}px`, async ({ browser, baseURL }) => {
     const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width, height: 900 } });
     const page = await context.newPage();
     try {
-      await page.goto('http://127.0.0.1:5176/');
+      await page.goto(baseURL);
       await readable(page.locator('#parents h2, #parents .worry-item, #about .teacher-art, #about h2, .gallery-card'));
       await expect(page.locator('.gallery-card')).toHaveCount(10);
       await expect(page.locator('.gallery-toolbar')).toBeHidden();
@@ -130,10 +141,12 @@ test('fast 390px swipes settle skipped content, controls stay usable, and video 
     await readable(page.locator(`${section} .reveal.motion-instant`));
   }
   expect(videos).toEqual([]);
+  const toggle = page.locator('#galleryToggle');
+  if (await toggle.getAttribute('aria-expanded') === 'false' && await toggle.isVisible()) await toggle.click();
   const trigger = page.locator('[data-media="VID-02"]');
   await trigger.tap();
   const video = page.locator('#mediaModal video');
-  await expect.poll(() => video.evaluate(element => element.readyState)).toBeGreaterThanOrEqual(2);
+  await expect.poll(() => video.evaluate(element => element.readyState), { timeout: 30000 }).toBeGreaterThanOrEqual(2);
   expect(await video.evaluate(element => element.paused && !element.autoplay && element.controls)).toBe(true);
   const box = await video.boundingBox();
   await video.tap({ position: { x: 30, y: box.height - 25 } });

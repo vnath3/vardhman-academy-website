@@ -5,15 +5,20 @@
     $('#mobileToggle').addEventListener('click',()=>{const open=$('#navLinks').classList.toggle('open');$('#mobileToggle').setAttribute('aria-expanded',String(open));$('#mobileToggle').textContent=open?'×':'☰';});
     $$('#navLinks a').forEach(a=>a.addEventListener('click',()=>{$('#navLinks').classList.remove('open');$('#mobileToggle').setAttribute('aria-expanded','false');$('#mobileToggle').textContent='☰';}));
     let scrollScheduled=false;window.addEventListener('scroll',()=>{if(scrollScheduled)return;scrollScheduled=true;requestAnimationFrame(()=>{const d=document.documentElement;$('#readingProgress').style.width=((d.scrollTop/(d.scrollHeight-d.clientHeight))*100||0)+'%';scrollScheduled=false;});},{passive:true});
-    // Register after v2.js finishes arranging the page and gallery. Content is
-    // visible by default; only an observed entrance opts into an animation.
+    // Register after the final page/gallery layout. Text stays readable before
+    // an entrance; only the parent underline is linked to scroll distance.
     document.addEventListener('DOMContentLoaded', () => {
       const preference = matchMedia('(prefers-reduced-motion: reduce)');
-      const parentHeading = $('#parents h2');
-      const targets = new Set();
-      const pending = new Set();
-      let observer, parentStarted = null, fastUntil = 0, lastY = scrollY, lastTime = performance.now(), scheduled = false;
+      const parentHeading = $('#parents h2'), parentWord = $('#parents .become-word');
+      const targets = new Set(), pending = new Set(), recentScroll = [];
+      const canObserve = 'IntersectionObserver' in window;
+      let observer, underlineProgress = 0, fastUntil = 0, lastY = scrollY, scheduled = false;
+      const progress = value => {
+        underlineProgress = Math.max(underlineProgress, Math.min(1, Math.max(0, value)));
+        parentHeading?.style.setProperty('--underline-progress', underlineProgress);
+      };
       const finish = element => {
+        if (element === parentHeading) progress(1);
         element.classList.add('motion-instant', 'visible');
         pending.delete(element);
         observer?.unobserve(element);
@@ -22,44 +27,49 @@
         if (!pending.has(element)) return;
         if (instant || preference.matches) finish(element);
         else {
-          if (element === parentHeading) parentStarted = performance.now();
-          if (element.classList.contains('reveal-concern')) {
-            // Desktop cards may reach the viewport before the adjacent heading.
-            // Start one parent sequence, then let each card enter after the line
-            // has drawn. On mobile the heading usually finishes before the cards.
-            enter(parentHeading);
-            const mobile = matchMedia('(max-width:780px)').matches;
-            const remaining = parentStarted === null ? 0 : Math.max(0, (mobile ? 360 : 600) - (performance.now() - parentStarted));
-            const order = Number(element.style.getPropertyValue('--reveal-order'));
-            element.style.setProperty('--reveal-delay', `${remaining + order * (mobile ? 35 : 80)}ms`);
-          }
           element.classList.add('visible');
           pending.delete(element);
-          observer.unobserve(element);
+          observer?.unobserve(element);
         }
       };
       const add = (element, kind, order = 0) => {
         if (!element) return;
         element.classList.add('reveal', `reveal-${kind}`);
         element.style.setProperty('--reveal-order', order);
-        targets.add(element);
-        pending.add(element);
+        targets.add(element); pending.add(element);
       };
-      // These containers include controls or now have individual reveal targets.
       $$('.reveal').forEach(element => {
         if (element.closest('.hero, #journey, #brainlab, #enquiry, #parents, #about')) element.classList.remove('reveal');
         else { targets.add(element); pending.add(element); }
       });
       add(parentHeading, 'parent');
-      $$('#parents .worry-item').forEach((element, index) => add(element, 'concern', index));
+      const concerns = $$('#parents .worry-item');
+      concerns.forEach((element, index) => add(element, 'concern', index));
       add($('#about .teacher-art'), 'mentor');
       add($('#about h2'), 'mentor');
       const columns = matchMedia('(max-width:520px)').matches ? 1 : matchMedia('(max-width:780px)').matches ? 2 : 3;
       $$('.gallery-card:not([hidden])').slice(0, columns).forEach((element, index) => add(element, 'gallery', index));
-
       const finishWithin = section => targets.forEach(element => {
         if (section?.contains(element)) finish(element);
       });
+      const updateParent = () => {
+        if (!canObserve || preference.matches || !parentHeading || !parentWord) return;
+        const mobile = matchMedia('(max-width:780px)').matches;
+        // Wait until the entire heading is above the mobile CTA / viewport edge.
+        // Compensate for its lift so animation does not itself draw the line.
+        const transform = getComputedStyle(parentHeading).transform;
+        const lift = transform === 'none' ? 0 : new DOMMatrixReadOnly(transform).m42;
+        const headingBottom = parentHeading.getBoundingClientRect().bottom - lift;
+        if (headingBottom <= innerHeight * (mobile ? .89 : .94)) enter(parentHeading);
+        const wordBottom = parentWord.getBoundingClientRect().bottom - lift;
+        if (parentHeading.classList.contains('visible')) {
+          // About 190-210px of natural scroll, entirely inside the viewport.
+          progress((innerHeight * .79 - wordBottom) / (innerHeight * .23));
+        }
+        if (underlineProgress === 1) concerns.forEach(element => {
+          if (element.getBoundingClientRect().top < innerHeight * (mobile ? .85 : .90)) enter(element);
+        });
+      };
       const jump = hash => {
         let section;
         try { section = document.getElementById(decodeURIComponent(hash.slice(1))); } catch { return; }
@@ -67,14 +77,19 @@
         fastUntil = performance.now() + 1200;
         finishWithin(section);
       };
-      if (!('IntersectionObserver' in window) || preference.matches) targets.forEach(finish);
+      if (!canObserve || preference.matches) targets.forEach(finish);
       else {
+        parentHeading?.classList.add('parent-scroll');
+        parentHeading?.style.setProperty('--underline-progress', 0);
         observer = new IntersectionObserver(entries => entries.forEach(entry => {
           if (entry.isIntersecting) enter(entry.target, performance.now() < fastUntil);
-        }), { threshold: 0, rootMargin: '0px 0px 32px 0px' });
-        pending.forEach(element => observer.observe(element));
+        }), { threshold: .08, rootMargin: '0px 0px -64px 0px' });
+        pending.forEach(element => {
+          if (!element.closest('#parents')) observer.observe(element);
+        });
       }
       if (location.hash) jump(location.hash);
+      requestAnimationFrame(updateParent);
       document.addEventListener('click', event => {
         const link = event.target.closest('a[href]');
         if (!link) return;
@@ -82,12 +97,14 @@
         if (url.origin === location.origin && url.pathname === location.pathname && url.hash) jump(url.hash);
       });
       window.addEventListener('hashchange', () => jump(location.hash));
-      // A swipe or jump consumes skipped entrances and cancels any reveal that
-      // would otherwise delay content at the landing position.
       window.addEventListener('scroll', () => {
         const now = performance.now(), distance = Math.abs(scrollY - lastY);
-        if (distance > innerHeight * .45 || distance / Math.max(1, now - lastTime) > 1.6) fastUntil = now + 180;
-        lastY = scrollY; lastTime = now;
+        recentScroll.push({ time: now, distance });
+        while (recentScroll.length && recentScroll[0].time < now - 120) recentScroll.shift();
+        // A normal wheel tick or slow touch stroke is not a fast swipe. Require
+        // substantial travel in a short window instead of one instantaneous rate.
+        if (recentScroll.reduce((sum, sample) => sum + sample.distance, 0) > Math.max(300, innerHeight * .45)) fastUntil = now + 180;
+        lastY = scrollY;
         if (scheduled) return;
         scheduled = true;
         requestAnimationFrame(() => {
@@ -96,13 +113,15 @@
             const rect = element.getBoundingClientRect();
             if (rect.bottom < 0 || (performance.now() < fastUntil && rect.top < innerHeight)) finish(element);
           });
+          updateParent();
         });
       }, { passive: true });
-      // Focus and taps never wait for a reveal, including a gallery filter change.
+      // Keyboard focus and real controls bypass delays. A touch starting a
+      // scrolling gesture on text must not consume the whole parent sequence.
       for (const type of ['focusin', 'pointerdown']) document.addEventListener(type, event => {
-        finishWithin(event.target.closest('section'));
+        if (event.target.closest('a, button, input, textarea, select, [tabindex]')) finishWithin(event.target.closest('section'));
       });
-      window.addEventListener('resize', () => finishWithin($('#life-at-vardhaman')));
+      window.addEventListener('resize', () => { finishWithin($('#life-at-vardhaman')); updateParent(); });
       preference.addEventListener('change', () => {
         if (preference.matches) targets.forEach(finish);
       });
