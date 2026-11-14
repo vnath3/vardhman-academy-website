@@ -1,6 +1,6 @@
 # Current V2 approvals and launch blockers
 
-Updated 2026-11-11. This current register supersedes historical checklist states; original handoff files remain unchanged. The owner authorized committing and pushing Batch 1 on 2026-11-11. Deployment and indexing still require separate authorization; the Batch 1 commit includes `[skip netlify]` to hold automated deployment.
+Updated 2026-11-14. This current register supersedes historical checklist states; original handoff files remain unchanged. The owner authorized committing and pushing Batch 1 on 2026-11-11, then explicitly authorized production deployment on 2026-11-14. The earlier Batch 1 commit used `[skip netlify]` to hold deployment; the deployment-trigger commit omits that marker. Indexing remains disabled and requires separate approval.
 
 ## Recorded owner approvals
 
@@ -25,8 +25,8 @@ Updated 2026-11-11. This current register supersedes historical checklist states
 - [ ] Review draft privacy wording, operational handling of enquiries and public usage analytics with the owner responsible for the site.
 - [ ] Provide a square master favicon/isolated logo if desired. The current favicon uses only the already-approved logo PNG.
 - [ ] Review physical mobile devices, Safari/iOS, Firefox, screen readers, slower connections and production Core Web Vitals. Local automated checks are not that coverage.
-- [ ] Explicitly approve launch/indexing. Only then record `seo.launch_approval` and enable `seo.indexing_enabled`; the build updates HTML, robots.txt and headers together. Noindex stays on for now.
+- [ ] Explicitly approve production indexing. Only then record `seo.launch_approval` and enable `seo.indexing_enabled`; the build updates HTML, robots.txt and headers together. Deployment approval does not enable indexing.
 - [x] Owner authorized committing and pushing the reviewed Batch 1 changes on 2026-11-11.
-- [ ] Authorize deployment separately. The Batch 1 push uses `[skip netlify]`; no deployment settings are changed.
+- [x] Owner explicitly authorized production deployment on 2026-11-14 after reviewing the current commit, approved gallery/WhatsApp configuration and successful production verification. Publish the existing approved display plan with noindex retained; no media permissions or deployment settings are changed.
 
-All **21 V2 media records** are owner-approved. The existing display plan selects **18 media files**, including **10 gallery cards** (5 photos and 5 videos) plus their posters. IMG-01, IMG-02 and IMG-09 remain unused archive references, not new gallery entries or current promotional claims. Private review at `http://127.0.0.1:5173/media-review.html` retains all supplied originals. Indexing remains disabled and publication still requires separate authorization.
+All **21 V2 media records** are owner-approved. The existing display plan selects **18 media files**, including **10 gallery cards** (5 photos and 5 videos) plus their posters. IMG-01, IMG-02 and IMG-09 remain unused archive references, not new gallery entries or current promotional claims. Private review at `http://127.0.0.1:5173/media-review.html` retains all supplied originals. This display plan is authorized for production deployment; indexing remains disabled.
