@@ -13,8 +13,8 @@ export default defineConfig({
     trace: 'retain-on-failure'
   },
   projects: [
-    { name: 'Chrome', testMatch: ['site.spec.mjs', 'stories.spec.mjs'], use: { browserName: 'chromium', launchOptions: { channel: 'chrome' } } },
-    { name: 'Edge', testMatch: ['edge.spec.mjs', 'stories.spec.mjs'], grep: /390px|Edge mobile/, use: { browserName: 'chromium', launchOptions: { channel: 'msedge' } } }
+    { name: 'Chrome', testMatch: ['site.spec.mjs', 'stories.spec.mjs', 'motion.spec.mjs'], use: { browserName: 'chromium', launchOptions: { channel: 'chrome' } } },
+    { name: 'Edge', testMatch: ['edge.spec.mjs', 'stories.spec.mjs', 'motion.spec.mjs'], grep: /390px|Edge mobile/, use: { browserName: 'chromium', launchOptions: { channel: 'msedge' } } }
   ],
   webServer: {
     command: 'node scripts/serve-v2.mjs --port 5176',

@@ -57,6 +57,8 @@ body { background: #fbfbf7; }
 .mentor-heart { color: #88bca9; }
 .parent-message { background: #fffefa; }
 .parent-message h2 em { color: #197f9a; }
+.become-word { position: relative; display: inline-block; }
+.become-word::after { content: ''; position: absolute; left: 0; right: 0; bottom: -.06em; height: 3px; border-radius: 100%; background: #dfb86d; transform-origin: left center; }
 .worry-item { background: #f5f9f5; }
 .teacher { background: #fffefa; }
 .teacher-grid { background: #edf4ef; }
@@ -228,4 +230,29 @@ body { background: #fbfbf7; }
 @media(prefers-reduced-motion:reduce) {
   *,*::before,*::after { animation-iteration-count: 1 !important; }
   .stage-deco { animation: none !important; transform: none; }
+}
+
+/* Visible without JS, without an observer, or while a scroll skips an entrance.
+   The existing observer adds .visible once; no hidden offscreen state is needed. */
+.reveal, .reveal.visible { opacity: 1; transform: none; transition: none; }
+.reveal { --reveal-distance: 16px; --reveal-duration: 600ms; --reveal-delay: 0ms; }
+.reveal.visible:not(.motion-instant) { animation: section-entrance var(--reveal-duration) cubic-bezier(.22,.61,.36,1) var(--reveal-delay) backwards; }
+.reveal-concern { --reveal-distance: 12px; --reveal-duration: 460ms; --reveal-delay: calc(260ms + var(--reveal-order) * 80ms); }
+.reveal-mentor { --reveal-distance: 10px; --reveal-duration: 480ms; }
+.reveal-gallery { --reveal-distance: 8px; --reveal-duration: 380ms; --reveal-delay: calc(var(--reveal-order) * 55ms); }
+.reveal-parent.visible:not(.motion-instant) .become-word::after { animation: become-underline 420ms cubic-bezier(.22,.61,.36,1) 180ms backwards; }
+.gallery-toolbar[hidden] { display: none; }
+/* Match the live order even before scripts run. */
+main > .v2-gallery { order: 3; }
+@keyframes section-entrance { from { opacity: .25; transform: translate3d(0,var(--reveal-distance),0); } to { opacity: 1; transform: none; } }
+@keyframes become-underline { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@media(max-width:780px) {
+  .reveal { --reveal-distance: 8px; --reveal-duration: 360ms; }
+  .reveal-concern { --reveal-distance: 6px; --reveal-duration: 300ms; --reveal-delay: calc(50ms + var(--reveal-order) * 35ms); }
+  .reveal-mentor, .reveal-gallery { --reveal-distance: 5px; --reveal-duration: 300ms; }
+  .reveal-gallery { --reveal-delay: calc(var(--reveal-order) * 25ms); }
+  .reveal-parent.visible:not(.motion-instant) .become-word::after { animation-duration: 260ms; animation-delay: 80ms; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .reveal.visible:not(.motion-instant), .reveal-parent.visible:not(.motion-instant) .become-word::after { animation: none !important; }
 }

@@ -41,6 +41,8 @@ No deployment was performed as part of this change. See the current [Batch 1 tes
 ## Source and regression checks
 
 - `src/v2/`: current V2 HTML, styles, interactions, fonts and licences.
+- `src/v2/concept.js` and `src/v2/v2.css`: one-time scroll reveals. Dear Parent raises the heading, draws the underline beneath “become”, then staggers the concern cards; mentor media/heading and the initial gallery row have smaller entrances. Mobile uses shorter motion. Fast scrolling, anchor jumps and focus bypass delays. Reduced motion, missing JavaScript or a missing observer leave content visible; hero, class, quiz and enquiry controls have no entrance delay.
+- `src/v2-gallery.mjs`: build-rendered gallery markup shared by production and private review. Without JavaScript all selected cards remain visible and link to their original photo/video; JavaScript enables filters, disclosure and the existing tap-to-play dialogs. Media selection still comes exclusively from the V2 manifest.
 - `src/v2-media.mjs`: manifest validation and public/private media planning; no hardcoded gallery IDs or display catalogue.
 - `content/v2-media-manifest.json`: V2 source/output paths, placement, captions, poster relationships, approval states, required checks and approval evidence. Change this manifest to activate future approved photos/videos; no gallery JavaScript edit is needed. Approve a video and its linked poster individually. Never infer guardian consent from design approval.
 - `content/v2-settings.json`: owner-approved WhatsApp destination, canonical URL, SEO metadata and launch/indexing approval. See [implementation details](docs/IMPLEMENTATION.md) before activating a contact or indexing.
@@ -48,6 +50,7 @@ No deployment was performed as part of this change. See the current [Batch 1 tes
 - `npm test`: V1 and V2 contracts plus production packaging/privacy regressions, run sequentially so V1 tests cannot leave `dist/` containing V1.
 - `npm run test:browser:production`: tests the already-built production artifact in Chrome (1440/768/390/320px) and Edge (390px).
 - `npm run test:browser:v2`: retained private V2 interaction/media regressions. `npm run test:browser`: retained V1 browser suite.
+- The private V2 suite also covers slow entrances and their sequence, scroll-back, native touch swipes, menu/hash jumps, reduced-motion changes, missing JavaScript/observer support and native video-control taps. Local section screenshots are saved under ignored `qa/visual/scroll-*.png`.
 - `npm run test:browser:engines`: focused gallery, motion and navigation checks in Firefox and Windows WebKit. Install these engines once with `npx playwright install firefox webkit`; this does not replace physical Safari/iOS testing.
 - `npm run dev:v1`: retained V1 preview. Its legacy builder remains `scripts/build.mjs`; running that file directly overwrites `dist/` with V1, so rebuild V2 afterwards. It is not used by Netlify or the production preview.
 

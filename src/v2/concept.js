@@ -5,7 +5,108 @@
     $('#mobileToggle').addEventListener('click',()=>{const open=$('#navLinks').classList.toggle('open');$('#mobileToggle').setAttribute('aria-expanded',String(open));$('#mobileToggle').textContent=open?'×':'☰';});
     $$('#navLinks a').forEach(a=>a.addEventListener('click',()=>{$('#navLinks').classList.remove('open');$('#mobileToggle').setAttribute('aria-expanded','false');$('#mobileToggle').textContent='☰';}));
     let scrollScheduled=false;window.addEventListener('scroll',()=>{if(scrollScheduled)return;scrollScheduled=true;requestAnimationFrame(()=>{const d=document.documentElement;$('#readingProgress').style.width=((d.scrollTop/(d.scrollHeight-d.clientHeight))*100||0)+'%';scrollScheduled=false;});},{passive:true});
-    if('IntersectionObserver' in window){const revealObserver=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');revealObserver.unobserve(e.target);}}),{threshold:.11});$$('.reveal').forEach(e=>revealObserver.observe(e));}else{$$('.reveal').forEach(e=>e.classList.add('visible'));}
+    // Register after v2.js finishes arranging the page and gallery. Content is
+    // visible by default; only an observed entrance opts into an animation.
+    document.addEventListener('DOMContentLoaded', () => {
+      const preference = matchMedia('(prefers-reduced-motion: reduce)');
+      const parentHeading = $('#parents h2');
+      const targets = new Set();
+      const pending = new Set();
+      let observer, parentStarted = null, fastUntil = 0, lastY = scrollY, lastTime = performance.now(), scheduled = false;
+      const finish = element => {
+        element.classList.add('motion-instant', 'visible');
+        pending.delete(element);
+        observer?.unobserve(element);
+      };
+      const enter = (element, instant = false) => {
+        if (!pending.has(element)) return;
+        if (instant || preference.matches) finish(element);
+        else {
+          if (element === parentHeading) parentStarted = performance.now();
+          if (element.classList.contains('reveal-concern')) {
+            // Desktop cards may reach the viewport before the adjacent heading.
+            // Start one parent sequence, then let each card enter after the line
+            // has drawn. On mobile the heading usually finishes before the cards.
+            enter(parentHeading);
+            const mobile = matchMedia('(max-width:780px)').matches;
+            const remaining = parentStarted === null ? 0 : Math.max(0, (mobile ? 360 : 600) - (performance.now() - parentStarted));
+            const order = Number(element.style.getPropertyValue('--reveal-order'));
+            element.style.setProperty('--reveal-delay', `${remaining + order * (mobile ? 35 : 80)}ms`);
+          }
+          element.classList.add('visible');
+          pending.delete(element);
+          observer.unobserve(element);
+        }
+      };
+      const add = (element, kind, order = 0) => {
+        if (!element) return;
+        element.classList.add('reveal', `reveal-${kind}`);
+        element.style.setProperty('--reveal-order', order);
+        targets.add(element);
+        pending.add(element);
+      };
+      // These containers include controls or now have individual reveal targets.
+      $$('.reveal').forEach(element => {
+        if (element.closest('.hero, #journey, #brainlab, #enquiry, #parents, #about')) element.classList.remove('reveal');
+        else { targets.add(element); pending.add(element); }
+      });
+      add(parentHeading, 'parent');
+      $$('#parents .worry-item').forEach((element, index) => add(element, 'concern', index));
+      add($('#about .teacher-art'), 'mentor');
+      add($('#about h2'), 'mentor');
+      const columns = matchMedia('(max-width:520px)').matches ? 1 : matchMedia('(max-width:780px)').matches ? 2 : 3;
+      $$('.gallery-card:not([hidden])').slice(0, columns).forEach((element, index) => add(element, 'gallery', index));
+
+      const finishWithin = section => targets.forEach(element => {
+        if (section?.contains(element)) finish(element);
+      });
+      const jump = hash => {
+        let section;
+        try { section = document.getElementById(decodeURIComponent(hash.slice(1))); } catch { return; }
+        if (!section) return;
+        fastUntil = performance.now() + 1200;
+        finishWithin(section);
+      };
+      if (!('IntersectionObserver' in window) || preference.matches) targets.forEach(finish);
+      else {
+        observer = new IntersectionObserver(entries => entries.forEach(entry => {
+          if (entry.isIntersecting) enter(entry.target, performance.now() < fastUntil);
+        }), { threshold: 0, rootMargin: '0px 0px 32px 0px' });
+        pending.forEach(element => observer.observe(element));
+      }
+      if (location.hash) jump(location.hash);
+      document.addEventListener('click', event => {
+        const link = event.target.closest('a[href]');
+        if (!link) return;
+        const url = new URL(link.href, location.href);
+        if (url.origin === location.origin && url.pathname === location.pathname && url.hash) jump(url.hash);
+      });
+      window.addEventListener('hashchange', () => jump(location.hash));
+      // A swipe or jump consumes skipped entrances and cancels any reveal that
+      // would otherwise delay content at the landing position.
+      window.addEventListener('scroll', () => {
+        const now = performance.now(), distance = Math.abs(scrollY - lastY);
+        if (distance > innerHeight * .45 || distance / Math.max(1, now - lastTime) > 1.6) fastUntil = now + 180;
+        lastY = scrollY; lastTime = now;
+        if (scheduled) return;
+        scheduled = true;
+        requestAnimationFrame(() => {
+          scheduled = false;
+          targets.forEach(element => {
+            const rect = element.getBoundingClientRect();
+            if (rect.bottom < 0 || (performance.now() < fastUntil && rect.top < innerHeight)) finish(element);
+          });
+        });
+      }, { passive: true });
+      // Focus and taps never wait for a reveal, including a gallery filter change.
+      for (const type of ['focusin', 'pointerdown']) document.addEventListener(type, event => {
+        finishWithin(event.target.closest('section'));
+      });
+      window.addEventListener('resize', () => finishWithin($('#life-at-vardhaman')));
+      preference.addEventListener('change', () => {
+        if (preference.matches) targets.forEach(finish);
+      });
+    }, { once: true });
     const milestones={1:{"title":"Little discoveries","desc":"Class 1 is a chance to explore letters, numbers and the joy of learning.","label":"First discoveries","focus":["Letter and number familiarity","Listening and expression","Comfort with learning routines"],"deco":["✏️","📚"],"bg":"#e4ebff"},2:{"title":"The growing explorer","desc":"Class 2 builds on early reading, counting and the confidence to ask questions.","label":"Growing curiosity","focus":["Reading practice","Number confidence","Asking questions"],"deco":["🌱","🔎"],"bg":"#dff8ef"},3:{"title":"Building connections","desc":"Class 3 connects reading and number skills with everyday ideas and discoveries.","label":"Connecting ideas","focus":["Reading understanding","Mathematics practice","Explaining ideas"],"deco":["📖","🧩"],"bg":"#fff0c5"},4:{"title":"The curious problem-solver","desc":"Class 4 encourages step-by-step reasoning and growing independence with familiar skills.","label":"Learning with purpose","focus":["Applying the basics","Step-by-step reasoning","Independent learning habits"],"deco":["💡","📚"],"bg":"#eee7ff"},5:{title:'The curious explorer',desc:'Class 5 is about connecting ideas, growing independence and discovering the joy of solving problems.',label:'Building confidence',focus:['Stronger subject fundamentals','Growing learning confidence','Steady study habits'],deco:['✏️','📚'],bg:'#e4ebff'},6:{title:'The brave new explorer',desc:'New subjects, deeper concepts and more opportunities to become independent.',label:'A new learning leap',focus:['Adapting to deeper subjects','Asking thoughtful questions','Planning study time'],deco:['🌟','🔬'],bg:'#dff8ef'},7:{title:'The confident connector',desc:'A stage for connecting ideas across subjects and practising with purpose.',label:'Connecting the dots',focus:['Concept application','Science and mathematics reasoning','Study consistency'],deco:['🧠','🧪'],bg:'#fff0c5'},8:{title:'The focused thinker',desc:'Building a steady approach to more complex topics and examinations.',label:'Focus & understanding',focus:['Complex problem solving','Preparation and practice','Independent revision'],deco:['💡','🎯'],bg:'#eee7ff'},9:{title:'The determined learner',desc:'Stronger foundations and better habits for important academic choices.',label:'Growing determination',focus:['Subject-depth understanding','Exam strategy','Personal learning goals'],deco:['📐','📖'],bg:'#e2efff'},10:{title:'The future-ready achiever',desc:'A meaningful milestone — with preparation, focus and confidence for what comes next.',label:'Ready for next chapter',focus:['Board exam readiness','Confident revision routines','Preparing for the next chapter'],deco:['🎓','🚀'],bg:'#ffe5cd'}};
     let currentGrade=1;const icons=['📚','💡','🌱'];function setGrade(g){currentGrade=Math.max(1,Math.min(10,g));const d=milestones[currentGrade];$('#stageNumber').textContent=currentGrade;$('#gradeTitle').textContent=d.title;$('#gradeDesc').textContent=d.desc;$('#stageLabel').textContent=d.label;$('#decoA').textContent=d.deco[0];$('#decoB').textContent=d.deco[1];$('#journeyStage').style.background=d.bg;$('#gradeCount').textContent=`Class ${currentGrade} / 10`;$('#focusList').innerHTML=d.focus.map((x,i)=>`<div class="focus-item"><span>${icons[i]}</span>${x}</div>`).join('');$$('.grade-dot').forEach((b,i)=>b.setAttribute('aria-pressed',String(Number(b.textContent)===currentGrade)));$('#stageGlobe').style.transform=`rotate(${(currentGrade-1)*4}deg)`;$('#stageNumber').style.transform=`rotate(${(currentGrade-1)*1.5}deg)`;}
     for(let i=1;i<=10;i++){const b=document.createElement('button');b.className='grade-dot';b.textContent=i;b.type='button';b.setAttribute('aria-label',`Class ${i}`);b.addEventListener('click',()=>setGrade(i));$('#gradeTrack').append(b);}$('#prevGrade').addEventListener('click',()=>setGrade(currentGrade===1?10:currentGrade-1));$('#nextGrade').addEventListener('click',()=>setGrade(currentGrade===10?1:currentGrade+1));setGrade(1);

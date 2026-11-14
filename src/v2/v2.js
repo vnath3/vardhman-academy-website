@@ -99,57 +99,17 @@
   const quizIntro=q('.brainlab .intro .muted');
   if(quizIntro)quizIntro.textContent='A playful three-question challenge for Class 1–10 learners and their parents. Pick a level and explore together.';
 
-  // Bring a real, owner-review-only photo/video story into the original design.
-  const gallery=document.createElement('section');
-  gallery.className='v2-gallery';
-  gallery.id='life-at-vardhaman';
-  gallery.setAttribute('aria-labelledby','galleryTitle');
-  gallery.innerHTML=`
-    <div class="container">
-      <div class="gallery-intro">
-        <div><span class="eyebrow">Learning has many moments</span><h2 class="h2" id="galleryTitle">Beyond books. <span style="color:var(--blue)">Into life.</span></h2></div>
-        <p class="muted">From a spirited game of cricket to moments worth celebrating, here's a closer look at the people and experiences behind the academy.</p>
-      </div>
-      <span class="gallery-chip">✦ Real media · Private concept review</span>
-      <div class="gallery-toolbar" aria-label="Filter gallery">
-        <button class="gallery-tab" type="button" data-category="all" aria-pressed="true">All moments</button>
-        <button class="gallery-tab" type="button" data-category="activities" aria-pressed="false">⚽ Sports & play</button>
-        <button class="gallery-tab" type="button" data-category="achievements" aria-pressed="false">🏅 Achievements</button>
-        <button class="gallery-tab" type="button" data-category="community" aria-pressed="false">💚 Community</button>
-      </div>
-      <div class="gallery-grid" id="galleryGrid"></div>
-      <div class="gallery-disclosure"><p class="muted" id="gallerySummary" role="status" aria-live="polite"></p><button class="btn light" type="button" id="galleryToggle" aria-controls="galleryGrid" aria-expanded="false">View all moments</button></div>
-      <div class="gallery-footnote"><span aria-hidden="true">🛡</span><div><strong>Private-review footage.</strong> These are authentic photos and videos shared by the academy. Public release requires parent/guardian permissions for identifiable students and verification of award details. The event-banner photograph contains an older course listing and must not be reused as a current offer.</div></div>
-    </div>`;
-
+  // Enhance the build-rendered gallery; links also open originals without JS.
+  const gallery=q('#life-at-vardhaman');
   const media=mediaConfig.gallery;
-
-  const grid=gallery.querySelector('#galleryGrid');
-  grid.innerHTML=media.map(item=>`
-    <article class="gallery-card" data-category="${item.category}" data-type="${item.category==='achievements'?'achievement':item.type}">
-      <button type="button" class="gallery-action" data-media="${item.id}" aria-label="${item.type==='video'?'Play video':'View photo'}: ${escapeText(item.title)}">
-        <div class="gallery-media-wrap"><img class="gallery-media" src="${item.poster||item.src}" alt="${escapeText(item.alt||item.title)}" loading="lazy">${item.type==='video'?'<span class="gallery-play" aria-hidden="true">▶</span>':''}</div>
-        <div class="gallery-body"><span class="gallery-category">${item.category}${item.duration?' · '+item.duration:''}</span><strong>${escapeText(item.title)}</strong><p>${escapeText(item.desc)}</p><div class="gallery-card-bottom"><span class="gallery-consent">${privateReview?'Owner review · Not published':'Shared with permission'}</span><span class="gallery-arrow" aria-hidden="true">↗</span></div></div>
-      </button>
-    </article>`).join('');
-
-  if (!privateReview) {
-    gallery.querySelector('.gallery-chip').textContent='Life at Vardhaman';
-    gallery.querySelector('.gallery-footnote').remove();
-  }
-  const empty=document.createElement('p');
-  empty.className='gallery-empty muted';
-  empty.setAttribute('role','status');
-  empty.textContent='Photos and videos will be shared here with permission.';
-  empty.hidden=media.length>0;
-  grid.after(empty);
+  const empty=gallery.querySelector('.gallery-empty');
+  gallery.querySelector('.gallery-toolbar').hidden=false;
 
   // Important: the original HTML rearranges its sections on load. Insert our
   // new section into the *final* live order after the mentor section.
   const teacher=q('.teacher');
   teacher?.after(gallery);
-  const nav=q('#navLinks');
-  if(nav){const a=document.createElement('a');a.href='#life-at-vardhaman';a.textContent='Life at Vardhaman';nav.insertBefore(a,nav.querySelector('a[href="#enquiry"]'));a.addEventListener('click',()=>{nav.classList.remove('open');const toggle=q('#mobileToggle');if(toggle){toggle.setAttribute('aria-expanded','false');toggle.textContent='☰';}});}
+
 
   let selectedCategory='all',expanded=privateReview;
   const galleryToggle=gallery.querySelector('#galleryToggle');
@@ -203,7 +163,7 @@
       q('#mediaModalCaption').append(error);
     }, { once: true });
   }
-  qa('[data-media]').forEach(button=>button.addEventListener('click',()=>openMedia(button.dataset.media)));
+  qa('[data-media]').forEach(button=>button.addEventListener('click',event=>{event.preventDefault();openMedia(button.dataset.media);}));
   q('.media-modal-close')?.addEventListener('click',closeMedia);
   modal.addEventListener('click',e=>{if(e.target===modal)closeMedia();});
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('open'))closeMedia();});
