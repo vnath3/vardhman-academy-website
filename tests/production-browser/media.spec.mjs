@@ -3,6 +3,7 @@ import { access } from 'node:fs/promises';
 import path from 'node:path';
 import { root, readV2Manifest } from '../../scripts/contracts.mjs';
 import { planMedia } from '../../src/v2-media.mjs';
+import { renderGallery } from '../../src/v2-gallery.mjs';
 import { stubAnalytics } from './analytics.mjs';
 
 test.beforeEach(async ({ page }) => { await stubAnalytics(page); });
@@ -61,6 +62,13 @@ for (const width of [1440, 390]) {
     const poster = approve({ ...structuredClone(manifest.assets.find(asset => asset.id === 'VID-05-POSTER')), id: 'FIXTURE-POSTER', source_path: 'media/vardhaman/video-posters/fixture-poster.png', production_path: 'media/fixtures/poster.png', parent_id: video.id });
     manifest.assets.push(photo, video, poster);
     const runtime = planMedia(manifest).runtime;
+    // Gallery markup is now generated at build time. Simulate that same manifest
+    // update in both HTML and browser data without changing the real artifact.
+    await page.route('http://127.0.0.1:5178/', async route => {
+      const response = await route.fetch();
+      const html = (await response.text()).replace(/<section class="v2-gallery"[\s\S]*?<\/section>/, () => renderGallery(runtime));
+      await route.fulfill({ response, body: html });
+    });
     const errors = [], failures = [];
     page.on('pageerror', error => errors.push(error.message));
     page.on('response', response => { if (response.status() >= 400) failures.push(response.url()); });
