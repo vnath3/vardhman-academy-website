@@ -152,17 +152,15 @@ for (const width of [1440, 390]) {
   }
 }
 
-test('story dialog contains focus and leaves sample claims clearly labelled', async ({ page }) => {
+test('gallery dialog contains focus without exposing sample stories', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('.story-note')).toContainText('not verified alumni testimonials');
-  const trigger = page.locator('.story-card').first();
+  const trigger=page.locator('.gallery-card:visible .gallery-action').first();
   await trigger.click();
-  await expect(page.locator('main')).toHaveAttribute('inert', '');
-  await page.keyboard.press('Shift+Tab');
-  await expect(page.locator('#modalEnd')).toBeFocused();
+  await expect(page.locator('main')).toHaveAttribute('inert','');
   await page.keyboard.press('Tab');
-  await expect(page.locator('#modalClose')).toBeFocused();
+  await expect(page.locator('.media-modal-close')).toBeFocused();
   await page.keyboard.press('Escape');
-  await expect(page.locator('main')).not.toHaveAttribute('inert', '');
+  await expect(page.locator('main')).not.toHaveAttribute('inert','');
   await expect(trigger).toBeFocused();
+  await expect(page.locator('#stories, #storyModal')).toHaveCount(0);
 });

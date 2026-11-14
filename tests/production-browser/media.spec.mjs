@@ -20,8 +20,9 @@ for (const width of [1440, 390]) {
     expect(videoRequests).toEqual([]);
     for (const category of ['activities', 'achievements', 'community', 'all']) {
       await page.locator(`.gallery-tab[data-category="${category}"]`).click();
-      await expect(page.locator('.gallery-card:visible')).toHaveCount(gallery.filter(item => category === 'all' || item.category === category).length);
+      await expect(page.locator('.gallery-card:visible')).toHaveCount(Math.min(gallery.filter(item => category === 'all' || item.category === category).length, width <= 520 ? 1 : 3));
     }
+    if(await page.locator('#galleryToggle').isVisible())await page.locator('#galleryToggle').click();
     for (const item of gallery) {
       const trigger = page.locator(`[data-media="${item.id}"]`);
       await trigger.click();
@@ -75,9 +76,10 @@ for (const width of [1440, 390]) {
     await expect(page.locator('.gallery-consent').first()).toHaveText('Shared with permission');
     for (const [category, count] of [['activities', 1], ['community', 1], ['achievements', 0], ['all', 2]]) {
       await page.locator(`.gallery-tab[data-category="${category}"]`).click();
-      await expect(page.locator('.gallery-card:visible')).toHaveCount(count);
+      await expect(page.locator('.gallery-card:visible')).toHaveCount(Math.min(count,width <= 520 ? 1 : 3));
       if (!count) await expect(page.locator('.gallery-empty')).toBeVisible();
     }
+    if(await page.locator('#galleryToggle').isVisible())await page.locator('#galleryToggle').click();
     const imageTrigger = page.locator('[data-media="FIXTURE-PHOTO"]');
     await imageTrigger.click();
     await expect(page.locator('#mediaModalCaption')).toContainText(photo.title);

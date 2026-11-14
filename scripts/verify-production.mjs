@@ -4,7 +4,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { root, readV2Manifest, readV2Settings } from './contracts.mjs';
 import { planMedia, v2Source } from './build-v2.mjs';
-import { renderSiteHtml, siteRuntime, robotsFile, productionHeaders } from '../src/v2-settings.mjs';
+import { renderSiteHtml, renderConceptScript, siteRuntime, robotsFile, productionHeaders } from '../src/v2-settings.mjs';
 
 export async function listFiles(directory, prefix = '') {
   const files = [];
@@ -29,7 +29,8 @@ export async function verifyProduction() {
   assert.deepEqual(actual, expected, 'Artifact must contain only V2 code, fonts and approved media; rebuild to remove stale files.');
   for (const file of sourceFiles) {
     const source = await readFile(path.join(v2Source, file));
-    const expectedBytes = file === 'index.html' ? Buffer.from(renderSiteHtml(source.toString('utf8'), settings, { media: runtime })) : source;
+    const expectedBytes = file === 'index.html' ? Buffer.from(renderSiteHtml(source.toString('utf8'), settings, { media: runtime }))
+      : file === 'concept.js' ? Buffer.from(renderConceptScript(source.toString('utf8'))) : source;
     assert.deepEqual(await readFile(path.join(output, file)), expectedBytes, `Source mismatch: ${file}`);
   }
   assert.equal(await readFile(path.join(output, 'site-settings.js'), 'utf8'), `window.VARDHAMAN_SITE = ${JSON.stringify(siteRuntime(settings)).replaceAll('<', '\\u003c')};\n`);

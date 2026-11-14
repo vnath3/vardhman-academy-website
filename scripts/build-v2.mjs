@@ -3,7 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { root, readV2Manifest, readV2Settings } from './contracts.mjs';
 import { planMedia } from '../src/v2-media.mjs';
-import { siteRuntime, renderSiteHtml, robotsFile, productionHeaders } from '../src/v2-settings.mjs';
+import { siteRuntime, renderSiteHtml, renderConceptScript, robotsFile, productionHeaders } from '../src/v2-settings.mjs';
 export { planMedia } from '../src/v2-media.mjs';
 
 export const v2Output = path.join(root, '.local-preview-v2');
@@ -32,9 +32,10 @@ export async function buildV2({ privateReview = false } = {}) {
   // Both paths are fixed generated directories inside this checkout.
   await rm(output, { recursive: true, force: true });
   await mkdir(output, { recursive: true });
-  for (const file of ['base.css', 'v2.css', 'concept.js', 'v2.js', 'enquiry.js', 'dialogs.js', 'fonts.css', 'fonts']) {
+  for (const file of ['base.css', 'v2.css', 'v2.js', 'enquiry.js', 'dialogs.js', 'fonts.css', 'fonts']) {
     await cp(path.join(v2Source, file), path.join(output, file), { recursive: true });
   }
+  await writeFile(path.join(output, 'concept.js'), renderConceptScript(await readFile(path.join(v2Source, 'concept.js'), 'utf8'), { privateReview }));
   await writeFile(path.join(output, 'index.html'), renderSiteHtml(await readFile(path.join(v2Source, 'index.html'), 'utf8'), settings, { privateReview, media: planMedia(manifest).runtime }));
   await writeFile(path.join(output, 'site-settings.js'), `window.VARDHAMAN_SITE = ${JSON.stringify(runtimeSettings).replaceAll('<', '\\u003c')};\n`);
   if (!privateReview) {

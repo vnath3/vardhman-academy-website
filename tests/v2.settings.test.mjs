@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { readV2Settings, readV2Manifest, root } from '../scripts/contracts.mjs';
-import { validateSettings, siteRuntime, renderSiteHtml, robotsFile, productionHeaders } from '../src/v2-settings.mjs';
+import { validateSettings, siteRuntime, renderSiteHtml, renderConceptScript, robotsFile, productionHeaders } from '../src/v2-settings.mjs';
 import { planMedia } from '../src/v2-media.mjs';
 import path from 'node:path';
 
@@ -48,4 +48,28 @@ test('canonical, sharing and favicon use configured origin and already-approved 
   assert.doesNotMatch(renderSiteHtml(source, config, { privateReview: true, media }), /googletagmanager|analytics\.js/);
   config.seo.title = 'Academy "quoted" <script>';
   assert.match(renderSiteHtml(source, config), /Academy &quot;quoted&quot; &lt;script&gt;/);
+});
+
+test('public output removes sample stories and unfinished copy while private review retains its carousel', async () => {
+  const source = await readFile(path.join(root, 'src/v2/index.html'), 'utf8');
+  const script = await readFile(path.join(root, 'src/v2/concept.js'), 'utf8');
+  const media = planMedia(await readV2Manifest()).runtime;
+  const publicHtml = renderSiteHtml(source, settings, { media });
+  assert.doesNotMatch(publicHtml, /storyTrack|storyModal|href="#stories"|student-voices|final page|final launch|Concept preview|Interactive concept preview|Reserved for real|will appear here|map pin once/);
+  assert.match(publicHtml, /5,000\+ students/);
+  assert.doesNotMatch(renderConceptScript(script), /A dream takes flight|Engineering journey|storyTrack|private-stories/);
+  assert.match(renderSiteHtml(source, settings, { privateReview: true, media }), /storyTrack/);
+  assert.equal(renderConceptScript(script, { privateReview: true }), script);
+});
+
+test('approved mentor media is rendered in HTML and missing permissions produce only neutral identity text', async () => {
+  const source = await readFile(path.join(root, 'src/v2/index.html'), 'utf8');
+  const media = planMedia(await readV2Manifest()).runtime;
+  const html = renderSiteHtml(source, settings, { media });
+  assert.match(html, /class="mentor-portrait" src=".\/media\/hero\//);
+  assert.match(html, /class="mentor-event-photo" src=".\/media\/mentor\//);
+  assert.match(html, /External event, not hosted by Vardhaman Academy/);
+  const denied = renderSiteHtml(source, settings, { media: {} });
+  assert.doesNotMatch(denied, /class="mentor-portrait"|class="mentor-event-photo"|will appear|photo belongs here/);
+  assert.match(denied, /Rushabh Mutha · Vardhaman Academy/);
 });

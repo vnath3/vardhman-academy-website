@@ -60,21 +60,21 @@
   const heroButton=q('.hero-parent .hero-actions .btn.primary');
   if(heroButton) heroButton.innerHTML='Tell us about your child <span class="arrow">↗</span>';
   const heroTrust=q('.hero-parent .hero-trust p');
-  if(heroTrust) heroTrust.innerHTML='<strong>500+ students taught — as shared by the academy</strong><br>Classes 1–10 · Bansilal Nagar';
+  if(heroTrust) heroTrust.innerHTML='<strong>5,000+ students taught</strong><br>Classes 1–10 · Bansilal Nagar';
 
   const portrait=q('.portrait-field');
-  if(portrait && mediaConfig.hero) portrait.innerHTML=`<img class="mentor-portrait" src="${mediaConfig.hero}" alt="${escapeText(mediaConfig.heroAlt || 'Rushabh Sir speaking with a microphone in a warm Vardhaman-themed portrait')}" loading="eager" fetchpriority="high">`;
-  else portrait?.classList.add('media-placeholder');
+  if(portrait && mediaConfig.hero) {
+    if(!portrait.querySelector('.mentor-portrait')) portrait.innerHTML=`<img class="mentor-portrait" src="${mediaConfig.hero}" alt="${escapeText(mediaConfig.heroAlt || 'Rushabh Sir speaking with a microphone in a warm Vardhaman-themed portrait')}" loading="eager" fetchpriority="high">`;
+  } else portrait?.classList.add('media-placeholder');
   const heroArt=q('.mentor-hero');
-  if(heroArt) heroArt.setAttribute('aria-label',mediaConfig.hero ? 'Portrait of Rushabh Sir' : 'Rushabh Sir portrait placeholder');
+  if(heroArt) heroArt.setAttribute('aria-label',mediaConfig.hero ? 'Portrait of Rushabh Sir' : 'Rushabh Mutha, Vardhaman Academy');
   const plate=q('.mentor-nameplate span');
   if(plate) plate.textContent='Vardhaman Academy';
 
   const teacherArt=q('.teacher-art');
-  if(teacherArt && mediaConfig.mentor) teacherArt.innerHTML=`<img class="mentor-event-photo" src="${mediaConfig.mentor}" alt="${escapeText(mediaConfig.mentorAlt || 'Rushabh Sir speaking during an external educational seminar')}" loading="lazy"><div class="teacher-photo-note">${escapeText(mediaConfig.mentorCaption || 'A real educational seminar appearance · External event, not hosted by Vardhaman Academy')}</div>`;
-  else if(teacherArt) teacherArt.innerHTML='<span class="portrait-monogram" aria-hidden="true">RM</span><span class="teacher-photo-note">Meet Rushabh Sir · Vardhaman Academy</span>';
-  const teacherPreview=q('.teacher .placeholder');
-  if(teacherPreview) teacherPreview.textContent=privateReview ? 'Real seminar photography. Authentic student reviews and quotations will be added after verification and permission.' : 'Student stories and photographs will be shared with permission.';
+  if(teacherArt && mediaConfig.mentor) {
+    if(!teacherArt.querySelector('.mentor-event-photo')) teacherArt.innerHTML=`<img class="mentor-event-photo" src="${mediaConfig.mentor}" alt="${escapeText(mediaConfig.mentorAlt || 'Rushabh Sir speaking during an external educational seminar')}" loading="lazy"><div class="teacher-photo-note">${escapeText(mediaConfig.mentorCaption || 'A real educational seminar appearance · External event, not hosted by Vardhaman Academy')}</div>`;
+  } else if(teacherArt) teacherArt.innerHTML='<span class="portrait-note">Rushabh Mutha · Vardhaman Academy</span>';
   const teacherEyebrow=q('.teacher-copy .eyebrow');
   if(teacherEyebrow) teacherEyebrow.textContent='The heart of Vardhaman';
   qa('.teacher-facts .pill').forEach((pill,i) => {
@@ -118,6 +118,7 @@
         <button class="gallery-tab" type="button" data-category="community" aria-pressed="false">💚 Community</button>
       </div>
       <div class="gallery-grid" id="galleryGrid"></div>
+      <div class="gallery-disclosure"><p class="muted" id="gallerySummary" role="status" aria-live="polite"></p><button class="btn light" type="button" id="galleryToggle" aria-controls="galleryGrid" aria-expanded="false">View all moments</button></div>
       <div class="gallery-footnote"><span aria-hidden="true">🛡</span><div><strong>Private-review footage.</strong> These are authentic photos and videos shared by the academy. Public release requires parent/guardian permissions for identifiable students and verification of award details. The event-banner photograph contains an older course listing and must not be reused as a current offer.</div></div>
     </div>`;
 
@@ -150,13 +151,38 @@
   const nav=q('#navLinks');
   if(nav){const a=document.createElement('a');a.href='#life-at-vardhaman';a.textContent='Life at Vardhaman';nav.insertBefore(a,nav.querySelector('a[href="#enquiry"]'));a.addEventListener('click',()=>{nav.classList.remove('open');const toggle=q('#mobileToggle');if(toggle){toggle.setAttribute('aria-expanded','false');toggle.textContent='☰';}});}
 
+  let selectedCategory='all',expanded=privateReview;
+  const galleryToggle=gallery.querySelector('#galleryToggle');
+  const gallerySummary=gallery.querySelector('#gallerySummary');
+  function renderGalleryVisibility(){
+    const limit=matchMedia('(max-width:520px)').matches?1:matchMedia('(max-width:780px)').matches?2:3;
+    const matches=media.filter(item=>selectedCategory==='all'||item.category===selectedCategory);
+    let shown=0;
+    qa('.gallery-card').forEach(card=>{
+      const included=selectedCategory==='all'||card.dataset.category===selectedCategory;
+      card.hidden=!included||(!expanded&&shown>=limit);
+      if(included&&!card.hidden)shown++;
+    });
+    empty.hidden=matches.length>0;
+    empty.textContent=media.length?'No photos or videos in this category.':'Photos and videos will be shared here with permission.';
+    gallerySummary.textContent=`Showing ${shown} of ${matches.length} moments`;
+    gallery.querySelector('.gallery-disclosure').hidden=!matches.length;
+    galleryToggle.hidden=matches.length<=limit;
+    galleryToggle.setAttribute('aria-expanded',String(expanded));
+    galleryToggle.textContent=expanded?'Show fewer':`View all ${matches.length} moments`;
+  }
   qa('.gallery-tab').forEach(tab=>tab.addEventListener('click',()=>{
-    const category=tab.dataset.category;
+    selectedCategory=tab.dataset.category;expanded=privateReview;
     qa('.gallery-tab').forEach(x=>x.setAttribute('aria-pressed',String(x===tab)));
-    qa('.gallery-card').forEach(card=>card.hidden=category!=='all'&&card.dataset.category!==category);
-    empty.hidden=media.some(item=>category==='all'||item.category===category);
-    empty.textContent=media.length ? 'No photos or videos in this category yet.' : 'Photos and videos will be shared here with permission.';
+    renderGalleryVisibility();
   }));
+  galleryToggle.addEventListener('click',()=>{
+    expanded=!expanded;renderGalleryVisibility();
+    galleryToggle.focus({preventScroll:true});
+    if(!expanded)galleryToggle.scrollIntoView({block:'nearest'});
+  });
+  for(const query of ['(max-width:520px)','(max-width:780px)'])matchMedia(query).addEventListener('change',renderGalleryVisibility);
+  renderGalleryVisibility();
 
   const modal=document.createElement('div');modal.className='media-modal';modal.id='mediaModal';modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');modal.setAttribute('aria-label','Gallery media preview');
   modal.innerHTML='<div class="media-modal-panel"><button type="button" class="media-modal-close" aria-label="Close preview">×</button><div class="media-modal-stage" id="mediaModalStage"></div><div class="media-modal-caption" id="mediaModalCaption"></div></div>';
@@ -170,7 +196,7 @@
     }else{
       el=document.createElement('img');el.src=item.src;el.alt=item.alt||item.title;
     }
-    stage.append(el);q('#mediaModalCaption').innerHTML=`<strong>${escapeText(item.title)}</strong><p>${escapeText(item.desc)}${privateReview?' · Private preview only; permission review pending.':''}</p>`;modal.classList.add('open');document.body.style.overflow='hidden';q('.media-modal-close')?.focus();window.VardhamanDialogs.open(modal,lastFocused);
+    stage.append(el);q('#mediaModalCaption').innerHTML=`<strong>${escapeText(item.title)}</strong><p>${escapeText(item.desc)}${privateReview?' · Private media review.':''}</p>`;modal.classList.add('open');document.body.style.overflow='hidden';q('.media-modal-close')?.focus();window.VardhamanDialogs.open(modal,lastFocused);
     el.addEventListener('error', () => {
       const error=document.createElement('p');error.setAttribute('role','alert');
       error.textContent='This media could not be loaded. Please close the preview and try again later.';

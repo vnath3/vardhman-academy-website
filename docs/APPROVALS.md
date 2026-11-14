@@ -4,6 +4,9 @@ Updated 2026-11-14. This current register supersedes historical checklist states
 
 ## Recorded owner approvals
 
+- [x] Owner updated the public student-teaching count to **5,000+** on 2026-11-14. This replaces 500+ consistently in the hero, statistics and mentor biography; it is an owner-provided figure, not an independent student-record audit.
+- [x] Owner requested removal of visible production placeholders and a compact expandable gallery, journey animation/browser fixes and centered/wrapped navigation, with commit, push and deployment. Unverified sample alumni content remains private-only; no replacement testimonial or career was invented.
+
 - [x] Preserve the V2 design in the existing repository. Owner updated the current class range to **Classes 1–10** on 2026-11-14, superseding the earlier Classes 5–10 offer.
 - [x] Owner confirmed **Rushabh** as the public spelling on 2026-11-14. Use Rushabh Sir / Rushabh Mutha in active website text, image descriptions, SEO and enquiry drafts. Original filenames and historical approval evidence remain unchanged.
 - [x] Owner requested removal of the dotted photo overlay, then explicitly chose to keep the authentic external-event background. No academy-event composite is authorized by that final choice; retain the external-event caption.
@@ -23,7 +26,7 @@ Updated 2026-11-14. This current register supersedes historical checklist states
 
 - [ ] Owner to test actual WhatsApp receipt on the approved contact. Automated checks intercept navigation and do not contact the number or send a message.
 - [ ] Review clip audio and provide captions/transcripts as appropriate. VID-04's sideways ending remains a known quality issue; any later edited derivative needs its own review.
-- [ ] Verify the 500+ claim, subjects/boards, full address, actual admissions availability and teaching commitments.
+- [ ] Confirm detailed subjects/boards, full street address/map, admissions availability and specific teaching commitments before adding them as factual offers. Public copy uses locality and contact guidance rather than unfinished promises or an unverified universal-board claim.
 - [ ] Provide verified, permissioned stories/testimonials if illustrative cards are to be replaced. Current sample labels must stay until then.
 - [ ] Review draft privacy wording, operational handling of enquiries and public usage analytics with the owner responsible for the site.
 - [ ] Provide a square master favicon/isolated logo if desired. The current favicon uses only the already-approved logo PNG.

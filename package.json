@@ -20,7 +20,8 @@
     "test:browser:v2": "playwright test --config playwright.v2.config.mjs",
     "compare:v2": "node scripts/compare-v2.mjs",
     "compare:v2:details": "node scripts/compare-v2-details.mjs",
-    "check": "node scripts/check.mjs"
+    "check": "node scripts/check.mjs",
+    "test:browser:engines": "playwright test --config playwright.engines.config.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.10.2",

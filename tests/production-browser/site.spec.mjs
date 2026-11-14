@@ -36,11 +36,12 @@ for (const width of [1440, 768, 390, 320]) {
     await expect(page.locator('.gallery-footnote')).toHaveCount(0);
     await expect(page.locator('.gallery-card')).toHaveCount(publicPlan.runtime.gallery.length);
     if (!publicPlan.runtime.gallery.length) await expect(page.locator('.gallery-empty')).toContainText('shared here with permission');
-    for (const selector of ['#home', '#parents', '#about', '#life-at-vardhaman', '#stories', '#approach', '#journey', '#brainlab', '#enquiry', '.faq', '.footer']) {
+    for (const selector of ['#home', '#parents', '#about', '#life-at-vardhaman', '#approach', '#journey', '#brainlab', '#enquiry', '.faq', '.footer']) {
       await page.locator(selector).scrollIntoViewIfNeeded();
       await expect(page.locator(selector)).toBeVisible();
     }
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(width);
+    if (await page.locator('#galleryToggle').isVisible()) await page.locator('#galleryToggle').click();
     for (const img of await page.locator('img').all()) {
       await img.scrollIntoViewIfNeeded();
       await expect.poll(() => img.evaluate(item => item.complete && item.naturalWidth > 0)).toBeTruthy();
@@ -64,7 +65,8 @@ for (const width of [1440, 768, 390, 320]) {
       const tab = page.locator(`.gallery-tab[data-category="${category}"]`);
       await tab.click();
       await expect(tab).toHaveAttribute('aria-pressed', 'true');
-      const count = publicPlan.runtime.gallery.filter(item => category === 'all' || item.category === category).length;
+      const total = publicPlan.runtime.gallery.filter(item => category === 'all' || item.category === category).length;
+      const count = Math.min(total, width <= 520 ? 1 : width <= 780 ? 2 : 3);
       await expect(page.locator('.gallery-card:visible')).toHaveCount(count);
       if (!count) await expect(page.locator('.gallery-empty')).toBeVisible();
     }
@@ -92,13 +94,7 @@ for (const width of [1440, 768, 390, 320]) {
     await expect(page.locator('#resultText')).toContainText('3 correct answers');
     await page.locator('#quizAgain').click();
     await expect(page.locator('#quizCount')).toHaveText('Question 1 of 3');
-    await page.locator('#storyFilters [data-filter="personal"]').click();
-    await expect(page.locator('.story-card')).toHaveCount(2);
-    const story = page.locator('.story-card').first();
-    await story.click();
-    await expect(page.locator('#storyModal')).toBeVisible();
-    await page.keyboard.press('Escape');
-    await expect(story).toBeFocused();
+    await expect(page.locator('#stories, #storyModal, a[href="#stories"]')).toHaveCount(0);
     await page.locator('.hero-actions a.primary').click();
     await expect(page).toHaveURL(/#enquiry$/);
     await page.locator('#classNext').click();

@@ -4,6 +4,8 @@ V2 is the active design for development and production. Static HTML, CSS and bro
 
 The current owner-confirmed offer is **Classes 1–10**, and the mentor's public name is **Rushabh Mutha / Rushabh Sir** (2026-11-14). The journey selector, enquiry wizard, quiz level labels and SEO metadata use that range. The seminar photo retains its authentic external-event background; its dotted CSS overlay is removed. See [the Batch 2 report](docs/BATCH2_TEST_REPORT.md). Historical V1 sources and original handoff documents retain their original wording.
 
+The current public teaching count is **5,000+**, supplied by the owner. Public builds omit the sample alumni carousel and unfinished review/launch copy; private review retains the carousel. The gallery starts with one row and supports View all / Show fewer. See [the Batch 3 content inventory and test report](docs/BATCH3_TEST_REPORT.md) for removals, browser checks and remaining work.
+
 ## Local V2 review
 
 ```powershell
@@ -46,6 +48,7 @@ No deployment was performed as part of this change. See the current [Batch 1 tes
 - `npm test`: V1 and V2 contracts plus production packaging/privacy regressions, run sequentially so V1 tests cannot leave `dist/` containing V1.
 - `npm run test:browser:production`: tests the already-built production artifact in Chrome (1440/768/390/320px) and Edge (390px).
 - `npm run test:browser:v2`: retained private V2 interaction/media regressions. `npm run test:browser`: retained V1 browser suite.
+- `npm run test:browser:engines`: focused gallery, motion and navigation checks in Firefox and Windows WebKit. Install these engines once with `npx playwright install firefox webkit`; this does not replace physical Safari/iOS testing.
 - `npm run dev:v1`: retained V1 preview. Its legacy builder remains `scripts/build.mjs`; running that file directly overwrites `dist/` with V1, so rebuild V2 afterwards. It is not used by Netlify or the production preview.
 
 The four-step enquiry wizard prepares an editable summary, supports copying and opens WhatsApp only after an explicit action when an approved number is configured. The owner-approved destination is 8830499339 (`918830499339` in international digits); the number and evidence are recorded in `content/v2-settings.json`. The parent must manually press Send in WhatsApp; opening it or copying never reports a submission. Missing/unapproved destinations show a disabled action and explanation. Private review disables real WhatsApp destinations. Drafts are not stored or sent to analytics. No backend lead submission or external video embed is configured.

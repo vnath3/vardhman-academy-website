@@ -44,6 +44,10 @@ export function robotsFile(settings, options = {}) {
   return `User-agent: *\n${robotsPolicy(settings, options).startsWith('noindex') ? 'Disallow: /' : 'Allow: /'}\n`;
 }
 
+export function renderConceptScript(source, { privateReview = false } = {}) {
+  return privateReview ? source : source.replace(/\s*\/\/ private-stories:start[\s\S]*?\/\/ private-stories:end\r?\n/g, '\n');
+}
+
 export function renderSiteHtml(source, settings, { privateReview = false, media } = {}) {
   validateSettings(settings);
   const seo = settings.seo;
@@ -66,6 +70,14 @@ export function renderSiteHtml(source, settings, { privateReview = false, media 
     ...(icon ? [`<link rel="icon" type="image/png" href="${escape(icon)}">`] : [])
   ].join('\n  ');
   html = html.replace('<!-- site-metadata -->', metadata);
+  html = html.replace('<!-- hero-media -->', media?.hero
+    ? `<img class="mentor-portrait" src="${escape(media.hero)}" alt="${escape(media.heroAlt)}" loading="eager" fetchpriority="high">`
+    : '<span class="portrait-note">Rushabh Mutha · Vardhaman Academy</span>');
+  html = html.replace('<!-- seminar-media -->', media?.mentor
+    ? `<img class="mentor-event-photo" src="${escape(media.mentor)}" alt="${escape(media.mentorAlt)}" loading="lazy"><div class="teacher-photo-note">${escape(media.mentorCaption)}</div>`
+    : '<span class="portrait-note">Rushabh Mutha · Vardhaman Academy</span>');
+  if (!privateReview) html = html.replace(/\s*<!-- private-preview:start -->[\s\S]*?<!-- private-preview:end -->/g, '')
+    .replace(/<a\b[^>]*href="#stories"[^>]*>[\s\S]*?<\/a>/g, '');
   if (privateReview) html = html.replace(/  <!-- Google tag \(gtag.js\): production only -->[\s\S]*?  <!-- \/Google tag -->\r?\n/, '');
   return html;
 }
