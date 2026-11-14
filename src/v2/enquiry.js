@@ -38,7 +38,7 @@
     heading.tabIndex = -1;
     heading.focus({ preventScroll: true });
   }
-  for (let grade = 5; grade <= 10; grade++) {
+  for (let grade = 1; grade <= 10; grade++) {
     const button = document.createElement('button');
     button.type = 'button'; button.className = 'choice'; button.textContent = grade;
     button.setAttribute('aria-label', `Class ${grade}`); button.setAttribute('aria-pressed', 'false');
@@ -69,7 +69,7 @@
     if (!chosenClass || !chosenConcern) return;
     const concern = concerns.find(item => item[0] === chosenConcern)[2];
     const note = q('#childNote').value.trim().slice(0, 350);
-    message = `Hello Rushab Sir,\n\nI would like to enquire about tuition at Vardhaman Academy for my child.\n\nClass: ${chosenClass}\nMain concern: ${concern}${note ? `\nWhat I hope to see improve: ${note}` : ''}\n\nCould we discuss the next steps?`;
+    message = `Hello Rushabh Sir,\n\nI would like to enquire about tuition at Vardhaman Academy for my child.\n\nClass: ${chosenClass}\nMain concern: ${concern}${note ? `\nWhat I hope to see improve: ${note}` : ''}\n\nCould we discuss the next steps?`;
     q('#enquirySummary').textContent = message;
     q('#copyStatus').textContent = '';
     q('#whatsappStatus').textContent = '';

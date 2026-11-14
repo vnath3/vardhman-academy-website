@@ -12,11 +12,12 @@ test('V2 has stable correct identity/grades, with the original reference present
   const concept = await readFile(path.join(v2Source, 'concept.js'), 'utf8');
   const enhancements = await readFile(path.join(v2Source, 'v2.js'), 'utf8');
   assert.match(html, /Vardhaman Academy/);
-  assert.match(html, /Classes 5–10/);
-  assert.doesNotMatch(html, /Vardhman|VARDHMAN|Classes? (1[–-]|[1-4] through)|Class 4–7|Class 8–10/);
-  assert.match(concept, /for\(let i=5;i<=10;i\+\+\)/);
-  assert.match(concept, /Math.max\(5,Math.min\(10,g\)\)/);
-  assert.doesNotMatch(concept, /milestones=\{1:/);
+  assert.match(html, /Classes 1–10/);
+  assert.match(html, /Rushabh Mutha/);
+  assert.doesNotMatch(html, /Vardhman|VARDHMAN|Classes? 5[–-]10|Classes 5 through 10|\bRushab\b/);
+  assert.match(concept, /for\(let i=1;i<=10;i\+\+\)/);
+  assert.match(concept, /Math.max\(1,Math.min\(10,g\)\)/);
+  assert.match(concept, /milestones=\{1:/);
   assert.doesNotMatch(enhancements, /if\(index<4\)|gradeBtns.slice\(0,4\)/);
   for (const file of ['base.css', 'v2.css', 'concept.js', 'v2.js', 'fonts.css']) assert.ok(html.includes(`./${file}`));
   assert.doesNotMatch(html, /https:\/\/fonts\.|wa\.me|youtube\.com|<form/);

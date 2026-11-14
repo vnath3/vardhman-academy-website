@@ -69,6 +69,7 @@ body { background: #fbfbf7; }
 .mentor-event-photo { width: 100%; height: 100%; object-fit: cover; object-position: 30% center; display: block; }
 .teacher-photo-note { position: absolute; bottom: 16px; left: 16px; right: 16px; padding: 11px 14px; background: rgba(11,45,58,.87); border-radius: 12px; color: #fff; font-size: 12px; line-height: 1.5; }
 .teacher-icon, .teacher-bubble { display:none; }
+.teacher-art::before { content: none; }
 .trust-strip { background:#eff3e9; }
 .trust-item strong { color: #176f8f; }
 .stories { background: #143b50; }
@@ -160,6 +161,7 @@ body { background: #fbfbf7; }
   .gallery-media{height:200px}
 }
 @media(max-width:520px) {
+  .grade-track{grid-template-columns:repeat(5,minmax(0,1fr))}
   .logo{min-width:0}.official-logo-crop{scale:.7;margin-right:-84px;transform-origin:left center;}
   .hero-parent h1{font-size:46px;letter-spacing:-2px}
   .hero-parent .hero-trust{align-items:center}

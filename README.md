@@ -2,6 +2,8 @@
 
 V2 is the active design for development and production. Static HTML, CSS and browser JavaScript; Node 22.12+ is used for builds and tests. There is no runtime server, framework or external font dependency.
 
+The current owner-confirmed offer is **Classes 1–10**, and the mentor's public name is **Rushabh Mutha / Rushabh Sir** (2026-11-14). The journey selector, enquiry wizard, quiz level labels and SEO metadata use that range. The seminar photo retains its authentic external-event background; its dotted CSS overlay is removed. See [the Batch 2 report](docs/BATCH2_TEST_REPORT.md). Historical V1 sources and original handoff documents retain their original wording.
+
 ## Local V2 review
 
 ```powershell

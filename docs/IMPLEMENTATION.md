@@ -1,5 +1,13 @@
 # Implementation and QA handoff
 
+## Batch 2: mentor spelling, photo overlay and Classes 1–10 - 2026-11-14
+
+The owner confirmed Rushabh as the public spelling, expanded the current offer to Classes 1–10, and chose to retain the authentic seminar background. The pictured dotted ring came from `.teacher-art::before`; it is removed in CSS without changing any source photograph, crop or media approval.
+
+Active V2 copy, alt text, SEO/share descriptions and enquiry greetings now use Rushabh. The journey and enquiry controls offer all ten classes, with new generic Class 1–4 learning-stage descriptions, a Class 1 initial state and 1/10 wraparound. The old enhancement layer's Class 5 floor and duplicate button handlers were removed. Junior/middle/senior quiz labels cover 1–4, 5–7 and 8–10. At small widths the journey buttons use two rows of five within the existing component. Original handoffs, archive filenames and V1 regression sources remain historical.
+
+The owner authorized pushing verified batches. See [the Batch 2 report](BATCH2_TEST_REPORT.md). Noindex, WhatsApp destination, source photo/video bytes and release permissions remain unchanged.
+
 ## Batch 1 follow-up - 2026-11-11
 
 The owner supplied and approved 8830499339 for parent enquiries. It matches the printed contact in the retained IMG-01/02 source flyers; the live page/settings exposed no contact number at verification. `content/v2-settings.json` now records the international destination `918830499339` and approval evidence. Actual owner receipt remains untested; automated navigation is intercepted before contacting WhatsApp. The parent must still press Send, and copying remains available.

@@ -4,9 +4,12 @@ Updated 2026-11-14. This current register supersedes historical checklist states
 
 ## Recorded owner approvals
 
-- [x] Preserve the V2 design and Classes 5-10 in the existing repository.
+- [x] Preserve the V2 design in the existing repository. Owner updated the current class range to **Classes 1–10** on 2026-11-14, superseding the earlier Classes 5–10 offer.
+- [x] Owner confirmed **Rushabh** as the public spelling on 2026-11-14. Use Rushabh Sir / Rushabh Mutha in active website text, image descriptions, SEO and enquiry drafts. Original filenames and historical approval evidence remain unchanged.
+- [x] Owner requested removal of the dotted photo overlay, then explicitly chose to keep the authentic external-event background. No academy-event composite is authorized by that final choice; retain the external-event caption.
+- [x] Owner authorized continuing verified fixes in batches with commits/pushes on 2026-11-14. Push successful batches without a deployment-skip marker; indexing still requires separate approval.
 - [x] LOGO-V2: authentic pixel-preserving logo-only crop; full historical flyer excluded.
-- [x] HERO-A: edited Rushab Sir portrait, likeness/publication rights confirmed.
+- [x] HERO-A: edited Rushabh Sir portrait, likeness/publication rights confirmed.
 - [x] IMG-12: original external-seminar image, rights and guardian consent for every embedded student confirmed. Preserve truthful external-event context.
 - [x] Google tag G-4F7P27EQSF requested; implementation remains in production builds only.
 - [x] Implement a configurable WhatsApp draft handoff requiring explicit parent action. This authorizes the workflow, not an unconfirmed contact number.

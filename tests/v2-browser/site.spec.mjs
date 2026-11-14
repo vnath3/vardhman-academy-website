@@ -26,7 +26,7 @@ for (const width of [1440, 768, 390, 320]) {
     }
     expect(requests.some(request => request.url.includes('.mp4'))).toBeFalsy();
     expect(requests.every(request => request.url.startsWith('http://127.0.0.1:5176/') && request.method === 'GET')).toBeTruthy();
-    expect(await page.locator('body').innerText()).not.toMatch(/Vardhman|Classes 1–10|Classes 1 through 10/);
+    expect(await page.locator('body').innerText()).not.toMatch(/Vardhman|Classes 5–10|Classes 5 through 10|\bRushab\b/);
     await page.evaluate(() => scrollTo(0, 0));
     if (width <= 780) {
       const menu = page.locator('#mobileToggle');
@@ -92,22 +92,28 @@ test('illustrative story carousel, category switches and modal', async ({ page }
   await expect(story).toBeFocused();
 });
 
-test('class 5–10 states, selected controls and wraparound navigation', async ({ page }) => {
+test('class 1–10 states, selected controls and wraparound navigation', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('#gradeTrack button')).toHaveCount(6);
-  for (const grade of [5, 9, 10]) {
+  await expect(page.locator('#gradeTrack button')).toHaveCount(10);
+  for (const grade of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) {
     const button = page.locator('#gradeTrack button').filter({ hasText: new RegExp(`^${grade}$`) });
     await button.click();
     await expect(page.locator('#stageNumber')).toHaveText(String(grade));
     await expect(button).toHaveAttribute('aria-pressed', 'true');
     await expect(page.locator('#gradeTrack [aria-pressed="true"]')).toHaveCount(1);
+    await expect(page.locator('#gradeTitle')).not.toHaveText('');
+    await expect(page.locator('#focusList .focus-item')).toHaveCount(3);
   }
   await page.locator('#nextGrade').click();
-  await expect(page.locator('#stageNumber')).toHaveText('5');
+  await expect(page.locator('#stageNumber')).toHaveText('1');
   await page.locator('#prevGrade').click();
   await expect(page.locator('#stageNumber')).toHaveText('10');
   await page.evaluate(() => window.setGrade(2));
-  await expect(page.locator('#stageNumber')).toHaveText('5');
+  await expect(page.locator('#stageNumber')).toHaveText('2');
+  await page.evaluate(() => window.setGrade(0));
+  await expect(page.locator('#stageNumber')).toHaveText('1');
+  await page.evaluate(() => window.setGrade(11));
+  await expect(page.locator('#stageNumber')).toHaveText('10');
 });
 
 test('quiz levels, wrong/right feedback, three-question progress and reset', async ({ page }) => {
@@ -133,7 +139,7 @@ test('four-step parent demo validates, supports back/edit/copy and transmits no 
   const transmissions = [];
   page.on('request', request => { if (request.method() !== 'GET') transmissions.push(request.url()); });
   await page.goto('/');
-  await expect(page.locator('#classSelect button')).toHaveCount(6);
+  await expect(page.locator('#classSelect button')).toHaveCount(10);
   await page.locator('#classNext').click();
   await expect(page.locator('#classValidation')).toContainText('Please choose');
   await page.locator('#classSelect button').filter({ hasText: /^9$/ }).click();

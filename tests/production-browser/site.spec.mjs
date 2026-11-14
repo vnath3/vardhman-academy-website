@@ -26,6 +26,10 @@ for (const width of [1440, 768, 390, 320]) {
     await expect(page.locator('.official-logo-crop').first()).toBeVisible();
     await expect(page.locator('.mentor-portrait')).toBeVisible();
     await expect(page.locator('.mentor-event-photo')).toBeVisible();
+    expect(await page.locator('.teacher-art').evaluate(item => getComputedStyle(item, '::before').content)).toBe('none');
+    expect(await page.locator('body').innerText()).not.toMatch(/\bRushab\b|Classes 5–10/);
+    await expect(page.locator('.teacher-copy h2')).toContainText('Rushabh Sir');
+    await expect(page).toHaveTitle(/Classes 1–10/);
     await expect(page.locator('.teacher-photo-note')).toContainText('External event, not hosted by Vardhaman Academy');
     await expect(page.locator('.portrait-monogram')).toHaveCount(0);
     await expect(page.locator('.v2-review-flag')).toHaveCount(0);
@@ -70,10 +74,13 @@ for (const width of [1440, 768, 390, 320]) {
       await page.locator('#navLinks a[href="#journey"]').click();
       await expect(page.locator('#mobileToggle')).toHaveAttribute('aria-expanded', 'false');
     }
+    await expect(page.locator('#gradeTrack button')).toHaveCount(10);
+    await expect(page.locator('#classSelect button')).toHaveCount(10);
+    await expect(page.locator('#classSelect button')).toHaveText(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']);
     await page.locator('#gradeTrack button').filter({ hasText: /^10$/ }).click();
     await expect(page.locator('#stageNumber')).toHaveText('10');
     await page.locator('#nextGrade').click();
-    await expect(page.locator('#stageNumber')).toHaveText('5');
+    await expect(page.locator('#stageNumber')).toHaveText('1');
     await page.locator('#prevGrade').click();
     await expect(page.locator('#stageNumber')).toHaveText('10');
     await page.locator('#levelSwitch [data-level="middle"]').click();

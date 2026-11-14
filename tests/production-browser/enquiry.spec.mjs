@@ -5,8 +5,8 @@ import { siteRuntime } from '../../src/v2-settings.mjs';
 
 test.beforeEach(async ({ page }) => { await stubAnalytics(page); });
 
-async function prepareDraft(page, goal) {
-  await page.locator('#classSelect button').filter({ hasText: /^8$/ }).click();
+async function prepareDraft(page, goal, grade = 8) {
+  await page.locator('#classSelect button').filter({ hasText: new RegExp(`^${grade}$`) }).click();
   await page.locator('#classNext').click();
   await page.locator('#concernOptions button').first().click();
   await page.locator('#concernNext').click();
@@ -27,7 +27,9 @@ for (const width of [1440, 390]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto('/');
     expect(await page.evaluate(() => window.VARDHAMAN_SITE)).toEqual(runtime);
-    await prepareDraft(page, 'Synthetic configured-contact check.');
+    const grade = width === 1440 ? 1 : 4;
+    await prepareDraft(page, 'Synthetic configured-contact check.', grade);
+    await expect(page.locator('#enquirySummary')).toContainText(`Class: ${grade}`);
     const action = page.locator('#whatsappEnquiry');
     if (!runtime.whatsappNumber) {
       await expect(action).toBeDisabled();
@@ -83,7 +85,7 @@ for (const width of [1440, 390]) {
     expect(url.searchParams.get('text')).toContain(goal);
     expect(url.searchParams.get('text')).toContain('Class: 8');
     expect(url.searchParams.get('text')).toBe(await page.locator('#enquirySummary').innerText());
-    expect(url.searchParams.get('text')).toBe(`Hello Rushab Sir,\n\nI would like to enquire about tuition at Vardhaman Academy for my child.\n\nClass: 8\nMain concern: Understanding concepts is difficult\nWhat I hope to see improve: ${goal}\n\nCould we discuss the next steps?`);
+    expect(url.searchParams.get('text')).toBe(`Hello Rushabh Sir,\n\nI would like to enquire about tuition at Vardhaman Academy for my child.\n\nClass: 8\nMain concern: Understanding concepts is difficult\nWhat I hope to see improve: ${goal}\n\nCould we discuss the next steps?`);
     expect(await page.evaluate(() => JSON.stringify(window.dataLayer))).not.toContain(goal);
     await expect(page.locator('#whatsappStatus')).toContainText('cannot confirm delivery');
     await whatsapp.close();

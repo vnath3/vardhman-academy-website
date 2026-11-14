@@ -16,11 +16,7 @@
   // Accurate brand name and grades throughout the pre-existing source copy.
   const replacements = [
     [/VARDHMAN ACADEMY/g, 'VARDHAMAN ACADEMY'],
-    [/Vardhman Academy/g, 'Vardhaman Academy'],
-    [/Classes 1–10/g, 'Classes 5–10'],
-    [/Classes 1 through 10/g, 'Classes 5 through 10'],
-    [/Class 1–10/g, 'Class 5–10'],
-    [/\b1–10\b/g, '5–10']
+    [/Vardhman Academy/g, 'Vardhaman Academy']
   ];
   const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
   const textNodes=[];
@@ -58,64 +54,50 @@
   const heroHeading=q('.hero-parent h1');
   if(heroHeading) heroHeading.innerHTML='Every child learns differently. <em>Every child deserves someone who understands.</em>';
   const heroBadge=q('.hero-parent .hero-badge');
-  if(heroBadge) heroBadge.innerHTML='<span class="sparkle">♡</span> Bansilal Nagar · Classes 5–10';
+  if(heroBadge) heroBadge.innerHTML='<span class="sparkle">♡</span> Bansilal Nagar · Classes 1–10';
   const heroLead=q('.hero-parent .lead');
-  if(heroLead) heroLead.textContent='At Vardhaman Academy, Rushab Sir helps children build understanding, confidence and stronger learning habits. Because every child deserves to feel seen.';
+  if(heroLead) heroLead.textContent='At Vardhaman Academy, Rushabh Sir helps children build understanding, confidence and stronger learning habits. Because every child deserves to feel seen.';
   const heroButton=q('.hero-parent .hero-actions .btn.primary');
   if(heroButton) heroButton.innerHTML='Tell us about your child <span class="arrow">↗</span>';
   const heroTrust=q('.hero-parent .hero-trust p');
-  if(heroTrust) heroTrust.innerHTML='<strong>500+ students taught — as shared by the academy</strong><br>Classes 5–10 · Bansilal Nagar';
+  if(heroTrust) heroTrust.innerHTML='<strong>500+ students taught — as shared by the academy</strong><br>Classes 1–10 · Bansilal Nagar';
 
   const portrait=q('.portrait-field');
-  if(portrait && mediaConfig.hero) portrait.innerHTML=`<img class="mentor-portrait" src="${mediaConfig.hero}" alt="${escapeText(mediaConfig.heroAlt || 'Rushab Sir speaking with a microphone in a warm Vardhaman-themed portrait')}" loading="eager" fetchpriority="high">`;
+  if(portrait && mediaConfig.hero) portrait.innerHTML=`<img class="mentor-portrait" src="${mediaConfig.hero}" alt="${escapeText(mediaConfig.heroAlt || 'Rushabh Sir speaking with a microphone in a warm Vardhaman-themed portrait')}" loading="eager" fetchpriority="high">`;
   else portrait?.classList.add('media-placeholder');
   const heroArt=q('.mentor-hero');
-  if(heroArt) heroArt.setAttribute('aria-label',mediaConfig.hero ? 'Portrait of Rushab Sir' : 'Rushab Sir portrait placeholder');
+  if(heroArt) heroArt.setAttribute('aria-label',mediaConfig.hero ? 'Portrait of Rushabh Sir' : 'Rushabh Sir portrait placeholder');
   const plate=q('.mentor-nameplate span');
   if(plate) plate.textContent='Vardhaman Academy';
 
   const teacherArt=q('.teacher-art');
-  if(teacherArt && mediaConfig.mentor) teacherArt.innerHTML=`<img class="mentor-event-photo" src="${mediaConfig.mentor}" alt="${escapeText(mediaConfig.mentorAlt || 'Rushab Sir speaking during an external educational seminar')}" loading="lazy"><div class="teacher-photo-note">${escapeText(mediaConfig.mentorCaption || 'A real educational seminar appearance · External event, not hosted by Vardhaman Academy')}</div>`;
-  else if(teacherArt) teacherArt.innerHTML='<span class="portrait-monogram" aria-hidden="true">RM</span><span class="teacher-photo-note">Meet Rushab Sir · Vardhaman Academy</span>';
+  if(teacherArt && mediaConfig.mentor) teacherArt.innerHTML=`<img class="mentor-event-photo" src="${mediaConfig.mentor}" alt="${escapeText(mediaConfig.mentorAlt || 'Rushabh Sir speaking during an external educational seminar')}" loading="lazy"><div class="teacher-photo-note">${escapeText(mediaConfig.mentorCaption || 'A real educational seminar appearance · External event, not hosted by Vardhaman Academy')}</div>`;
+  else if(teacherArt) teacherArt.innerHTML='<span class="portrait-monogram" aria-hidden="true">RM</span><span class="teacher-photo-note">Meet Rushabh Sir · Vardhaman Academy</span>';
   const teacherPreview=q('.teacher .placeholder');
   if(teacherPreview) teacherPreview.textContent=privateReview ? 'Real seminar photography. Authentic student reviews and quotations will be added after verification and permission.' : 'Student stories and photographs will be shared with permission.';
   const teacherEyebrow=q('.teacher-copy .eyebrow');
   if(teacherEyebrow) teacherEyebrow.textContent='The heart of Vardhaman';
   qa('.teacher-facts .pill').forEach((pill,i) => {
-    if(i===0) pill.textContent='📚 Classes 5–10';
+    if(i===0) pill.textContent='📚 Classes 1–10';
   });
 
   // Keep the original grade-journey game, but expose only the confirmed offer.
   const newNavLabels={
-    '#journey':'Classes 5–10',
+    '#journey':'Classes 1–10',
     '#brainlab':'Brain Spark'
   };
   qa('#navLinks a').forEach(link => { if(newNavLabels[link.getAttribute('href')]) link.textContent=newNavLabels[link.getAttribute('href')]; });
-  const gradePrev=q('#prevGrade');
-  const gradeNext=q('#nextGrade');
-  function currentClass(){ return Number(q('#stageNumber')?.textContent) || 5; }
-  if(gradePrev){
-    const copy=gradePrev.cloneNode(true);gradePrev.replaceWith(copy);
-    copy.addEventListener('click',()=>window.setGrade(currentClass()===5?10:currentClass()-1));
-  }
-  if(gradeNext){
-    const copy=gradeNext.cloneNode(true);gradeNext.replaceWith(copy);
-    copy.addEventListener('click',()=>window.setGrade(currentClass()===10?5:currentClass()+1));
-  }
-  const gradeCount=q('#gradeCount');
-  if(gradeCount) gradeCount.textContent='Class 5 / 10';
-  const gradeBtns=qa('#classSelect .choice');
-  // Source controls already contain only Classes 5?10; never remove valid options.
+  // The source journey owns the full 1–10 range and its wraparound controls.
 
   // The quiz stays interactive but uses grades within the actual academy range.
   const junior=q('#levelSwitch [data-level="junior"]');
   const middle=q('#levelSwitch [data-level="middle"]');
   const senior=q('#levelSwitch [data-level="senior"]');
-  if(junior)junior.textContent='🌱 Class 5–6';
-  if(middle)middle.textContent='🚀 Class 7–8';
-  if(senior)senior.textContent='🎓 Class 9–10';
+  if(junior)junior.textContent='🌱 Class 1–4';
+  if(middle)middle.textContent='🚀 Class 5–7';
+  if(senior)senior.textContent='🎓 Class 8–10';
   const quizIntro=q('.brainlab .intro .muted');
-  if(quizIntro)quizIntro.textContent='A playful three-question challenge for Class 5–10 learners and their parents. Pick a level and explore together.';
+  if(quizIntro)quizIntro.textContent='A playful three-question challenge for Class 1–10 learners and their parents. Pick a level and explore together.';
 
   // Bring a real, owner-review-only photo/video story into the original design.
   const gallery=document.createElement('section');
@@ -202,7 +184,7 @@
 
   // Footer semantics and the FAQ are kept aligned with the confirmed grades.
   const faq=qa('.faq-answer').find(el=>el.textContent.includes('Classes 1 through 10'));
-  if(faq)faq.textContent='Vardhaman Academy currently supports Classes 5 through 10.';
+  if(faq)faq.textContent='Vardhaman Academy currently supports Classes 1 through 10.';
 
   // A simple safeguard to detect accidental public promotion of unapproved media.
   document.documentElement.dataset.mediaReview=privateReview?'private-only':'approved-only';
