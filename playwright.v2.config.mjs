@@ -4,6 +4,7 @@ export default defineConfig({
   outputDir: 'test-results-v2',
   workers: 1,
   fullyParallel: false,
+  timeout: process.env.V2_MOTION_BASE_URL ? 120000 : 30000,
   reporter: 'list',
   use: {
     baseURL: process.env.V2_MOTION_BASE_URL || 'http://127.0.0.1:5176',

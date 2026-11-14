@@ -18,7 +18,7 @@ for (const width of [1440, 390]) {
     test.setTimeout(60000);
     await page.setViewportSize({ width, height: 900 });
     await page.emulateMedia({ reducedMotion: 'no-preference' });
-    await page.goto('/');
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
     await page.evaluate(() => document.fonts.ready);
     await page.evaluate(() => {
       window.entrances = [];
@@ -72,7 +72,7 @@ for (const width of [1440, 390]) {
   test(`menu jumps and initial hashes land on readable content at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.emulateMedia({ reducedMotion: 'no-preference' });
-    await page.goto('/');
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
     for (const hash of ['#about', '#life-at-vardhaman', '#journey', '#brainlab', '#enquiry']) {
       await page.evaluate(() => scrollTo({ top: 0, behavior: 'instant' }));
       if (width === 390) await page.locator('#mobileToggle').click();
@@ -81,7 +81,7 @@ for (const width of [1440, 390]) {
       await readable(page.locator(`${hash} .reveal`));
     }
     for (const hash of ['#parents', '#about', '#life-at-vardhaman']) {
-      await page.goto(`/${hash}`);
+      await page.goto(`/${hash}`, { waitUntil: 'domcontentloaded' });
       await readable(page.locator(`${hash} .reveal`));
       await expect(page.locator(hash)).toBeInViewport();
     }
@@ -90,14 +90,14 @@ for (const width of [1440, 390]) {
   test(`reduced motion and changing the preference show everything at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.goto('/');
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
     expect(await page.evaluate(() => matchMedia('(prefers-reduced-motion: reduce)').matches)).toBe(true);
     await readable(page.locator(targets));
     expect(await page.locator('.become-word').evaluate(element => getComputedStyle(element, '::after').animationName)).toBe('none');
     await page.emulateMedia({ reducedMotion: 'no-preference' });
     await page.locator('#parents').scrollIntoViewIfNeeded();
     await readable(page.locator(targets));
-    await page.reload();
+    await page.reload({ waitUntil: 'domcontentloaded' });
     await slowScrollUntil(page, () => document.querySelector('#parents h2').classList.contains('visible'), width === 390);
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await readable(page.locator(targets));
@@ -107,14 +107,16 @@ for (const width of [1440, 390]) {
     const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width, height: 900 } });
     const page = await context.newPage();
     try {
-      await page.goto(baseURL);
+      await page.goto(baseURL, { waitUntil: 'domcontentloaded' });
       await readable(page.locator('#parents h2, #parents .worry-item, #about .teacher-art, #about h2, .gallery-card'));
       await expect(page.locator('.gallery-card')).toHaveCount(10);
       await expect(page.locator('.gallery-toolbar')).toBeHidden();
       await expect(page.locator('.gallery-disclosure')).toBeHidden();
       await expect(page.locator('[data-media="VID-02"]')).toHaveAttribute('href', /\.mp4$/);
-      await page.locator('[data-media="IMG-18"]').click();
-      await expect(page).toHaveURL(/olympiad-medal.*\.jpeg$/);
+      await Promise.all([
+        page.waitForURL(/olympiad-medal.*\.jpeg$/, { waitUntil: 'commit' }),
+        page.locator('[data-media="IMG-18"]').click({ noWaitAfter: true })
+      ]);
     } finally { await context.close(); }
   });
 }
@@ -124,7 +126,7 @@ test('fast 390px swipes settle skipped content, controls stay usable, and video 
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   const videos = [];
   page.on('request', request => { if (request.url().includes('.mp4')) videos.push(request.url()); });
-  await page.goto('/');
+  await page.goto('/', { waitUntil: 'domcontentloaded' });
   await expect(page.locator('.hero-actions a.primary')).toBeVisible();
   await readable(page.locator('#journey .journey-details, #brainlab .brain-panel, #enquiry .enquiry'));
   const touch = await page.context().newCDPSession(page);
@@ -158,7 +160,7 @@ test('fast 390px swipes settle skipped content, controls stay usable, and video 
 test('without IntersectionObserver content remains readable', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.addInitScript(() => { delete window.IntersectionObserver; });
-  await page.goto('/');
+  await page.goto('/', { waitUntil: 'domcontentloaded' });
   await readable(page.locator(targets));
   await page.locator('#gradeTrack button').filter({ hasText: /^10$/ }).click();
   await expect(page.locator('#stageNumber')).toHaveText('10');
