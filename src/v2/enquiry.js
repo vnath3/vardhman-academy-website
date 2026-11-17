@@ -42,6 +42,15 @@
     footerContact.append(call, document.createTextNode(' · '), chat);
   }
 
+  // Hero locality badge opens the owner-approved map link (content/v2-settings.json).
+  // Falls back to its harmless in-page "#home" anchor when unapproved/private review.
+  const heroMapBadge = q('#heroMapBadge');
+  if (heroMapBadge && typeof settings.mapUrl === 'string' && /^https:/.test(settings.mapUrl)) {
+    heroMapBadge.href = settings.mapUrl;
+    heroMapBadge.target = '_blank';
+    heroMapBadge.rel = 'noopener';
+  }
+
   function goStep(index) {
     steps.forEach((step, position) => step.classList.toggle('active', index === position));
     progress.setAttribute('aria-valuenow', String(index + 1));

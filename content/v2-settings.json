@@ -15,5 +15,14 @@
       "approved_on": "2026-11-11",
       "evidence": "Owner supplied 8830499339 and instructed its use for parent enquiries. The same number is printed in source assets media/vardhaman/brand/legacy-brand-poster-img-01.jpeg and legacy-results-poster-img-02.jpeg. Normalized with India's +91 country code; no other flyer number was selected."
     }
+  },
+  "location": {
+    "map_url": "https://maps.app.goo.gl/uWC2yhFHMDAmT8a2A",
+    "map_approved": true,
+    "approval_record": {
+      "approved_by": "Academy owner via chat confirmation",
+      "approved_on": "2026-11-17",
+      "evidence": "Owner confirmed this Google Maps listing is the correct location for the Bansilal Nagar hero badge link, after being shown the pin's address text (which names a different locality, Rajnagar/MIDC, and the owner separately flagged that address text as wrong on Google's side, not the location itself)."
+    }
   }
 }

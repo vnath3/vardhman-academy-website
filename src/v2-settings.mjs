@@ -21,6 +21,15 @@ export function validateSettings(settings) {
     assert.ok(number, 'Approved WhatsApp destination requires a number');
     requireApproval(settings.enquiry.approval_record, 'WhatsApp approval');
   }
+  if (settings.location !== undefined) {
+    assert.equal(typeof settings.location.map_approved, 'boolean', 'location.map_approved must be a boolean');
+    const mapUrl = settings.location.map_url;
+    if (mapUrl !== null && mapUrl !== undefined) assert.equal(new URL(mapUrl).protocol, 'https:', 'location.map_url must be an HTTPS URL');
+    if (settings.location.map_approved) {
+      assert.ok(mapUrl, 'Approved map link requires a URL');
+      requireApproval(settings.location.approval_record, 'Map link approval');
+    }
+  }
   return settings;
 }
 
@@ -28,7 +37,8 @@ export function siteRuntime(settings, { privateReview = false } = {}) {
   validateSettings(settings);
   return {
     privateReview,
-    whatsappNumber: !privateReview && settings.enquiry.number_approved ? settings.enquiry.whatsapp_number : null
+    whatsappNumber: !privateReview && settings.enquiry.number_approved ? settings.enquiry.whatsapp_number : null,
+    mapUrl: !privateReview && settings.location?.map_approved ? settings.location.map_url : null
   };
 }
 

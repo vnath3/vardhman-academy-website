@@ -36,6 +36,31 @@ body { background: #fbfbf7; }
 .hero-parent .lead { max-width: 545px; }
 .hero-parent .hero-badge { color: #2e6d78; border-color: #d8e5df; }
 .hero-parent .hero-badge .sparkle { background: #d7ede7; color: #0e799a; }
+.hero-badge-map {
+  cursor: pointer;
+  transition: transform .2s ease, box-shadow .2s ease;
+  animation: badge-breathe 2.8s ease-in-out infinite;
+}
+.hero-badge-map .badge-arrow {
+  opacity: .55;
+  margin-left: -2px;
+  transition: opacity .2s ease, transform .2s ease;
+}
+.hero-badge-map:hover,
+.hero-badge-map:focus-visible {
+  transform: translateY(-1px) scale(1.04);
+  box-shadow: 0 10px 24px rgba(24, 40, 89, .16);
+  animation-play-state: paused;
+}
+.hero-badge-map:hover .badge-arrow,
+.hero-badge-map:focus-visible .badge-arrow {
+  opacity: 1;
+  transform: translate(2px, -2px);
+}
+@keyframes badge-breathe {
+  0%, 100% { box-shadow: 0 8px 20px rgba(24, 40, 89, .06), 0 0 0 0 rgba(20, 123, 165, .22); }
+  50% { box-shadow: 0 8px 20px rgba(24, 40, 89, .06), 0 0 0 6px rgba(20, 123, 165, 0); }
+}
 .hero-parent .hero-actions .btn.primary { background: #147ba5; }
 .hero-parent .proof-seal { background: #e7f0e2; border-color: #cadec9; color: #176d80; }
 .mentor-hero { height: 580px; }
