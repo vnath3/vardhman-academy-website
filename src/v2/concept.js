@@ -7,6 +7,60 @@
     // One rAF-batched scroll tick drives three bits of chrome at once: the
     // reading-progress bar, a header that tightens up once you're past the
     // hero, and a back-to-top control — rather than three separate listeners.
+    // Hero recede: copy and portrait each get a 0..1 progress that starts as
+    // that element scrolls off the top, so on mobile (stacked) the portrait
+    // isn't faded before you've even reached it.
+    const heroEl=$('.hero-parent'), heroCopy=heroEl&&heroEl.querySelector('.hero-copy'), heroArt=heroEl&&heroEl.querySelector('.mentor-hero');
+    const heroReduce=matchMedia('(prefers-reduced-motion: reduce)');
+    let heroSpans=null, heroLast={copy:-1,art:-1};
+    function measureHero(){
+      if(!heroEl)return;
+      heroEl.style.setProperty('--hp-copy',0);heroEl.style.setProperty('--hp-art',0);
+      const span=el=>{if(!el)return null;const r=el.getBoundingClientRect();return {start:r.top+scrollY-40,len:Math.max(220,r.height*.9)};};
+      heroSpans={copy:span(heroCopy),art:span(heroArt)};heroLast={copy:-1,art:-1};
+    }
+    function heroRecede(y){
+      if(!heroEl||heroReduce.matches)return;
+      if(!heroSpans)measureHero();
+      for(const [key,name] of [['copy','--hp-copy'],['art','--hp-art']]){
+        const s=heroSpans[key];if(!s)continue;
+        const p=Math.round(Math.min(1,Math.max(0,(y-s.start)/s.len))*200)/200;
+        if(p!==heroLast[key]){heroEl.style.setProperty(name,p);heroLast[key]=p;}
+      }
+    }
+    window.addEventListener('resize',()=>{heroSpans=null;});
+    // Count-up stats: numbers climb to their value the first time they're seen.
+    (function(){
+      const nodes=$$('.hero-trust .proof-seal strong, .trust-item strong');
+      if(!('IntersectionObserver' in window)||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+      const ease=t=>1-Math.pow(1-t,3);
+      const prepare=el=>{
+        const text=el.textContent.trim();let m,from=0,to,fmt;
+        if((m=text.match(/^([\d,]+)(\+?)$/))){to=parseInt(m[1].replace(/,/g,''),10);fmt=n=>Math.round(n).toLocaleString('en-US')+m[2];}
+        else if((m=text.match(/^(\d+)([–-])(\d+)$/))){from=+m[1];to=+m[3];fmt=n=>m[1]+m[2]+Math.round(n);}
+        else return null;
+        // Keep the box the width of the final number so nothing shifts while counting.
+        const w=el.getBoundingClientRect().width;
+        if(getComputedStyle(el).display==='inline')el.style.display='inline-block';
+        el.style.minWidth=w+'px';
+        el.classList.add('count-up');
+        el.innerHTML='<span aria-hidden="true"></span><span class="sr-only"></span>';
+        el.lastChild.textContent=text;const shown=el.firstChild;shown.textContent=fmt(from);
+        return {el,shown,from,to,fmt};
+      };
+      const items=nodes.map(prepare).filter(Boolean);
+      const run=item=>{
+        const t0=performance.now(),dur=1700;
+        const step=now=>{const t=Math.min(1,(now-t0)/dur);item.shown.textContent=item.fmt(item.from+(item.to-item.from)*ease(t));if(t<1)requestAnimationFrame(step);};
+        requestAnimationFrame(step);
+      };
+      const io=new IntersectionObserver(entries=>entries.forEach(e=>{
+        if(!e.isIntersecting)return;io.unobserve(e.target);
+        const item=items.find(i=>i.el===e.target);
+        if(item)setTimeout(()=>run(item),e.target.closest('.hero')?650:0);
+      }),{threshold:.6});
+      items.forEach(i=>io.observe(i.el));
+    })();
     const siteHeader=$('.site-header'), backToTop=$('#backToTop');
     let headerScrolled=false, backVisible=false;
     let scrollScheduled=false;window.addEventListener('scroll',()=>{if(scrollScheduled)return;scrollScheduled=true;requestAnimationFrame(()=>{
@@ -17,6 +71,7 @@
       if(scrolled!==headerScrolled){siteHeader?.classList.toggle('scrolled',scrolled);headerScrolled=scrolled;}
       const show=y>innerHeight*.8;
       if(show!==backVisible){backToTop?.classList.toggle('visible',show);backToTop?.setAttribute('aria-hidden',String(!show));if(backToTop)backToTop.tabIndex=show?0:-1;backVisible=show;}
+      heroRecede(y);
       scrollScheduled=false;
     });},{passive:true});
     if(backToTop)backToTop.addEventListener('click',()=>{

@@ -384,3 +384,42 @@ main > .v2-outcomes { order: 4; }
 @media(prefers-reduced-motion: reduce) {
   .site-header, .site-header .nav, .back-to-top { transition: none; }
 }
+
+/* ---- "Alive" pass: hero entrance + scroll recede, count-up stats, tonal wash ---- */
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.count-up { font-variant-numeric: tabular-nums; }
+
+/* Hero entrance on load: copy rises in a stagger, the portrait settles in.
+   Handnote / nameplate keep their own rotation, so they only fade. */
+@keyframes hero-rise { from { opacity: 0; transform: translate3d(0,22px,0); } to { opacity: 1; transform: none; } }
+@keyframes hero-settle { from { opacity: 0; transform: scale(.94); } to { opacity: 1; transform: none; } }
+@keyframes hero-fade { from { opacity: 0; } to { opacity: 1; } }
+.hero-parent .hero-copy > * { animation: hero-rise 700ms cubic-bezier(.22,.61,.36,1) backwards; }
+.hero-parent .hero-copy > :nth-child(2) { animation-delay: 90ms; }
+.hero-parent .hero-copy > :nth-child(3) { animation-delay: 180ms; }
+.hero-parent .hero-copy > :nth-child(4) { animation-delay: 270ms; }
+.hero-parent .hero-copy > :nth-child(5) { animation-delay: 360ms; }
+.hero-parent .portrait-shell { animation: hero-settle 900ms cubic-bezier(.22,.61,.36,1) 150ms backwards; }
+.hero-parent .mentor-handnote, .hero-parent .mentor-nameplate, .hero-parent .mentor-heart { animation: hero-fade 700ms ease-out 650ms backwards; }
+
+/* Hero recedes as you scroll away: copy lifts off faster than the page,
+   the portrait lags behind and shrinks a touch — a sense of depth. Driven by
+   --hp-copy / --hp-art (0..1) set from the shared scroll tick. */
+.hero-parent .hero-copy { transform: translate3d(0, calc(var(--hp-copy, 0) * -54px), 0); opacity: calc(1 - max(0, var(--hp-copy, 0) - .3) * 1.4); will-change: transform, opacity; }
+.hero-parent .mentor-hero { transform: translate3d(0, calc(var(--hp-art, 0) * 40px), 0) scale(calc(1 - var(--hp-art, 0) * .08)); transform-origin: 50% 70%; opacity: calc(1 - var(--hp-art, 0) * .95); will-change: transform, opacity; }
+
+/* Tonal wash: each section gets its own soft tint, and the top of every
+   section blends out of the previous section's colour instead of a hard cut. */
+main > .parent-message { background-color: #fffaf0; background-image: linear-gradient(180deg, #eff3e9 0, rgba(239,243,233,0) 120px); border-bottom: 0; }
+main > .teacher { background: #fffaf0; }
+main > .v2-gallery { background-color: #e9f3f6; background-image: linear-gradient(180deg, #fffaf0 0, rgba(255,250,240,0) 140px), linear-gradient(180deg, rgba(233,243,246,0) 55%, #f3f9fa 100%); }
+main > .v2-outcomes { background-color: #fffdf8; background-image: linear-gradient(180deg, #f3f9fa 0, rgba(243,249,250,0) 130px); }
+main > .features { background-color: #ecf6ef; background-image: linear-gradient(180deg, #fffdf8 0, rgba(255,253,248,0) 130px); }
+main > #journey { background-color: #eef4fb; background-image: linear-gradient(180deg, #ecf6ef 0, rgba(236,246,239,0) 130px); }
+main > #brainlab { background-color: #f8f4e9; background-image: linear-gradient(180deg, #eef4fb 0, rgba(238,244,251,0) 130px); }
+main > #enquiry { background-color: #e1f0e8; background-image: linear-gradient(180deg, #f8f4e9 0, rgba(248,244,233,0) 130px); }
+main > .faq { background-color: #fbfaf3; background-image: linear-gradient(180deg, #e1f0e8 0, rgba(225,240,232,0) 130px); }
+
+@media(prefers-reduced-motion: reduce) {
+  .hero-parent .hero-copy, .hero-parent .mentor-hero { transform: none; opacity: 1; will-change: auto; }
+}
