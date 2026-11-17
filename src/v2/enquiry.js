@@ -14,7 +14,7 @@
   let chosenClass = null, chosenConcern = null, message = '';
   const steps = qa('.form-step');
   const progress = q('#formProgress');
-  for (const [attribute, value] of Object.entries({ role: 'progressbar', 'aria-label': 'Enquiry progress', 'aria-valuemin': '1', 'aria-valuemax': '3', 'aria-valuenow': '1', 'aria-valuetext': 'Step 1 of 3' })) progress.setAttribute(attribute, value);
+  for (const [attribute, value] of Object.entries({ role: 'progressbar', 'aria-label': 'Enquiry progress', 'aria-valuemin': '1', 'aria-valuemax': '2', 'aria-valuenow': '1', 'aria-valuetext': 'Step 1 of 2' })) progress.setAttribute(attribute, value);
   qa('#formProgress span').forEach(step => step.setAttribute('aria-hidden', 'true'));
   const whatsapp = q('#whatsappEnquiry');
   const availability = q('#whatsappAvailability');
@@ -54,27 +54,35 @@
   function goStep(index) {
     steps.forEach((step, position) => step.classList.toggle('active', index === position));
     progress.setAttribute('aria-valuenow', String(index + 1));
-    progress.setAttribute('aria-valuetext', `Step ${index + 1} of 3`);
+    progress.setAttribute('aria-valuetext', `Step ${index + 1} of 2`);
     qa('#formProgress span').forEach((step, position) => {
       step.classList.toggle('active', position <= index);
     });
-    // Keep the draft out of link attributes: outbound-link analytics must not
-    // receive an enquiry as a link_url parameter.
-    whatsapp.hidden = index !== 2;
-    whatsapp.disabled = index !== 2 || !number;
     const heading = steps[index].querySelector('h3');
     heading.tabIndex = -1;
     heading.focus({ preventScroll: true });
   }
-  // The optional "goal" note now lives inline on the review step instead of
-  // its own screen — rebuild the draft whenever class, concern, or the note
-  // changes, so the review step is always showing the current draft.
+  // The review (draft + optional goal + send/copy) isn't its own screen —
+  // it reveals inline on the concern step the moment a concern is picked, so
+  // choosing a concern IS the action; there's no separate "next" tap. These
+  // controls are shown/hidden by revealReview(), not by which step is active.
   function buildMessage() {
     if (!chosenClass || !chosenConcern) return;
     const concern = concerns.find(item => item[0] === chosenConcern)[2];
     const note = q('#childNote').value.trim().slice(0, 350);
     message = `Hello Rushabh Sir,\n\nI would like to enquire about tuition at Vardhaman Academy for my child.\n\nClass: ${chosenClass}\nMain concern: ${concern}${note ? `\nWhat I hope to see improve: ${note}` : ''}\n\nCould we discuss the next steps?`;
     q('#enquirySummary').textContent = message;
+  }
+  function revealReview() {
+    buildMessage();
+    q('#reviewPanel').hidden = false;
+    // Keep the draft out of link attributes: outbound-link analytics must not
+    // receive an enquiry as a link_url parameter.
+    whatsapp.hidden = false;
+    whatsapp.disabled = !number;
+    q('#copyEnquiry').hidden = false;
+    q('#copyStatus').textContent = '';
+    q('#whatsappStatus').textContent = '';
   }
   for (let grade = 1; grade <= 10; grade++) {
     const button = document.createElement('button');
@@ -97,17 +105,11 @@
       chosenConcern = id;
       qa('#concernOptions .option').forEach(item => { item.classList.toggle('active', item === button); item.setAttribute('aria-pressed', String(item === button)); });
       q('#concernValidation').textContent = '';
+      revealReview();
     });
     q('#concernOptions').append(button);
   }
   q('#classNext').addEventListener('click', () => chosenClass ? goStep(1) : q('#classValidation').textContent = 'Please choose a class to continue.');
-  q('#concernNext').addEventListener('click', () => {
-    if (!chosenConcern) { q('#concernValidation').textContent = 'Please choose one concern to continue.'; return; }
-    buildMessage();
-    q('#copyStatus').textContent = '';
-    q('#whatsappStatus').textContent = '';
-    goStep(2);
-  });
   qa('[data-back]').forEach(button => button.addEventListener('click', () => goStep(Number(button.dataset.back))));
   q('#childNote').addEventListener('input', () => {
     buildMessage();
@@ -129,7 +131,7 @@
     }
   });
   whatsapp.addEventListener('click', event => {
-    if (!number || !message || whatsapp.disabled || !steps[2].classList.contains('active')) { event.preventDefault(); return; }
+    if (!number || !message || whatsapp.disabled || !steps[1].classList.contains('active')) { event.preventDefault(); return; }
     window.open(`https://wa.me/${number}?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
     q('#whatsappStatus').textContent = 'Review and send your draft in WhatsApp. This page cannot confirm delivery.';
   });
