@@ -423,3 +423,39 @@ main > .faq { background-color: #fbfaf3; background-image: linear-gradient(180de
 @media(prefers-reduced-motion: reduce) {
   .hero-parent .hero-copy, .hero-parent .mentor-hero { transform: none; opacity: 1; will-change: auto; }
 }
+
+/* ---- Scroll-linked set pieces ---- */
+/* Class journey: the section pins and scroll drives the class 1 -> 10. */
+.journey-pin { position: relative; }
+.journey-scrub .journey-sticky { position: sticky; top: 84px; }
+.journey-progress, .journey-hint { display: none; }
+.journey-scrub .journey-progress { display: block; position: absolute; left: 0; right: 0; bottom: 0; height: 5px; background: rgba(255,255,255,.6); z-index: 3; }
+.journey-progress span { display: block; height: 100%; background: #1779a2; transform-origin: left; transform: scaleX(0); }
+.journey-scrub .journey-hint { display: block; position: absolute; top: 14px; right: 14px; z-index: 3; font: 800 11.5px "DM Sans", sans-serif; color: #176f8f; background: rgba(255,255,255,.85); border-radius: 999px; padding: 7px 12px; transition: opacity .3s; }
+@media(max-width:780px) { .journey-scrub .journey-sticky { top: 76px; } }
+/* Short viewports (phones): tighten the pinned card so all of it fits. */
+.journey-compact .path-grid { gap: 10px; }
+.journey-compact .journey-stage { min-height: 0; padding: 14px 18px 18px; }
+.journey-compact .journey-stage .stage-title { display: none; }
+.journey-compact .stage-art { height: 92px; }
+.journey-compact .stage-number { font-size: 78px; }
+.journey-compact .stage-footer { gap: 6px; }
+.journey-compact .journey-details { padding: 16px 18px; }
+.journey-compact .journey-details h3 { font-size: 22px; margin: 6px 0 2px; }
+.journey-compact .journey-details .muted { font-size: 13px; line-height: 1.5; margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.journey-compact .grade-tools { margin-top: 12px; }
+.journey-compact .grade-head { display: none; }
+.journey-compact .grade-dot { padding: 9px 0; }
+.journey-compact .focus-list { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 0; }
+.journey-compact .focus-item { padding: 6px 10px 6px 6px; gap: 7px; font-size: 12px; border-radius: 999px; }
+.journey-compact .focus-item span { width: 24px; height: 24px; font-size: 13px; border-radius: 50%; }
+.journey-compact .stage-steps { display: none; }
+
+/* Headline that fills in word by word (JS adds .fill-ready / .on). */
+.fill-ready .fw { opacity: .22; transition: opacity .3s ease; }
+.fill-ready .fw.on { opacity: 1; }
+
+/* Photos drift slower than their frame. Individual transform properties,
+   so they never fight the existing hover/reveal transforms. */
+.px { translate: 0 var(--py, 0px); scale: 1.12; }
+.outcome-hero { overflow: hidden; }

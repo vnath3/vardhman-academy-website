@@ -72,6 +72,7 @@
       const show=y>innerHeight*.8;
       if(show!==backVisible){backToTop?.classList.toggle('visible',show);backToTop?.setAttribute('aria-hidden',String(!show));if(backToTop)backToTop.tabIndex=show?0:-1;backVisible=show;}
       heroRecede(y);
+      if(window.__scrollFx)window.__scrollFx(y);
       scrollScheduled=false;
     });},{passive:true});
     if(backToTop)backToTop.addEventListener('click',()=>{
@@ -227,7 +228,7 @@
       });
     }, { once: true });
     const milestones={1:{"title":"Little discoveries","desc":"Class 1 is a chance to explore letters, numbers and the joy of learning.","label":"First discoveries","focus":["Letter and number familiarity","Listening and expression","Comfort with learning routines"],"deco":["✏️","📚"],"bg":"#e4ebff"},2:{"title":"The growing explorer","desc":"Class 2 builds on early reading, counting and the confidence to ask questions.","label":"Growing curiosity","focus":["Reading practice","Number confidence","Asking questions"],"deco":["🌱","🔎"],"bg":"#dff8ef"},3:{"title":"Building connections","desc":"Class 3 connects reading and number skills with everyday ideas and discoveries.","label":"Connecting ideas","focus":["Reading understanding","Mathematics practice","Explaining ideas"],"deco":["📖","🧩"],"bg":"#fff0c5"},4:{"title":"The curious problem-solver","desc":"Class 4 encourages step-by-step reasoning and growing independence with familiar skills.","label":"Learning with purpose","focus":["Applying the basics","Step-by-step reasoning","Independent learning habits"],"deco":["💡","📚"],"bg":"#eee7ff"},5:{title:'The curious explorer',desc:'Class 5 is about connecting ideas, growing independence and discovering the joy of solving problems.',label:'Building confidence',focus:['Stronger subject fundamentals','Growing learning confidence','Steady study habits'],deco:['✏️','📚'],bg:'#e4ebff'},6:{title:'The brave new explorer',desc:'New subjects, deeper concepts and more opportunities to become independent.',label:'A new learning leap',focus:['Adapting to deeper subjects','Asking thoughtful questions','Planning study time'],deco:['🌟','🔬'],bg:'#dff8ef'},7:{title:'The confident connector',desc:'A stage for connecting ideas across subjects and practising with purpose.',label:'Connecting the dots',focus:['Concept application','Science and mathematics reasoning','Study consistency'],deco:['🧠','🧪'],bg:'#fff0c5'},8:{title:'The focused thinker',desc:'Building a steady approach to more complex topics and examinations.',label:'Focus & understanding',focus:['Complex problem solving','Preparation and practice','Independent revision'],deco:['💡','🎯'],bg:'#eee7ff'},9:{title:'The determined learner',desc:'Stronger foundations and better habits for important academic choices.',label:'Growing determination',focus:['Subject-depth understanding','Exam strategy','Personal learning goals'],deco:['📐','📖'],bg:'#e2efff'},10:{title:'The future-ready achiever',desc:'A meaningful milestone — with preparation, focus and confidence for what comes next.',label:'Ready for next chapter',focus:['Board exam readiness','Confident revision routines','Preparing for the next chapter'],deco:['🎓','🚀'],bg:'#ffe5cd'}};
-    let currentGrade=1;const icons=['📚','💡','🌱'];function setGrade(g){currentGrade=Math.max(1,Math.min(10,g));const d=milestones[currentGrade];$('#stageNumber').textContent=currentGrade;$('#gradeTitle').textContent=d.title;$('#gradeDesc').textContent=d.desc;$('#stageLabel').textContent=d.label;$('#decoA').textContent=d.deco[0];$('#decoB').textContent=d.deco[1];$('#journeyStage').style.background=d.bg;$('#gradeCount').textContent=`Class ${currentGrade} / 10`;$('#focusList').innerHTML=d.focus.map((x,i)=>`<div class="focus-item"><span>${icons[i]}</span>${x}</div>`).join('');$$('.grade-dot').forEach((b,i)=>b.setAttribute('aria-pressed',String(Number(b.textContent)===currentGrade)));$('#stageGlobe').style.transform=`rotate(${(currentGrade-1)*4}deg)`;$('#stageNumber').style.transform=`rotate(${(currentGrade-1)*1.5}deg)`;}
+    let currentGrade=1;const icons=['📚','💡','🌱'];function setGrade(g,fromScroll){currentGrade=Math.max(1,Math.min(10,g));const d=milestones[currentGrade];$('#stageNumber').textContent=currentGrade;$('#gradeTitle').textContent=d.title;$('#gradeDesc').textContent=d.desc;$('#stageLabel').textContent=d.label;$('#decoA').textContent=d.deco[0];$('#decoB').textContent=d.deco[1];$('#journeyStage').style.background=d.bg;$('#gradeCount').textContent=`Class ${currentGrade} / 10`;$('#focusList').innerHTML=d.focus.map((x,i)=>`<div class="focus-item"><span>${icons[i]}</span>${x}</div>`).join('');$$('.grade-dot').forEach((b,i)=>b.setAttribute('aria-pressed',String(Number(b.textContent)===currentGrade)));$('#stageGlobe').style.transform=`rotate(${(currentGrade-1)*4}deg)`;$('#stageNumber').style.transform=`rotate(${(currentGrade-1)*1.5}deg)`;if(!fromScroll&&window.__journeySeek)window.__journeySeek(currentGrade);}
     for(let i=1;i<=10;i++){const b=document.createElement('button');b.className='grade-dot';b.textContent=i;b.type='button';b.setAttribute('aria-label',`Class ${i}`);b.addEventListener('click',()=>setGrade(i));$('#gradeTrack').append(b);}$('#prevGrade').addEventListener('click',()=>setGrade(currentGrade===1?10:currentGrade-1));$('#nextGrade').addEventListener('click',()=>setGrade(currentGrade===10?1:currentGrade+1));setGrade(1);
 
     const journeyMotion=$('#journeyMotion'),motionPreference=matchMedia('(prefers-reduced-motion: reduce)');
@@ -357,3 +358,109 @@
     }
     // private-stories:end
     $$('.faq-item button').forEach(b=>b.addEventListener('click',()=>{const p=b.closest('.faq-item');const next=!p.classList.contains('open');p.classList.toggle('open',next);b.setAttribute('aria-expanded',String(next));}));
+
+// ---- Scroll-linked set pieces: scrubbed class journey, word-fill headline,
+// in-frame photo parallax. All driven from the shared scroll tick above. ----
+(function(){
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)');
+  const $=(s)=>document.querySelector(s),$$=(s)=>Array.from(document.querySelectorAll(s));
+  const fx=[];
+
+  // 1. Class journey: the section pins and the class climbs 1->10 as you scroll.
+  (function(){
+    const section=$('#journey'),grid=section&&section.querySelector('.path-grid'),stage=$('#journeyStage');
+    if(!section||!grid||!stage||reduce.matches)return;
+    const pin=document.createElement('div'),sticky=document.createElement('div');
+    pin.className='journey-pin';sticky.className='journey-sticky';
+    grid.before(pin);pin.append(sticky);sticky.append(grid);
+    const bar=document.createElement('div');bar.className='journey-progress';bar.innerHTML='<span></span>';stage.append(bar);
+    const hint=document.createElement('div');hint.className='journey-hint';hint.textContent='↓ Scroll to explore';hint.setAttribute('aria-hidden','true');stage.append(hint);
+    let on=false,step=300,stickyTop=84,lastGrade=1;
+    const fits=()=>grid.offsetHeight<=innerHeight-stickyTop-(innerWidth<=780?78:16);
+    function measure(){
+      section.classList.remove('journey-scrub','journey-compact');pin.style.height='';
+      stickyTop=innerWidth<=780?76:84;
+      let ok=fits();
+      if(!ok){section.classList.add('journey-compact');ok=fits();}
+      on=ok;
+      if(!on){section.classList.remove('journey-compact');return;}
+      section.classList.add('journey-scrub');
+      step=Math.max(240,Math.round(innerHeight*.3));
+      pin.style.height=(grid.offsetHeight+stickyTop+9*step)+'px';
+    }
+    function progress(){
+      const top=pin.getBoundingClientRect().top;
+      return Math.min(1,Math.max(0,(stickyTop-top)/(9*step)));
+    }
+    fx.push(()=>{
+      if(!on)return;
+      const p=progress();
+      bar.firstChild.style.transform='scaleX('+p.toFixed(3)+')';
+      hint.style.opacity=p>.02&&p<.98?0:1;
+      const g=1+Math.min(9,Math.floor(p*10));
+      if(g!==lastGrade){lastGrade=g;setGrade(g,true);}
+    });
+    // Tapping a class (or prev/next) moves the page to that point so the
+    // scroll position and the chosen class never disagree.
+    window.__journeySeek=g=>{
+      if(!on||g===lastGrade&&progress()>0)return;
+      lastGrade=g;
+      const absTop=pin.getBoundingClientRect().top+scrollY;
+      const y=absTop-stickyTop+((g-1)+.5)/10*9*step;
+      scrollTo({top:Math.max(0,Math.round(y)),behavior:'smooth'});
+    };
+    measure();
+    let t;addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(()=>{measure();},150);});
+    addEventListener('load',measure);
+  })();
+
+  // 2. Headline fills in word by word as it scrolls into the reading zone.
+  (function(){
+    const h=$('#parents h2');if(!h||reduce.matches)return;
+    const words=[];
+    const wrap=node=>Array.from(node.childNodes).forEach(n=>{
+      if(n.nodeType===3){
+        const frag=document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach(part=>{
+          if(!part)return;
+          if(/^\s+$/.test(part)){frag.append(part);return;}
+          const w=document.createElement('span');w.className='fw';w.textContent=part;frag.append(w);words.push(w);
+        });
+        n.replaceWith(frag);
+      }else if(n.nodeType===1){
+        if(n.classList.contains('become-word')){const w=document.createElement('span');w.className='fw';while(n.firstChild)w.append(n.firstChild);n.append(w);words.push(w);}
+        else wrap(n);
+      }
+    });
+    wrap(h);h.classList.add('fill-ready');
+    let shown=-1;
+    fx.push(()=>{
+      const top=h.getBoundingClientRect().top,vh=innerHeight;
+      const p=Math.min(1,Math.max(0,(vh*.88-top)/(vh*.5)));
+      const count=Math.round(p*words.length);
+      if(count===shown)return;
+      shown=count;words.forEach((w,i)=>w.classList.toggle('on',i<count));
+    });
+  })();
+
+  // 3. Photos drift slightly slower than their frames.
+  (function(){
+    if(reduce.matches||!('IntersectionObserver' in window))return;
+    const items=$$('.gallery-media, .outcome-hero img, .mentor-event-photo').map(img=>({img,box:img.parentElement,vis:false,last:null}));
+    if(!items.length)return;
+    const io=new IntersectionObserver(es=>es.forEach(e=>{const it=items.find(i=>i.box===e.target);if(it)it.vis=e.isIntersecting;}),{rootMargin:'80px 0px'});
+    items.forEach(it=>{io.observe(it.box);it.img.classList.add('px');});
+    fx.push(()=>items.forEach(it=>{
+      if(!it.vis)return;
+      const r=it.box.getBoundingClientRect();
+      const t=Math.max(-1,Math.min(1,((r.top+r.height/2)-innerHeight/2)/(innerHeight/2+r.height/2)));
+      const ty=Math.round(-t*Math.min(14,r.height*.05)*2)/2;
+      if(ty!==it.last){it.img.style.setProperty('--py',ty+'px');it.last=ty;}
+    }));
+  })();
+
+  window.__scrollFx=y=>fx.forEach(f=>f(y));
+  addEventListener('load',()=>window.__scrollFx(scrollY));
+  document.addEventListener('DOMContentLoaded',()=>window.__scrollFx(scrollY));
+  window.__scrollFx(scrollY);
+})();
