@@ -18,20 +18,22 @@
       },
       "media": [
         {
-          "id": "NAKSHATRA-CERT",
-          "original_filename": "WhatsApp_Image_2026-11-14_at_4.34.39_PM.jpeg",
-          "source_path": "media/vardhaman/outcomes/nakshatra-cpl-certificate.jpg",
-          "production_path": "media/outcomes/nakshatra-cpl-certificate.jpg",
-          "alt": "Commercial Pilot License (MEA-L-IR) with Instrument Rating certificate for Nakshatra Sancheti, issued by 4 Aviators, Cape Town, South Africa, with the license number redacted",
-          "caption": "Commercial Pilot License (MEA-L-IR) with Instrument Rating — issued 10 Nov 2026"
-        },
-        {
           "id": "NAKSHATRA-PHOTO",
+          "role": "hero",
           "original_filename": "WhatsApp_Image_2026-11-14_at_4.36.53_PM.jpeg",
           "source_path": "media/vardhaman/outcomes/nakshatra-with-examiner.jpg",
           "production_path": "media/outcomes/nakshatra-with-examiner.jpg",
           "alt": "Nakshatra Sancheti with his flight examiner and a trainer in front of a training aircraft at 4 Aviators, Cape Town",
           "caption": "After the check-ride · 4 Aviators Pilot Training, Cape Town"
+        },
+        {
+          "id": "NAKSHATRA-CERT",
+          "role": "document",
+          "original_filename": "WhatsApp_Image_2026-11-14_at_4.34.39_PM.jpeg",
+          "source_path": "media/vardhaman/outcomes/nakshatra-cpl-certificate.jpg",
+          "production_path": "media/outcomes/nakshatra-cpl-certificate.jpg",
+          "alt": "Commercial Pilot License (MEA-L-IR) with Instrument Rating certificate for Nakshatra Sancheti, issued by 4 Aviators, Cape Town, South Africa, with the license number redacted",
+          "caption": "Commercial Pilot License · 4 Aviators, Cape Town"
         }
       ]
     }

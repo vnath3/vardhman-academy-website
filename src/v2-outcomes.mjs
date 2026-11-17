@@ -37,6 +37,7 @@ export function validateOutcomes(doc) {
       assert.ok(!paths.has(asset.production_path), `Duplicate production path: ${asset.id}`);
       paths.add(asset.production_path);
       for (const field of ['alt', 'caption']) assert.ok(typeof asset[field] === 'string' && asset[field].trim(), `Missing ${field}: ${asset.id}`);
+      if (asset.role !== undefined) assert.ok(['hero', 'document'].includes(asset.role), `Invalid media role: ${asset.id}`);
     }
     if (outcome.approval_status === 'approved') {
       for (const requirement of outcome.required_verifications) assert.equal(outcome.verified?.[requirement], true, `Unverified ${requirement}: ${outcome.id}`);
@@ -55,7 +56,7 @@ export function planOutcomes(doc, { privateReview = false } = {}) {
     return {
       id: outcome.id, name: outcome.name, relationship: outcome.relationship,
       headline: outcome.headline, description: outcome.description,
-      media: outcome.media.map(asset => ({ src: './' + asset.production_path, alt: asset.alt, caption: asset.caption }))
+      media: outcome.media.map(asset => ({ src: './' + asset.production_path, alt: asset.alt, caption: asset.caption, role: asset.role === 'document' ? 'document' : 'hero' }))
     };
   });
   return { runtime, copies: [...copies.values()], files: [...copies.keys()].map(file => file.slice('media/'.length)) };
@@ -64,18 +65,25 @@ export function planOutcomes(doc, { privateReview = false } = {}) {
 export function renderOutcomes(outcomes = []) {
   if (!outcomes.length) return '';
   const escapeText = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
-  const cards = outcomes.map(outcome => `
+  const cards = outcomes.map(outcome => {
+    const hero = outcome.media.find(item => item.role === 'hero') ?? outcome.media[0];
+    const documents = outcome.media.filter(item => item !== hero);
+    const thumbs = documents.map(item => `
+          <figure class="outcome-thumb"><img src="${escapeText(item.src)}" alt="${escapeText(item.alt)}" loading="lazy"><figcaption>${escapeText(item.caption)}</figcaption></figure>`).join('');
+    return `
     <article class="outcome-card reveal">
-      <div class="outcome-media">${outcome.media.map(item => `<figure><img src="${escapeText(item.src)}" alt="${escapeText(item.alt)}" loading="lazy"><figcaption>${escapeText(item.caption)}</figcaption></figure>`).join('')}</div>
+      <div class="outcome-hero"><img src="${escapeText(hero.src)}" alt="${escapeText(hero.alt)}" loading="lazy"></div>
       <div class="outcome-body">
         <span class="outcome-relationship">${escapeText(outcome.relationship)}</span>
         <h3>${escapeText(outcome.name)}</h3>
         <strong class="outcome-headline">${escapeText(outcome.headline)}</strong>
         <p>${escapeText(outcome.description)}</p>
+        ${documents.length ? `<div class="outcome-thumbs">${thumbs}</div>` : ''}
       </div>
-    </article>`).join('');
+    </article>`;
+  }).join('');
   return `<section class="v2-outcomes section-space" id="outcomes" aria-labelledby="outcomesTitle"><div class="container">
-      <div class="intro center reveal"><span class="eyebrow">Real outcomes</span><h2 class="h2" id="outcomesTitle">Where some of our students <span style="color:var(--blue)">are today.</span></h2><p class="muted">Owner-confirmed, shared with each student's own permission — not illustrative examples.</p></div>
+      <div class="intro center reveal"><span class="eyebrow">Real outcomes</span><h2 class="h2" id="outcomesTitle">Where some of our students <span style="color:var(--blue)">are today.</span></h2><p class="muted">Shared with each student's own permission.</p></div>
       <div class="outcome-grid">${cards}</div>
     </div></section>`;
 }
