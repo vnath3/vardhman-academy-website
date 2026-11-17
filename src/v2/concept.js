@@ -4,7 +4,38 @@
     $('#year').textContent=new Date().getFullYear();
     $('#mobileToggle').addEventListener('click',()=>{const open=$('#navLinks').classList.toggle('open');$('#mobileToggle').setAttribute('aria-expanded',String(open));$('#mobileToggle').textContent=open?'×':'☰';});
     $$('#navLinks a').forEach(a=>a.addEventListener('click',()=>{$('#navLinks').classList.remove('open');$('#mobileToggle').setAttribute('aria-expanded','false');$('#mobileToggle').textContent='☰';}));
-    let scrollScheduled=false;window.addEventListener('scroll',()=>{if(scrollScheduled)return;scrollScheduled=true;requestAnimationFrame(()=>{const d=document.documentElement;$('#readingProgress').style.width=((d.scrollTop/(d.scrollHeight-d.clientHeight))*100||0)+'%';scrollScheduled=false;});},{passive:true});
+    // One rAF-batched scroll tick drives three bits of chrome at once: the
+    // reading-progress bar, a header that tightens up once you're past the
+    // hero, and a back-to-top control — rather than three separate listeners.
+    const siteHeader=$('.site-header'), backToTop=$('#backToTop');
+    let headerScrolled=false, backVisible=false;
+    let scrollScheduled=false;window.addEventListener('scroll',()=>{if(scrollScheduled)return;scrollScheduled=true;requestAnimationFrame(()=>{
+      const d=document.documentElement;
+      $('#readingProgress').style.width=((d.scrollTop/(d.scrollHeight-d.clientHeight))*100||0)+'%';
+      const y=scrollY;
+      const scrolled=y>12;
+      if(scrolled!==headerScrolled){siteHeader?.classList.toggle('scrolled',scrolled);headerScrolled=scrolled;}
+      const show=y>innerHeight*.8;
+      if(show!==backVisible){backToTop?.classList.toggle('visible',show);backToTop?.setAttribute('aria-hidden',String(!show));if(backToTop)backToTop.tabIndex=show?0:-1;backVisible=show;}
+      scrollScheduled=false;
+    });},{passive:true});
+    if(backToTop)backToTop.addEventListener('click',()=>{
+      window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+    });
+    // Scrollspy: highlight whichever section the nav is pointing at as it
+    // comes into view, so the nav itself gives feedback while scrolling.
+    if('IntersectionObserver' in window){
+      const navLinks=$$('#navLinks a[href^="#"]').filter(a=>a.getAttribute('href').length>1);
+      const linkFor=id=>navLinks.find(a=>a.getAttribute('href')==='#'+id);
+      const spySections=navLinks.map(a=>document.getElementById(a.getAttribute('href').slice(1))).filter(Boolean);
+      const spy=new IntersectionObserver(entries=>{
+        entries.forEach(entry=>{
+          const link=linkFor(entry.target.id);
+          if(link)link.classList.toggle('current',entry.isIntersecting);
+        });
+      },{rootMargin:'-45% 0px -50% 0px'});
+      spySections.forEach(section=>spy.observe(section));
+    }
     // Register after the final page/gallery layout. Text stays readable before
     // an entrance; only the parent underline is linked to scroll distance.
     document.addEventListener('DOMContentLoaded', () => {

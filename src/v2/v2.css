@@ -313,3 +313,49 @@ main > .v2-outcomes { order: 4; }
   .reveal-parent, .reveal-concern { opacity: 1 !important; transform: none !important; }
   .parent-scroll .become-word::after { transform: none; }
 }
+
+/* Scroll feedback: a header that tightens up once you've scrolled past the
+   hero, a current-section indicator in the nav, and a back-to-top control —
+   the kind of response a long mobile page needs so scrolling doesn't feel
+   like dead space between sections. */
+.site-header { transition: box-shadow .25s ease, background .25s ease; }
+.site-header .nav { transition: height .25s ease; }
+.site-header.scrolled { box-shadow: 0 10px 28px rgba(20, 34, 65, .09); background: rgba(255, 255, 255, .97); }
+.site-header.scrolled .nav { height: 64px; }
+.site-header.scrolled .mark { transform: rotate(-8deg) scale(.88); }
+@media(max-width: 780px) {
+  .site-header.scrolled .nav { height: 58px; }
+}
+
+.nav-links a { position: relative; }
+.nav-links a.current { color: #1779a2; }
+.nav-links a.current::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; background: #1779a2; border-radius: 2px; }
+
+.back-to-top {
+  position: fixed; right: 24px; bottom: 28px; z-index: 80;
+  width: 46px; height: 46px; border: 0; border-radius: 50%;
+  background: #1779a2; color: #fff; font-size: 18px; line-height: 1;
+  display: grid; place-items: center; box-shadow: 0 10px 26px rgba(23, 121, 162, .35);
+  opacity: 0; transform: translateY(14px) scale(.9); pointer-events: none;
+  transition: opacity .25s ease, transform .25s ease;
+}
+.back-to-top.visible { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+.back-to-top:hover { filter: brightness(1.06); }
+.back-to-top:active { transform: scale(.9); }
+@media(max-width: 780px) {
+  /* Clear the fixed "Tell us about your child" bar at the bottom. */
+  .back-to-top { right: 14px; bottom: 82px; width: 42px; height: 42px; font-size: 16px; }
+}
+
+/* Tap feedback: a quick press-down on the controls a thumb actually taps,
+   so touch interactions feel acknowledged immediately, not just on release. */
+.btn, .nav-cta, .mobile-bottom, .choice, .option, .quiz-choice, .faq-item > button, .back-to-top {
+  transition-property: transform, box-shadow, background, border-color, opacity, filter;
+}
+.btn:active, .nav-cta:active, .mobile-bottom:active, .choice:active, .option:active, .quiz-choice:active, .faq-item > button:active {
+  transform: scale(.96);
+}
+
+@media(prefers-reduced-motion: reduce) {
+  .site-header, .site-header .nav, .back-to-top { transition: none; }
+}
