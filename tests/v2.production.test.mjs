@@ -6,8 +6,8 @@ import { execFile } from 'node:child_process';
 import path from 'node:path';
 import { tmpdir } from 'node:os';
 import sharp from 'sharp';
-import { root, readV2Manifest } from '../scripts/contracts.mjs';
-import { buildV2, planMedia } from '../scripts/build-v2.mjs';
+import { root, readV2Manifest, readV2Outcomes } from '../scripts/contracts.mjs';
+import { buildV2, planMedia, planOutcomes } from '../scripts/build-v2.mjs';
 import { validateV2Manifest } from '../src/v2-media.mjs';
 import { verifyProduction } from '../scripts/verify-production.mjs';
 import { createProductionServer } from '../scripts/preview-production.mjs';
@@ -108,6 +108,14 @@ test('isolated production CLI copies approvals, removes revoked files, verifies 
     const target = path.join(fixture, asset.source_path);
     await mkdir(path.dirname(target), { recursive: true });
     await writeFile(target, `Synthetic regression fixture for ${asset.id}`);
+  }
+  // The outcomes manifest isn't under test here, but build-v2.mjs always
+  // reads and copies it too, so the isolated fixture needs its real source
+  // files present the same way the gallery media does.
+  for (const asset of planOutcomes(await readV2Outcomes()).copies) {
+    const target = path.join(fixture, asset.source_path);
+    await mkdir(path.dirname(target), { recursive: true });
+    await cp(path.join(root, asset.source_path), target);
   }
   const manifestFile = path.join(fixture, 'content', 'v2-media-manifest.json');
   const save = () => writeFile(manifestFile, JSON.stringify(changed));

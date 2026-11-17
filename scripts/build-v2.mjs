@@ -1,10 +1,12 @@
 import { cp, mkdir, readFile, writeFile, rm, realpath } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { root, readV2Manifest, readV2Settings } from './contracts.mjs';
+import { root, readV2Manifest, readV2Settings, readV2Outcomes } from './contracts.mjs';
 import { planMedia } from '../src/v2-media.mjs';
+import { planOutcomes } from '../src/v2-outcomes.mjs';
 import { siteRuntime, renderSiteHtml, renderConceptScript, robotsFile, productionHeaders } from '../src/v2-settings.mjs';
 export { planMedia } from '../src/v2-media.mjs';
+export { planOutcomes } from '../src/v2-outcomes.mjs';
 
 export const v2Output = path.join(root, '.local-preview-v2');
 export const v2Source = path.join(root, 'src', 'v2');
@@ -21,10 +23,12 @@ export async function buildV2({ privateReview = false } = {}) {
   }
   const manifest = await readV2Manifest();
   const settings = await readV2Settings();
+  const outcomesDoc = await readV2Outcomes();
   const runtimeSettings = siteRuntime(settings, { privateReview });
   const plan = planMedia(manifest, { privateReview });
+  const outcomesPlan = planOutcomes(outcomesDoc, { privateReview });
   const archive = await realpath(path.join(root, 'media', 'vardhaman'));
-  for (const asset of plan.copies) {
+  for (const asset of [...plan.copies, ...outcomesPlan.copies]) {
     const source = await realpath(path.join(root, asset.source_path));
     if (!source.startsWith(archive + path.sep)) throw new Error(`Media source escapes archive: ${asset.id}`);
   }
@@ -36,7 +40,7 @@ export async function buildV2({ privateReview = false } = {}) {
     await cp(path.join(v2Source, file), path.join(output, file), { recursive: true });
   }
   await writeFile(path.join(output, 'concept.js'), renderConceptScript(await readFile(path.join(v2Source, 'concept.js'), 'utf8'), { privateReview }));
-  await writeFile(path.join(output, 'index.html'), renderSiteHtml(await readFile(path.join(v2Source, 'index.html'), 'utf8'), settings, { privateReview, media: planMedia(manifest).runtime, galleryMedia: plan.runtime }));
+  await writeFile(path.join(output, 'index.html'), renderSiteHtml(await readFile(path.join(v2Source, 'index.html'), 'utf8'), settings, { privateReview, media: planMedia(manifest).runtime, galleryMedia: plan.runtime, outcomesMedia: outcomesPlan.runtime }));
   await writeFile(path.join(output, 'site-settings.js'), `window.VARDHAMAN_SITE = ${JSON.stringify(runtimeSettings).replaceAll('<', '\\u003c')};\n`);
   if (!privateReview) {
     await cp(path.join(v2Source, 'analytics.js'), path.join(output, 'analytics.js'));
@@ -46,7 +50,7 @@ export async function buildV2({ privateReview = false } = {}) {
   await writeFile(path.join(output, 'robots.txt'), robotsFile(settings, { privateReview }));
   if (privateReview) await writeFile(path.join(output, 'media-review.html'), renderMediaReview(manifest));
   if (!privateReview) {
-    for (const asset of plan.copies) {
+    for (const asset of [...plan.copies, ...outcomesPlan.copies]) {
       const destination = path.join(output, asset.production_path);
       await mkdir(path.dirname(destination), { recursive: true });
       await cp(path.join(root, asset.source_path), destination);
@@ -54,10 +58,10 @@ export async function buildV2({ privateReview = false } = {}) {
     // Also supports manual dist/ uploads; Netlify reads these headers itself.
     await writeFile(path.join(output, '_headers'), productionHeaders(await readFile(path.join(root, 'config', 'production-headers.txt'), 'utf8'), settings));
   }
-  return { output, html: await readFile(path.join(output, 'index.html'), 'utf8'), mediaFiles: privateReview ? [] : plan.files };
+  return { output, html: await readFile(path.join(output, 'index.html'), 'utf8'), mediaFiles: privateReview ? [] : plan.files, outcomesFiles: privateReview ? [] : outcomesPlan.files };
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const result = await buildV2({ privateReview: process.argv.includes('--private-review') });
-  console.log(`${process.argv.includes('--private-review') ? 'Private review' : 'Production'} V2 build: ${result.output}\nPublic media files: ${result.mediaFiles.length}`);
+  console.log(`${process.argv.includes('--private-review') ? 'Private review' : 'Production'} V2 build: ${result.output}\nPublic media files: ${result.mediaFiles.length}\nOutcomes media files: ${result.outcomesFiles.length}`);
 }

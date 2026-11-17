@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "release_policy": "default_deny",
+  "outcomes": [
+    {
+      "id": "NAKSHATRA-2026",
+      "approval_status": "approved",
+      "name": "Nakshatra Sancheti",
+      "relationship": "Former student of Rushabh Sir",
+      "headline": "Commercial Pilot, Cape Town",
+      "description": "Nakshatra studied with Rushabh Sir at Vardhaman Academy and went on to earn his Commercial Pilot License (MEA-L-IR) with Instrument Rating from 4 Aviators in Cape Town, South Africa.",
+      "required_verifications": ["usage_rights", "subject_consent"],
+      "verified": { "usage_rights": true, "subject_consent": true },
+      "approval_record": {
+        "approved_by": "Academy owner via chat confirmation",
+        "approved_on": "2026-11-17",
+        "evidence": "Owner confirmed Nakshatra (an adult) explicitly agreed to his name, photo and certificate being published on the academy site. The certificate's SACAA license number is redacted at the owner's request; everything else on it is shown as issued. Source documents: a Commercial Pilot License (MEA-L-IR) with Instrument Rating certificate issued by 4 Aviators (PTY) Ltd, Cape Town, South Africa, dated 10/11/2026, and a photo from Nakshatra's own Instagram story at 4 Aviators Pilot Training."
+      },
+      "media": [
+        {
+          "id": "NAKSHATRA-CERT",
+          "original_filename": "WhatsApp_Image_2026-11-14_at_4.34.39_PM.jpeg",
+          "source_path": "media/vardhaman/outcomes/nakshatra-cpl-certificate.jpg",
+          "production_path": "media/outcomes/nakshatra-cpl-certificate.jpg",
+          "alt": "Commercial Pilot License (MEA-L-IR) with Instrument Rating certificate for Nakshatra Sancheti, issued by 4 Aviators, Cape Town, South Africa, with the license number redacted",
+          "caption": "Commercial Pilot License (MEA-L-IR) with Instrument Rating — issued 10 Nov 2026"
+        },
+        {
+          "id": "NAKSHATRA-PHOTO",
+          "original_filename": "WhatsApp_Image_2026-11-14_at_4.36.53_PM.jpeg",
+          "source_path": "media/vardhaman/outcomes/nakshatra-with-examiner.jpg",
+          "production_path": "media/outcomes/nakshatra-with-examiner.jpg",
+          "alt": "Nakshatra Sancheti with his flight examiner and a trainer in front of a training aircraft at 4 Aviators, Cape Town",
+          "caption": "After the check-ride · 4 Aviators Pilot Training, Cape Town"
+        }
+      ]
+    }
+  ]
+}

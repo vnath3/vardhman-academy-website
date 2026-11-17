@@ -2,8 +2,8 @@ import assert from 'node:assert/strict';
 import { readFile, readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { root, readV2Manifest, readV2Settings } from './contracts.mjs';
-import { planMedia, v2Source } from './build-v2.mjs';
+import { root, readV2Manifest, readV2Settings, readV2Outcomes } from './contracts.mjs';
+import { planMedia, planOutcomes, v2Source } from './build-v2.mjs';
 import { renderSiteHtml, renderConceptScript, siteRuntime, robotsFile, productionHeaders } from '../src/v2-settings.mjs';
 
 export async function listFiles(directory, prefix = '') {
@@ -21,15 +21,18 @@ export async function verifyProduction() {
   const output = path.join(root, 'dist');
   const manifest = await readV2Manifest();
   const settings = await readV2Settings();
+  const outcomesDoc = await readV2Outcomes();
   const { runtime, files: mediaFiles, copies } = planMedia(manifest);
+  const { runtime: outcomesRuntime, files: outcomesFiles, copies: outcomesCopies } = planOutcomes(outcomesDoc);
   const sourceFiles = ['index.html', 'base.css', 'v2.css', 'concept.js', 'v2.js', 'enquiry.js', 'dialogs.js', 'analytics.js', 'fonts.css',
     ...(await listFiles(path.join(v2Source, 'fonts'))).map(file => 'fonts/' + file)];
-  const expected = [...sourceFiles, 'media-data.js', 'site-settings.js', 'robots.txt', '_headers', ...mediaFiles.map(file => 'media/' + file)].sort();
+  const expected = [...sourceFiles, 'media-data.js', 'site-settings.js', 'robots.txt', '_headers',
+    ...mediaFiles.map(file => 'media/' + file), ...outcomesFiles.map(file => 'media/' + file)].sort();
   const actual = await listFiles(output);
   assert.deepEqual(actual, expected, 'Artifact must contain only V2 code, fonts and approved media; rebuild to remove stale files.');
   for (const file of sourceFiles) {
     const source = await readFile(path.join(v2Source, file));
-    const expectedBytes = file === 'index.html' ? Buffer.from(renderSiteHtml(source.toString('utf8'), settings, { media: runtime }))
+    const expectedBytes = file === 'index.html' ? Buffer.from(renderSiteHtml(source.toString('utf8'), settings, { media: runtime, outcomesMedia: outcomesRuntime }))
       : file === 'concept.js' ? Buffer.from(renderConceptScript(source.toString('utf8'))) : source;
     assert.deepEqual(await readFile(path.join(output, file)), expectedBytes, `Source mismatch: ${file}`);
   }
@@ -40,7 +43,7 @@ export async function verifyProduction() {
   const generated = JSON.parse(data.slice('window.VARDHAMAN_MEDIA = '.length, -2));
   assert.deepEqual(generated, JSON.parse(JSON.stringify(runtime)), 'Browser media data must match the public allowlist.');
   assert.equal(generated.privateReview, false);
-  for (const asset of copies) {
+  for (const asset of [...copies, ...outcomesCopies]) {
     assert.deepEqual(await readFile(path.join(output, asset.production_path)), await readFile(path.join(root, asset.source_path)), `Media mismatch: ${asset.id}`);
   }
   assert.equal(await readFile(path.join(output, '_headers'), 'utf8'), productionHeaders(await readFile(path.join(root, 'config', 'production-headers.txt'), 'utf8'), settings));
@@ -60,8 +63,13 @@ export async function verifyProduction() {
     for (const match of css.matchAll(/url\(['"]?([^)'"\s]+)['"]?\)/g)) await checkUrl(match[1], file);
   }
   for (const file of mediaFiles) await checkUrl('./media/' + file, 'index.html');
+  for (const file of outcomesFiles) await checkUrl('./media/' + file, 'index.html');
   const sizes = await Promise.all(actual.map(async file => (await stat(path.join(output, file))).size));
-  return { fileCount: actual.length, mediaFileCount: mediaFiles.length, galleryCount: generated.gallery.length, bytes: sizes.reduce((a, b) => a + b, 0) };
+  return {
+    fileCount: actual.length, mediaFileCount: mediaFiles.length, galleryCount: generated.gallery.length,
+    outcomesMediaFileCount: outcomesFiles.length, outcomesCount: outcomesRuntime.length,
+    bytes: sizes.reduce((a, b) => a + b, 0)
+  };
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

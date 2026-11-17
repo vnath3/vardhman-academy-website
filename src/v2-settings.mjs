@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { renderGallery } from './v2-gallery.mjs';
+import { renderOutcomes } from './v2-outcomes.mjs';
 
 const escape = value => String(value).replace(/[&<>"']/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[char]));
 function requireApproval(record, label) {
@@ -59,7 +60,7 @@ export function renderConceptScript(source, { privateReview = false } = {}) {
   return privateReview ? source : source.replace(/\s*\/\/ private-stories:start[\s\S]*?\/\/ private-stories:end\r?\n/g, '\n');
 }
 
-export function renderSiteHtml(source, settings, { privateReview = false, media, galleryMedia = media } = {}) {
+export function renderSiteHtml(source, settings, { privateReview = false, media, galleryMedia = media, outcomesMedia = [] } = {}) {
   validateSettings(settings);
   const seo = settings.seo;
   let html = source.replace(/<title>[^<]*<\/title>/, `<title>${escape(seo.title)}</title>`)
@@ -82,6 +83,7 @@ export function renderSiteHtml(source, settings, { privateReview = false, media,
   ].join('\n  ');
   html = html.replace('<!-- site-metadata -->', metadata);
   html = html.replace('<!-- gallery-section -->', renderGallery(galleryMedia));
+  html = html.replace('<!-- outcomes-section -->', renderOutcomes(outcomesMedia));
   html = html.replace('<!-- hero-media -->', media?.hero
     ? `<img class="mentor-portrait" src="${escape(media.hero)}" alt="${escape(media.heroAlt)}" loading="eager" fetchpriority="high">`
     : '<span class="portrait-note">Rushabh Mutha · Vardhaman Academy</span>');
