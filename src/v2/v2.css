@@ -275,8 +275,18 @@ body { background: #fbfbf7; }
 .reveal-concern:not(.visible) { opacity: .85; transform: translate3d(0,var(--reveal-distance),0); }
 .reveal-concern.visible:not(.motion-instant) { animation-name: concern-entrance; }
 .reveal-mentor { --reveal-distance: 10px; --reveal-duration: 480ms; }
-.reveal-gallery { --reveal-distance: 8px; --reveal-duration: 380ms; --reveal-delay: calc(var(--reveal-order) * 55ms); }
-.reveal-mentor.visible:not(.motion-instant), .reveal-gallery.visible:not(.motion-instant) { animation-name: quiet-entrance; }
+.reveal-mentor.visible:not(.motion-instant) { animation-name: quiet-entrance; }
+/* Cards (feature tiles, FAQ rows, outcome cards): a plain fade+rise, staggered
+   by --reveal-order so a row of siblings settles in left-to-right rather than
+   popping in all at once. */
+.reveal-card { --reveal-distance: 20px; --reveal-duration: 520ms; --reveal-delay: calc(var(--reveal-order) * 80ms); }
+.reveal-card:not(.visible) { opacity: 0; transform: translate3d(0,var(--reveal-distance),0); }
+.reveal-card.visible:not(.motion-instant) { animation-name: card-entrance; }
+/* Gallery photos: a soft zoom-in rather than a rise, so the grid reads as a
+   different, more photographic kind of motion than the text cards. */
+.reveal-zoom { --reveal-duration: 480ms; --reveal-delay: calc(var(--reveal-order) * 90ms); }
+.reveal-zoom:not(.visible) { opacity: 0; transform: scale(.92); }
+.reveal-zoom.visible:not(.motion-instant) { animation-name: zoom-entrance; }
 .parent-scroll .become-word::after { transform: scaleX(var(--underline-progress, 1)); }
 .gallery-toolbar[hidden] { display: none; }
 /* Match the live order even before scripts run. */
@@ -301,18 +311,33 @@ main > .v2-outcomes { order: 4; }
 @keyframes parent-entrance { from { opacity: .85; transform: translate3d(0,var(--reveal-distance),0); } to { opacity: 1; transform: none; } }
 @keyframes concern-entrance { from { opacity: .85; transform: translate3d(0,var(--reveal-distance),0); } to { opacity: 1; transform: none; } }
 @keyframes quiet-entrance { from { opacity: .8; transform: translate3d(0,var(--reveal-distance),0); } to { opacity: 1; transform: none; } }
+@keyframes card-entrance { from { opacity: 0; transform: translate3d(0,var(--reveal-distance),0); } to { opacity: 1; transform: none; } }
+@keyframes zoom-entrance { from { opacity: 0; transform: scale(.92); } to { opacity: 1; transform: scale(1); } }
+@keyframes story-slide-in { from { opacity: 0; transform: translate3d(28px,0,0); } to { opacity: 1; transform: none; } }
 @media(max-width:780px) {
   .reveal { --reveal-distance: 8px; --reveal-duration: 360ms; }
   .reveal-parent { --reveal-distance: 16px; --reveal-duration: 460ms; }
   .reveal-concern { --reveal-distance: 10px; --reveal-duration: 340ms; --reveal-delay: calc(var(--reveal-order) * 60ms); }
-  .reveal-mentor, .reveal-gallery { --reveal-distance: 5px; --reveal-duration: 300ms; }
-  .reveal-gallery { --reveal-delay: calc(var(--reveal-order) * 25ms); }
+  .reveal-mentor { --reveal-distance: 5px; --reveal-duration: 300ms; }
+  /* A touch more settle on mobile, where cards are full-width and the motion
+     is the main visual event rather than one of several things on screen. */
+  .reveal-card { --reveal-distance: 26px; --reveal-duration: 440ms; --reveal-delay: calc(var(--reveal-order) * 70ms); }
+  .reveal-card:not(.visible) { transform: translate3d(0,var(--reveal-distance),0) scale(.97); }
+  .reveal-zoom { --reveal-duration: 420ms; --reveal-delay: calc(var(--reveal-order) * 60ms); }
 }
 @media(prefers-reduced-motion:reduce) {
   .reveal.visible:not(.motion-instant) { animation: none !important; }
-  .reveal-parent, .reveal-concern { opacity: 1 !important; transform: none !important; }
+  .reveal-parent, .reveal-concern, .reveal-card, .reveal-zoom { opacity: 1 !important; transform: none !important; }
   .parent-scroll .become-word::after { transform: none; }
+  .story-card { opacity: 1 !important; transform: none !important; animation: none !important; }
 }
+
+/* Student-stories carousel: cards slide in from the right, staggered by
+   position, the first time the section scrolls into view. JS opts a card
+   into the hidden start state only once it knows it can reveal it again —
+   so with no JS, or no IntersectionObserver, cards are simply visible. */
+.story-track.pending .story-card { opacity: 0; transform: translate3d(28px,0,0); }
+.story-track.cards-in .story-card { animation: story-slide-in 480ms cubic-bezier(.22,.61,.36,1) backwards; animation-delay: calc(var(--i, 0) * 80ms); }
 
 /* Scroll feedback: a header that tightens up once you've scrolled past the
    hero, a current-section indicator in the nav, and a back-to-top control —

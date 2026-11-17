@@ -69,17 +69,31 @@
         element.style.setProperty('--reveal-order', order);
         targets.add(element); pending.add(element);
       };
+      // Sections handled explicitly below (cards, gallery) are excluded here
+      // so they don't also pick up the plain, unstaggered treatment.
       $$('.reveal').forEach(element => {
-        if (element.closest('.hero, #journey, #brainlab, #enquiry, #parents, #about')) element.classList.remove('reveal');
-        else { targets.add(element); pending.add(element); }
+        if (element.closest('.hero, #journey, #brainlab, #enquiry, #parents, #about, .features, .faq, .v2-outcomes')) element.classList.remove('reveal');
+        else { element.classList.add('reveal-card'); targets.add(element); pending.add(element); }
       });
       add(parentHeading, 'parent');
       const concerns = $$('#parents .worry-item');
       concerns.forEach((element, index) => add(element, 'concern', index));
       add($('#about .teacher-art'), 'mentor');
       add($('#about h2'), 'mentor');
+      // These groups previously had no scroll-entrance at all (a dead .reveal
+      // class with nothing wiring it up) — feature tiles, FAQ rows and the
+      // outcome cards now fade+rise in, staggered across each row.
+      add($('.features .intro'), 'card');
+      $$('.feature-card').forEach((element, index) => add(element, 'card', index));
+      add($('.faq-grid > div:first-child'), 'card');
+      $$('.faq-grid > div:last-child .faq-item').forEach((element, index) => add(element, 'card', index));
+      add($('.v2-outcomes .intro'), 'card');
+      $$('.outcome-card').forEach((element, index) => add(element, 'card', index));
+      // Gallery photos get a zoom-in instead, and now every card in the grid
+      // gets one (not just the first row) — each still only animates once it
+      // actually scrolls into view.
       const columns = matchMedia('(max-width:520px)').matches ? 1 : matchMedia('(max-width:780px)').matches ? 2 : 3;
-      $$('.gallery-card:not([hidden])').slice(0, columns).forEach((element, index) => add(element, 'gallery', index));
+      $$('.gallery-card:not([hidden])').forEach((element, index) => add(element, 'zoom', index % columns));
       const finishWithin = section => targets.forEach(element => {
         if (section?.contains(element)) finish(element);
       });
@@ -252,7 +266,7 @@
       visibleStoryIds=storyGroups[filter];
       track.style.transform='translateX(0)';
       track.classList.toggle('few',visibleStoryIds.length<3);
-      track.innerHTML=visibleStoryIds.map(i=>{const s=stories[i];return `<button class="story-card" data-story="${i}" aria-label="Open sample story: ${s.title}"><div class="story-visual" style="--theme:${s.theme}"><span class="story-bubble">Sample story 0${i+1}</span><span class="story-object">${s.symbol}</span></div><div class="story-body"><span class="small">${s.type}</span><h3>${s.title}</h3><p>${s.subtitle}</p><div class="story-bottom"><span>Explore the journey</span><span>↗</span></div></div></button>`;}).join('');
+      track.innerHTML=visibleStoryIds.map((i,idx)=>{const s=stories[i];return `<button class="story-card" style="--i:${idx}" data-story="${i}" aria-label="Open sample story: ${s.title}"><div class="story-visual" style="--theme:${s.theme}"><span class="story-bubble">Sample story 0${i+1}</span><span class="story-object">${s.symbol}</span></div><div class="story-body"><span class="small">${s.type}</span><h3>${s.title}</h3><p>${s.subtitle}</p><div class="story-bottom"><span>Explore the journey</span><span>↗</span></div></div></button>`;}).join('');
       $$('#storyFilters button').forEach(b=>{const selected=b.dataset.filter===filter;b.classList.toggle('active',selected);b.setAttribute('aria-pressed',String(selected));});
       showStory(0);
     }
@@ -273,6 +287,17 @@
     storyViewport.addEventListener('scroll',()=>{if(storyViewport.scrollLeft)storyViewport.scrollLeft=0;});
     window.addEventListener('resize',()=>syncStoryFocus(document.activeElement));
     renderStories('all');
+    // The cards slide in from the right the first time this section scrolls
+    // into view. .pending is what makes a card start hidden — so with no
+    // IntersectionObserver support, cards are just visible, never stuck.
+    const storiesSection=document.querySelector('.stories');
+    if('IntersectionObserver' in window && storiesSection){
+      track.classList.add('pending');
+      const storyObserver=new IntersectionObserver(entries=>{
+        entries.forEach(entry=>{if(entry.isIntersecting){track.classList.add('cards-in');track.classList.remove('pending');storyObserver.disconnect();}});
+      },{threshold:.2});
+      storyObserver.observe(storiesSection);
+    }
     let lastFocus=null;function openStory(i){const s=stories[i];lastFocus=document.activeElement;$('#modalSymbol').textContent=s.symbol;$('#modalTitle').textContent=s.title;$('#modalDesc').textContent=s.desc;$('#modalStart').textContent=s.start;$('#modalNow').textContent=s.now;$('#storyModal').classList.add('open');document.body.style.overflow='hidden';$('#modalClose').focus();window.VardhamanDialogs.open($('#storyModal'),lastFocus);}function closeStory(){$('#storyModal').classList.remove('open');document.body.style.overflow='';window.VardhamanDialogs.close($('#storyModal'));}track.addEventListener('click',e=>{const card=e.target.closest('[data-story]');if(card)openStory(Number(card.dataset.story));});$('#modalClose').addEventListener('click',closeStory);$('#modalEnd').addEventListener('click',closeStory);$('#storyModal').addEventListener('click',e=>{if(e.target===$('#storyModal'))closeStory();});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#storyModal').classList.contains('open'))closeStory();});
     }
     // private-stories:end
