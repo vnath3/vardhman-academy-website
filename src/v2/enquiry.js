@@ -23,6 +23,25 @@
     : number ? 'Review your draft, then choose Open WhatsApp. You will still need to press Send there.'
       : 'The academy’s WhatsApp contact is awaiting confirmation. You can copy your draft; this page does not send enquiries.';
 
+  // Give parents without WhatsApp, or who simply prefer to call, a visible
+  // fallback contact. Same approved number already used for the enquiry
+  // draft link (content/v2-settings.json) — nothing new to approve, just
+  // shown in the open instead of only inside a wa.me href.
+  const footerContact = q('#footerContact');
+  if (footerContact && number) {
+    const national = /^91(\d{10})$/.exec(number)?.[1];
+    const readable = national ? `+91 ${national.slice(0, 5)} ${national.slice(5)}` : `+${number}`;
+    const call = document.createElement('a');
+    call.href = `tel:+${number}`;
+    call.textContent = `📞 ${readable}`;
+    const chat = document.createElement('a');
+    chat.href = `https://wa.me/${number}`;
+    chat.target = '_blank';
+    chat.rel = 'noopener';
+    chat.textContent = '💬 WhatsApp';
+    footerContact.append(call, document.createTextNode(' · '), chat);
+  }
+
   function goStep(index) {
     steps.forEach((step, position) => step.classList.toggle('active', index === position));
     progress.setAttribute('aria-valuenow', String(index + 1));
