@@ -453,3 +453,8 @@ main > .faq { background-color: #fbfaf3; background-image: linear-gradient(180de
 .gallery-arrows .circle-btn { width: 46px; height: 46px; background: #fff; color: #1779a2; border: 1px solid #cfe0e3; box-shadow: 0 8px 18px rgba(23,121,162,.12); font-size: 18px; }
 .gallery-arrows .circle-btn:hover { background: #1779a2; color: #fff; }
 .gallery-arrows .circle-btn:active { transform: scale(.92); }
+
+/* Class journey card polish: balanced title (no orphaned "of"), and a little
+   air between the globe and the label/pause row. */
+.journey-stage .stage-title { text-wrap: balance; max-width: 440px; }
+.stage-footer { margin-top: 16px; }
