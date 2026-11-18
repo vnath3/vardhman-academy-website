@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { cp, mkdir, mkdtemp, readFile, rm, writeFile, access } from 'node:fs/promises';
+import { cp, mkdir, mkdtemp, readFile, rm, writeFile, access, stat } from 'node:fs/promises';
 import { promisify } from 'node:util';
 import { execFile } from 'node:child_process';
 import path from 'node:path';
@@ -152,7 +152,9 @@ test('production artifact includes all approved bytes, excludes all other files 
     const response = await fetch(base + '/' + asset.production_path);
     assert.equal(response.status, expected.copies.some(copy => copy.id === asset.id) ? 200 : 404, asset.id);
     if (response.ok) {
-      assert.deepEqual(Buffer.from(await response.arrayBuffer()), await readFile(path.join(root, asset.source_path)));
+      const optimized = path.join(root, 'media-optimized', asset.production_path);
+      const expectedBytes = await readFile(await stat(optimized).then(() => optimized, () => path.join(root, asset.source_path)));
+      assert.ok(Buffer.from(await response.arrayBuffer()).equals(expectedBytes), `Served bytes mismatch: ${asset.id}`);
       assert.equal(response.headers.get('content-type'), { '.png': 'image/png', '.jpeg': 'image/jpeg', '.jpg': 'image/jpeg', '.mp4': 'video/mp4' }[path.extname(asset.production_path)]);
       if (asset.type === 'video') {
         const partial = await fetch(base + '/' + asset.production_path, { headers: { Range: 'bytes=0-63' } });

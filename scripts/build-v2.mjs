@@ -1,4 +1,4 @@
-import { cp, mkdir, readFile, writeFile, rm, realpath } from 'node:fs/promises';
+import { cp, mkdir, readFile, writeFile, rm, realpath, access } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { root, readV2Manifest, readV2Settings, readV2Outcomes } from './contracts.mjs';
@@ -53,7 +53,10 @@ export async function buildV2({ privateReview = false } = {}) {
     for (const asset of [...plan.copies, ...outcomesPlan.copies]) {
       const destination = path.join(output, asset.production_path);
       await mkdir(path.dirname(destination), { recursive: true });
-      await cp(path.join(root, asset.source_path), destination);
+      // Prefer the committed optimized derivative (scripts/optimize-media.mjs); originals stay untouched.
+      const optimized = path.join(root, 'media-optimized', asset.production_path);
+      const useOptimized = await access(optimized).then(() => true, () => false);
+      await cp(useOptimized ? optimized : path.join(root, asset.source_path), destination);
     }
     // Also supports manual dist/ uploads; Netlify reads these headers itself.
     await writeFile(path.join(output, '_headers'), productionHeaders(await readFile(path.join(root, 'config', 'production-headers.txt'), 'utf8'), settings));

@@ -44,7 +44,10 @@ export async function verifyProduction() {
   assert.deepEqual(generated, JSON.parse(JSON.stringify(runtime)), 'Browser media data must match the public allowlist.');
   assert.equal(generated.privateReview, false);
   for (const asset of [...copies, ...outcomesCopies]) {
-    assert.deepEqual(await readFile(path.join(output, asset.production_path)), await readFile(path.join(root, asset.source_path)), `Media mismatch: ${asset.id}`);
+    // Delivery bytes must be the approved original or its committed optimized derivative (media-optimized/).
+    const optimized = path.join(root, 'media-optimized', asset.production_path);
+    const expectedMedia = await readFile(await stat(optimized).then(() => optimized, () => path.join(root, asset.source_path)));
+    assert.ok((await readFile(path.join(output, asset.production_path))).equals(expectedMedia), `Media mismatch: ${asset.id}`);
   }
   assert.equal(await readFile(path.join(output, '_headers'), 'utf8'), productionHeaders(await readFile(path.join(root, 'config', 'production-headers.txt'), 'utf8'), settings));
   const checkUrl = async (url, from) => {

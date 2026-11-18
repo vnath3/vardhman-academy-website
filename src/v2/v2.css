@@ -458,3 +458,10 @@ main > .faq { background-color: #fbfaf3; background-image: linear-gradient(180de
    air between the globe and the label/pause row. */
 .journey-stage .stage-title { text-wrap: balance; max-width: 440px; }
 .stage-footer { margin-top: 16px; }
+
+/* Performance/accessibility polish */
+@keyframes hero-rise-soft { from { transform: translate3d(0,18px,0); } to { transform: none; } }
+.hero-parent .hero-copy > h1 { animation-name: hero-rise-soft; animation-duration: 600ms; }
+.footer h3.footer-h { font: 800 14px Outfit; margin: 0 0 24px; color: inherit; }
+.gallery-dots button { position: relative; }
+.gallery-dots button::after { content: ""; position: absolute; inset: -9px -5px; }
