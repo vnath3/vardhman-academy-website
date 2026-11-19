@@ -665,8 +665,8 @@ html.mx .btn.mx-shine::after { content: ""; position: absolute; top: 0; bottom: 
 }
 
 /* 4. Rushabh Sir */
-html.mx .teacher-grid.mx-pre { transform: translate3d(0, 28px, 0) rotate(-1.2deg); }
-html.mx .teacher-grid.mx-in { transform: none; transition: transform .9s cubic-bezier(.2,.9,.25,1.12); }
+html.mx .teacher-grid.mx-pre { transform: translate3d(0, 18px, 0); }
+html.mx .teacher-grid.mx-in { transform: none; transition: transform .9s cubic-bezier(.22,.61,.36,1); }
 html.mx .teacher-facts .pill { transform: scale(.7) translate3d(0, 8px, 0); }
 html.mx .teacher-facts.mx-in .pill { transform: none; transition: transform .55s cubic-bezier(.34,1.56,.64,1) calc(var(--i) * 110ms + 250ms); }
 
@@ -766,3 +766,11 @@ html.mx-calm .faq-answer { transition-duration: .01s, .2s, .01s, 0s; }
 .content-page h1.h2 { font: 900 clamp(34px, 6.4vw, 54px)/1.1 Outfit; letter-spacing: -1px; color: #17323c; }
 .content-page h1 em { color: #1a7e9d; font-style: normal; background: linear-gradient(transparent 86%, #e7dfaa 86%); padding: 0 .08em; }
 .content-page h1 em { white-space: nowrap; }
+
+/* Seminar photo: no scroll-linked drift. One quiet focus-in as the section arrives, then still. */
+.mentor-event-photo { scale: 1; translate: 0 0; }
+html.mx .teacher-grid.mx-pre .mentor-event-photo { transform: scale(1.045); filter: saturate(.88) brightness(.97); }
+html.mx .teacher-grid.mx-in .mentor-event-photo { transform: none; filter: none; transition: transform 1.6s cubic-bezier(.22,.61,.36,1), filter 1.6s ease; }
+html.mx .teacher-grid.mx-pre .teacher-photo-note { transform: translateY(10px); }
+html.mx .teacher-grid.mx-in .teacher-photo-note { transform: none; transition: transform .9s cubic-bezier(.22,.61,.36,1) .5s; }
+html.mx-calm .teacher-grid.mx-pre .mentor-event-photo, html.mx-calm .teacher-grid.mx-pre .teacher-photo-note { transform: none; filter: none; }

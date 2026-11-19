@@ -392,7 +392,7 @@
   // 2. Photos drift slightly slower than their frames.
   (function(){
     if(reduce.matches||!('IntersectionObserver' in window))return;
-    const items=$$('.gallery-media, .outcome-hero img, .mentor-event-photo').map(img=>({img,box:img.parentElement,vis:false,last:null}));
+    const items=$$('.gallery-media, .outcome-hero img').map(img=>({img,box:img.parentElement,vis:false,last:null}));
     if(!items.length)return;
     const io=new IntersectionObserver(es=>es.forEach(e=>{const it=items.find(i=>i.box===e.target);if(it)it.vis=e.isIntersecting;}),{rootMargin:'80px 0px'});
     items.forEach(it=>{io.observe(it.box);it.img.classList.add('px');});
