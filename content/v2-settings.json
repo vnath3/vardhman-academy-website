@@ -4,8 +4,12 @@
   "seo": {
     "title": "Vardhaman Academy – Tuition for Classes 1–10 in Bansilal Nagar",
     "description": "Small-batch tuition for Classes 1–10 (CBSE, SSC, ICSE) in Bansilal Nagar, Chhatrapati Sambhajinagar. Taught in English and Marathi. Book a demo class.",
-    "indexing_enabled": false,
-    "launch_approval": null,
+    "indexing_enabled": true,
+    "launch_approval": {
+      "approved_by": "Vivek (site owner)",
+      "approved_on": "2026-11-19",
+      "evidence": "Owner replied 'now on netlify' in chat on 2026-11-19 approving go-live on va-academy.netlify.app; AI training crawlers kept blocked"
+    },
     "ai_training_crawlers": "block"
   },
   "enquiry": {

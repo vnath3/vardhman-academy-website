@@ -615,3 +615,16 @@
     });
   } catch (err) { /* Motion is an enhancement; never block the page. */ }
 })();
+
+/* Sticky enquiry bar: only after the hero button has scrolled away, and never over the form */
+(function () {
+  var bar = document.querySelector('.mobile-bottom');
+  var hero = document.querySelector('.hero-actions .btn.primary');
+  var form = document.querySelector('#enquiry');
+  if (!bar || !hero || !('IntersectionObserver' in window)) return;
+  var heroSeen = true, formSeen = false;
+  function apply() { bar.classList.toggle('mb-hide', heroSeen || formSeen); }
+  new IntersectionObserver(function (e) { heroSeen = e[e.length - 1].isIntersecting; apply(); }).observe(hero);
+  if (form) new IntersectionObserver(function (e) { formSeen = e[e.length - 1].isIntersecting; apply(); }, { threshold: 0.15 }).observe(form);
+  apply();
+})();

@@ -723,3 +723,16 @@ html.mx-calm .gallery-card:hover { transform: none; }
 html.mx-calm #reviewPanel:not([hidden]) { animation: hero-fade .4s ease; }
 html.mx-calm #whatsappEnquiry:not([hidden]):not(:disabled) { animation: none; }
 html.mx-calm .faq-answer { transition-duration: .01s, .2s, .01s, 0s; }
+
+/* Mobile hero: calmer first screen — smaller headline, one clear action, no duplicate proof */
+@media(max-width:780px) {
+  .hero-parent { padding: 28px 0 32px; }
+  .hero-parent h1 { font-size: clamp(33px, 9.2vw, 44px); letter-spacing: -1.2px; line-height: 1.08; margin: 16px 0 14px; }
+  .hero-parent .lead { font-size: 16px; line-height: 1.6; margin-bottom: 20px; }
+  .hero-parent .hero-actions { gap: 4px; }
+  .hero-parent .hero-actions .btn.light { background: transparent; border: 0; box-shadow: none; min-height: 44px; padding: 8px; text-decoration: underline; text-underline-offset: 4px; }
+  .hero-parent .hero-trust .proof-seal { display: none; }
+  .hero-parent .hero-trust { margin-top: 10px; }
+  .mobile-bottom { transition: transform .25s ease, opacity .25s ease; }
+  .mobile-bottom.mb-hide { transform: translateY(140%); opacity: 0; pointer-events: none; }
+}
