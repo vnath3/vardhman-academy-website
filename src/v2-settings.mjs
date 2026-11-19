@@ -12,7 +12,7 @@ function requireApproval(record, label) {
 // section is not shipped at all (markup, nav and footer links are removed).
 // Hero, enquiry, header and footer are core and cannot be flagged.
 export const SECTION_FLAGS = {
-  trust_strip: [], parent_message: ['parents'], journey: ['journey'], brainlab: ['brainlab'], approach: ['approach'],
+  trust_strip: [], parent_message: ['parents'], first_month: ['first-month'], brainlab: ['brainlab'], approach: ['approach'],
   mentor: ['about'], gallery: ['life-at-vardhaman'], outcomes: ['outcomes'], faq: ['faq']
 };
 

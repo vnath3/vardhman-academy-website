@@ -73,7 +73,7 @@ for (const width of [1440, 390]) {
     await page.setViewportSize({ width, height: 900 });
     await page.emulateMedia({ reducedMotion: 'no-preference' });
     await page.goto('/', { waitUntil: 'domcontentloaded' });
-    for (const hash of ['#about', '#life-at-vardhaman', '#journey', '#brainlab', '#enquiry']) {
+    for (const hash of ['#about', '#life-at-vardhaman', '#first-month', '#brainlab', '#enquiry']) {
       await page.evaluate(() => scrollTo({ top: 0, behavior: 'instant' }));
       if (width === 390) await page.locator('#mobileToggle').click();
       await page.locator(`#navLinks a[href="${hash}"]`).click();
@@ -128,7 +128,7 @@ test('fast 390px swipes settle skipped content, controls stay usable, and video 
   page.on('request', request => { if (request.url().includes('.mp4')) videos.push(request.url()); });
   await page.goto('/', { waitUntil: 'domcontentloaded' });
   await expect(page.locator('.hero-actions a.primary')).toBeVisible();
-  await readable(page.locator('#journey .journey-details, #brainlab .brain-panel, #enquiry .enquiry'));
+  await readable(page.locator('#brainlab .brain-panel, #enquiry .enquiry'));
   const touch = await page.context().newCDPSession(page);
   await touch.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 195, y: 700 }] });
   for (const y of [550, 400, 250, 100]) {

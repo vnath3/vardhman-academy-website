@@ -16,7 +16,7 @@ for (const width of [1440, 768, 390, 320]) {
     await expect(page.locator('.official-logo-crop').first()).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(width);
     await expect(page.locator('.gallery-card')).toHaveCount(10);
-    for (const selector of ['#home', '#parents', '#about', '#life-at-vardhaman', '#stories', '#approach', '#journey', '#brainlab', '#enquiry', '.faq', '.footer']) {
+    for (const selector of ['#home', '#parents', '#about', '#life-at-vardhaman', '#stories', '#approach', '#first-month', '#brainlab', '#enquiry', '.faq', '.footer']) {
       await page.locator(selector).scrollIntoViewIfNeeded();
       await expect(page.locator(selector)).toBeVisible();
     }
@@ -32,9 +32,9 @@ for (const width of [1440, 768, 390, 320]) {
       const menu = page.locator('#mobileToggle');
       await menu.focus(); await page.keyboard.press('Enter');
       await expect(menu).toHaveAttribute('aria-expanded', 'true');
-      await page.locator('#navLinks a[href="#journey"]').click();
+      await page.locator('#navLinks a[href="#first-month"]').click();
       await expect(menu).toHaveAttribute('aria-expanded', 'false');
-      await expect(page).toHaveURL(/#journey$/);
+      await expect(page).toHaveURL(/#first-month$/);
     }
     await page.locator('.hero-actions a.primary').click();
     await expect(page).toHaveURL(/#enquiry$/);

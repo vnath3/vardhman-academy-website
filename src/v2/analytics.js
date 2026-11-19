@@ -10,7 +10,7 @@ gtag('config', 'G-4F7P27EQSF');
   function track(name, params) { try { gtag('event', name, params || {}); } catch (e) {} }
   try {
     // 1) Section reach: fires once per section the first time ~40% is visible.
-    var names = { home: 'hero', parents: 'parent_message', journey: 'class_journey', brainlab: 'brain_lab', approach: 'approach', about: 'mentor', enquiry: 'enquiry' };
+    var names = { home: 'hero', parents: 'parent_message', 'first-month': 'how_it_starts', brainlab: 'brain_lab', approach: 'approach', about: 'mentor', enquiry: 'enquiry' };
     var targets = [];
     Object.keys(names).forEach(function (id) { var el = document.getElementById(id); if (el) targets.push([el, names[id]]); });
     [['.v2-gallery', 'gallery'], ['.v2-outcomes', 'outcomes'], ['.faq', 'faq']].forEach(function (p) { var el = document.querySelector(p[0]); if (el) targets.push([el, p[1]]); });

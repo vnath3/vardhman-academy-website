@@ -1,6 +1,6 @@
 
     const $=(s)=>document.querySelector(s), $$=(s)=>Array.from(document.querySelectorAll(s));
-    const main=$('main');['.hero','.trust-strip','.parent-message','.teacher','.stories','.features','#journey','#brainlab','#enquiry','.faq'].forEach(selector=>{const section=$(selector);if(section)main.append(section);});
+    const main=$('main');['.hero','.trust-strip','.parent-message','.teacher','.v2-outcomes','.stories','.v2-gallery','.features','#first-month','#brainlab','.faq','#enquiry'].forEach(selector=>{const section=$(selector);if(section)main.append(section);});
     $('#year').textContent=new Date().getFullYear();
     $('#mobileToggle').addEventListener('click',()=>{const open=$('#navLinks').classList.toggle('open');$('#mobileToggle').setAttribute('aria-expanded',String(open));$('#mobileToggle').textContent=open?'×':'☰';});
     $$('#navLinks a').forEach(a=>a.addEventListener('click',()=>{$('#navLinks').classList.remove('open');$('#mobileToggle').setAttribute('aria-expanded','false');$('#mobileToggle').textContent='☰';}));
@@ -140,7 +140,7 @@
       // Sections handled explicitly below (cards, gallery) are excluded here
       // so they don't also pick up the plain, unstaggered treatment.
       $$('.reveal').forEach(element => {
-        if (element.closest('.hero, #journey, #brainlab, #enquiry, #parents, #about, .features, .faq, .v2-outcomes')) element.classList.remove('reveal');
+        if (element.closest('.hero, #first-month, #brainlab, #enquiry, #parents, #about, .features, .faq, .v2-outcomes')) element.classList.remove('reveal');
         else { element.classList.add('reveal-card'); targets.add(element); pending.add(element); }
       });
       add(parentHeading, 'parent');
@@ -236,24 +236,6 @@
         if (preference.matches) targets.forEach(finish);
       });
     }, { once: true });
-    if($('#journeyStage')){
-    const milestones={1:{"title":"Little discoveries","desc":"Class 1 is a chance to explore letters, numbers and the joy of learning.","label":"First discoveries","focus":["Letter and number familiarity","Listening and expression","Comfort with learning routines"],"deco":["✏️","📚"],"bg":"#e4ebff"},2:{"title":"The growing explorer","desc":"Class 2 builds on early reading, counting and the confidence to ask questions.","label":"Growing curiosity","focus":["Reading practice","Number confidence","Asking questions"],"deco":["🌱","🔎"],"bg":"#dff8ef"},3:{"title":"Building connections","desc":"Class 3 connects reading and number skills with everyday ideas and discoveries.","label":"Connecting ideas","focus":["Reading understanding","Mathematics practice","Explaining ideas"],"deco":["📖","🧩"],"bg":"#fff0c5"},4:{"title":"The curious problem-solver","desc":"Class 4 encourages step-by-step reasoning and growing independence with familiar skills.","label":"Learning with purpose","focus":["Applying the basics","Step-by-step reasoning","Independent learning habits"],"deco":["💡","📚"],"bg":"#eee7ff"},5:{title:'The curious explorer',desc:'Class 5 is about connecting ideas, growing independence and discovering the joy of solving problems.',label:'Building confidence',focus:['Stronger subject fundamentals','Growing learning confidence','Steady study habits'],deco:['✏️','📚'],bg:'#e4ebff'},6:{title:'The brave new explorer',desc:'New subjects, deeper concepts and more opportunities to become independent.',label:'A new learning leap',focus:['Adapting to deeper subjects','Asking thoughtful questions','Planning study time'],deco:['🌟','🔬'],bg:'#dff8ef'},7:{title:'The confident connector',desc:'A stage for connecting ideas across subjects and practising with purpose.',label:'Connecting the dots',focus:['Concept application','Science and mathematics reasoning','Study consistency'],deco:['🧠','🧪'],bg:'#fff0c5'},8:{title:'The focused thinker',desc:'Building a steady approach to more complex topics and examinations.',label:'Focus & understanding',focus:['Complex problem solving','Preparation and practice','Independent revision'],deco:['💡','🎯'],bg:'#eee7ff'},9:{title:'The determined learner',desc:'Stronger foundations and better habits for important academic choices.',label:'Growing determination',focus:['Subject-depth understanding','Exam strategy','Personal learning goals'],deco:['📐','📖'],bg:'#e2efff'},10:{title:'The future-ready achiever',desc:'A meaningful milestone — with preparation, focus and confidence for what comes next.',label:'Ready for next chapter',focus:['Board exam readiness','Confident revision routines','Preparing for the next chapter'],deco:['🎓','🚀'],bg:'#ffe5cd'}};
-    let currentGrade=1;const icons=['📚','💡','🌱'];function setGrade(g){currentGrade=Math.max(1,Math.min(10,g));const d=milestones[currentGrade];$('#stageNumber').textContent=currentGrade;$('#gradeTitle').textContent=d.title;$('#gradeDesc').textContent=d.desc;$('#stageLabel').textContent=d.label;$('#decoA').textContent=d.deco[0];$('#decoB').textContent=d.deco[1];$('#journeyStage').style.background=d.bg;$('#gradeCount').textContent=`Class ${currentGrade} / 10`;$('#focusList').innerHTML=d.focus.map((x,i)=>`<div class="focus-item"><span>${icons[i]}</span>${x}</div>`).join('');$$('.grade-dot').forEach((b,i)=>b.setAttribute('aria-pressed',String(Number(b.textContent)===currentGrade)));$('#stageGlobe').style.transform=`rotate(${(currentGrade-1)*4}deg)`;$('#stageNumber').style.transform=`rotate(${(currentGrade-1)*1.5}deg)`;}
-    for(let i=1;i<=10;i++){const b=document.createElement('button');b.className='grade-dot';b.textContent=i;b.type='button';b.setAttribute('aria-label',`Class ${i}`);b.addEventListener('click',()=>setGrade(i));$('#gradeTrack').append(b);}$('#prevGrade').addEventListener('click',()=>setGrade(currentGrade===1?10:currentGrade-1));$('#nextGrade').addEventListener('click',()=>setGrade(currentGrade===10?1:currentGrade+1));setGrade(1);
-
-    const journeyMotion=$('#journeyMotion'),motionPreference=matchMedia('(prefers-reduced-motion: reduce)');
-    let iconsPaused=false;
-    function syncJourneyMotion(){
-      const reduced=motionPreference.matches,paused=iconsPaused||reduced;
-      $('#journeyStage').dataset.motionPaused=String(paused);
-      journeyMotion.disabled=reduced;
-      journeyMotion.setAttribute('aria-pressed',String(paused));
-      journeyMotion.textContent=reduced?'Motion off':iconsPaused?'Resume icons':'Pause icons';
-      journeyMotion.title=reduced?'Your device has reduced motion enabled.':'';
-    }
-    journeyMotion.addEventListener('click',()=>{iconsPaused=!iconsPaused;syncJourneyMotion();});
-    motionPreference.addEventListener('change',syncJourneyMotion);syncJourneyMotion();
-    } // end journey
     if($('#quizNext')){
     const quizSets={
       junior:[

@@ -83,7 +83,6 @@
 
   // Keep the original grade-journey game, but expose only the confirmed offer.
   const newNavLabels={
-    '#journey':'Classes 1–10',
     '#brainlab':'Brain Spark'
   };
   qa('#navLinks a').forEach(link => { if(newNavLabels[link.getAttribute('href')]) link.textContent=newNavLabels[link.getAttribute('href')]; });
@@ -109,7 +108,9 @@
   // Important: the original HTML rearranges its sections on load. Insert our
   // new section into the *final* live order after the mentor section.
   const teacher=q('.teacher');
-  teacher?.after(gallery);
+  const resultsSection=q('.v2-outcomes');
+  // DOM order matches the visual order: mentor > results > life at Vardhaman.
+  if(resultsSection){teacher?.after(resultsSection);resultsSection.after(gallery);}else teacher?.after(gallery);
 
 
   let selectedCategory='all',expanded=privateReview;

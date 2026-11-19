@@ -85,7 +85,7 @@ test('section flags remove disabled sections and their links, and reject unknown
   config.sections.brainlab = false; config.sections.approach = false;
   const off = renderSiteHtml(source, config, { media });
   assert.doesNotMatch(off, /id="brainlab"|id="approach"|href="#brainlab"|href="#approach"|<!-- \/?section:/);
-  assert.match(off, /id="journey"/); assert.match(off, /id="enquiry"/);
+  assert.match(off, /id="first-month"/); assert.match(off, /id="enquiry"/);
   const gone = structuredClone(config); gone.sections.gallery = false;
   assert.doesNotMatch(renderSiteHtml(source, gone, { media }), /id="life-at-vardhaman"/);
   const bad = structuredClone(settings); bad.sections = { hero: false };

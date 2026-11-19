@@ -36,7 +36,7 @@ for (const width of [1440, 768, 390, 320]) {
     await expect(page.locator('.gallery-footnote')).toHaveCount(0);
     await expect(page.locator('.gallery-card')).toHaveCount(publicPlan.runtime.gallery.length);
     if (!publicPlan.runtime.gallery.length) await expect(page.locator('.gallery-empty')).toContainText('shared here with permission');
-    for (const selector of ['#home', '#parents', '#about', '#life-at-vardhaman', '#approach', '#journey', '#brainlab', '#enquiry', '.faq', '.footer']) {
+    for (const selector of ['#home', '#parents', '#about', '#life-at-vardhaman', '#approach', '#first-month', '#brainlab', '#enquiry', '.faq', '.footer']) {
       await page.locator(selector).scrollIntoViewIfNeeded();
       await expect(page.locator(selector)).toBeVisible();
     }
@@ -73,7 +73,7 @@ for (const width of [1440, 768, 390, 320]) {
     await page.evaluate(() => scrollTo(0, 0));
     if (width <= 780) {
       await page.locator('#mobileToggle').click();
-      await page.locator('#navLinks a[href="#journey"]').click();
+      await page.locator('#navLinks a[href="#first-month"]').click();
       await expect(page.locator('#mobileToggle')).toHaveAttribute('aria-expanded', 'false');
     }
     await expect(page.locator('#gradeTrack button')).toHaveCount(10);

@@ -45,46 +45,6 @@ for (const width of [1280, 390]) {
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(width === 390 ? 1280 : 390);
   });
 
-  test(`journey icons animate, pause and respect reduced motion at ${width}px`, async ({ page }) => {
-    await page.setViewportSize({ width, height: 900 });
-    await page.emulateMedia({ reducedMotion: 'no-preference' });
-    await page.goto('/');
-    await page.evaluate(() => document.fonts.ready);
-    const stage = page.locator('#journeyStage'), icon = page.locator('#decoA'), control = page.locator('#journeyMotion');
-    await stage.scrollIntoViewIfNeeded();
-    await expect.poll(() => stage.evaluate(element => getComputedStyle(element).transform)).toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
-    await expect(control).toHaveText('Pause icons'); await expect(control).toBeEnabled();
-    const relativeTop = () => icon.evaluate(element => element.getBoundingClientRect().top - element.parentElement.getBoundingClientRect().top);
-    const first = await relativeTop();
-    await expect.poll(async () => Math.abs(await relativeTop() - first)).toBeGreaterThan(.2);
-    await control.click(); await expect(control).toHaveText('Resume icons');
-    const pausedDelta = await icon.evaluate(async element => {
-      const relative = () => element.getBoundingClientRect().top - element.parentElement.getBoundingClientRect().top;
-      const start = relative();
-      await new Promise(resolve => setTimeout(resolve, 250));
-      return Math.abs(relative() - start);
-    });
-    expect(pausedDelta).toBeLessThan(.1);
-    await control.click(); await expect(control).toHaveText('Pause icons');
-    const resumed = await relativeTop();
-    await expect.poll(async () => Math.abs(await relativeTop() - resumed)).toBeGreaterThan(.2);
-    await page.locator('#gradeTrack button').filter({ hasText: /^10$/ }).click();
-    await expect(page.locator('#stageNumber')).toHaveText('10');
-    const contained = await stage.evaluate(element => {
-      const box = element.getBoundingClientRect();
-      return [...element.querySelectorAll('.stage-deco')].every(icon => {
-        const rect = icon.getBoundingClientRect();
-        return rect.left >= box.left && rect.right <= box.right && rect.top >= box.top && rect.bottom <= box.bottom;
-      });
-    });
-    expect(contained).toBe(true);
-    expect(await stage.evaluate(element => element.scrollLeft)).toBe(0);
-    await page.emulateMedia({ reducedMotion: 'reduce' });
-    await expect(control).toHaveText('Motion off'); await expect(control).toBeDisabled();
-    expect(await icon.evaluate(element => getComputedStyle(element).animationName)).toBe('none');
-    await page.emulateMedia({ reducedMotion: 'no-preference' });
-    await expect(control).toHaveText('Pause icons'); await expect(control).toBeEnabled();
-  });
 }
 
 test('navigation wraps and centers at desktop widths and opens on tablets and 390px mobile', async ({ page }) => {
@@ -104,7 +64,7 @@ test('navigation wraps and centers at desktop widths and opens on tablets and 39
     }));
     expect(alignment.every(item => item.centered && item.contained && item.linesCentered), `${width}px: ${JSON.stringify(alignment)}`).toBeTruthy();
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(width);
-    await page.locator('#navLinks a[href="#journey"]').click();
+    await page.locator('#navLinks a[href="#first-month"]').click();
     if (mobile) { await expect(page.locator('#mobileToggle')).toHaveAttribute('aria-expanded', 'false'); await expect(page.locator('#navLinks')).toBeHidden(); }
   }
 });

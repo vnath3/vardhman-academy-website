@@ -28,7 +28,7 @@
   "sections": {
     "trust_strip": true,
     "parent_message": true,
-    "journey": true,
+    "first_month": true,
     "brainlab": false,
     "approach": false,
     "mentor": true,

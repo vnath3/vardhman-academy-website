@@ -103,7 +103,6 @@ body { background: #fbfbf7; }
 .stories:before { background: #24556c; }
 .stories .h2 span { color: #d8e9a9; }
 .story-card:hover { box-shadow: 0 18px 40px rgba(5,30,42,.24); }
-.journey-stage { box-shadow: 0 25px 60px rgba(33,66,72,.08); }
 .brainlab { background: #f7faf5; }
 .brain-panel { box-shadow: 0 25px 60px rgba(33,66,72,.09); }
 .features { background:#fbfcf8; }
@@ -240,12 +239,8 @@ body { background: #fbfbf7; }
 .gallery-disclosure { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; margin-top: 24px; }
 .gallery-disclosure p { margin: 0; font-size: 13px; }
 .gallery-disclosure[hidden], #galleryToggle[hidden] { display: none; }
-.journey-stage { overflow: clip; }
-.stage-deco { display: block; width: 1.25em; height: 1.25em; line-height: 1.25; text-align: center; pointer-events: none; user-select: none; transform: translate3d(0,0,0); animation: journey-float 6s ease-in-out infinite; }
 .stage-deco.b { animation-delay: -2s; }
 .stage-deco.c { animation-delay: -3s; }
-@keyframes journey-float { 0%,100% { transform: translate3d(0,0,0); } 50% { transform: translate3d(0,-12px,0); } }
-.journey-stage[data-motion-paused="true"] .stage-deco { animation-play-state: paused; }
 .stage-footer { flex-wrap: wrap; }
 .motion-toggle { background: rgba(255,255,255,.85); border: 1px solid #d3daef; border-radius: 999px; padding: 8px 12px; min-height: 36px; font: inherit; font-size: 10px; letter-spacing: .4px; color: #36516f; }
 .motion-toggle:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
@@ -415,7 +410,7 @@ main > .teacher { background: #fffaf0; }
 main > .v2-gallery { background-color: #e9f3f6; background-image: linear-gradient(180deg, #fffaf0 0, rgba(255,250,240,0) 140px), linear-gradient(180deg, rgba(233,243,246,0) 55%, #f3f9fa 100%); }
 main > .v2-outcomes { background-color: #fffdf8; background-image: linear-gradient(180deg, #f3f9fa 0, rgba(243,249,250,0) 130px); }
 main > .features { background-color: #ecf6ef; background-image: linear-gradient(180deg, #fffdf8 0, rgba(255,253,248,0) 130px); }
-main > #journey { background-color: #eef4fb; background-image: linear-gradient(180deg, #ecf6ef 0, rgba(236,246,239,0) 130px); }
+main > #first-month { background-color: #eef4fb; background-image: linear-gradient(180deg, #ecf6ef 0, rgba(236,246,239,0) 130px); }
 main > #brainlab { background-color: #f8f4e9; background-image: linear-gradient(180deg, #eef4fb 0, rgba(238,244,251,0) 130px); }
 main > #enquiry { background-color: #e1f0e8; background-image: linear-gradient(180deg, #f8f4e9 0, rgba(248,244,233,0) 130px); }
 main > .faq { background-color: #fbfaf3; background-image: linear-gradient(180deg, #e1f0e8 0, rgba(225,240,232,0) 130px); }
@@ -454,10 +449,6 @@ main > .faq { background-color: #fbfaf3; background-image: linear-gradient(180de
 .gallery-arrows .circle-btn:hover { background: #1779a2; color: #fff; }
 .gallery-arrows .circle-btn:active { transform: scale(.92); }
 
-/* Class journey card polish: balanced title (no orphaned "of"), and a little
-   air between the globe and the label/pause row. */
-.journey-stage .stage-title { text-wrap: balance; max-width: 440px; }
-.stage-footer { margin-top: 16px; }
 
 /* Performance/accessibility polish */
 @keyframes hero-rise-soft { from { transform: translate3d(0,18px,0); } to { transform: none; } }
@@ -487,7 +478,7 @@ main > .faq { background-color: #fbfaf3; background-image: linear-gradient(180de
 
 /* Spacing pass, batch 2 */
 .nowrap { white-space: nowrap; }
-#journey .h2 { text-wrap: balance; }
+
 @media (max-width: 780px) {
   .gallery-tab { min-height: 44px; display: inline-flex; align-items: center; }
   .footer-grid { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 28px; }
@@ -544,7 +535,7 @@ main > .faq { background-color: #fbfaf3; background-image: linear-gradient(180de
 /* ---- Results (year tabs, top scorers, full list) ---- */
 main > .v2-outcomes { order: 3; background-color: #fffdf8; background-image: linear-gradient(180deg, #fffaf0 0, rgba(255,250,240,0) 130px); }
 main > .v2-gallery { order: 4; background-image: linear-gradient(180deg, #fffdf8 0, rgba(255,253,248,0) 140px), linear-gradient(180deg, rgba(233,243,246,0) 55%, #f3f9fa 100%); }
-main > #journey { background-image: linear-gradient(180deg, #f3f9fa 0, rgba(243,249,250,0) 130px); }
+main > #first-month { background-image: linear-gradient(180deg, #f3f9fa 0, rgba(243,249,250,0) 130px); }
 .results { margin-top: 30px; }
 .results-tabs { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 0 0 26px; }
 .results-tab { min-height: 44px; padding: 10px 22px; border-radius: 999px; border: 1px solid #cfe0e6; background: #fff; color: #245866; font: inherit; font-weight: 800; font-size: 14px; cursor: pointer; transition: background .2s, color .2s, border-color .2s; }
@@ -583,12 +574,33 @@ main > #journey { background-image: linear-gradient(180deg, #f3f9fa 0, rgba(243,
 }
 
 /* Explicit, unique section order (no ties):
-   hero > trust > parents > mentor > results > [stories] > life > journey > faq > enquiry */
+   hero > trust > parents > mentor > results > [stories] > life > first-month > faq > enquiry */
 main > .hero { order: 0; } main > .trust-strip { order: 1; } main > .parent-message { order: 2; }
 main > .teacher { order: 3; } main > .v2-outcomes { order: 4; } main > .stories { order: 5; }
-main > .v2-gallery { order: 6; } main > .features { order: 7; } main > #journey { order: 8; }
+main > .v2-gallery { order: 6; } main > .features { order: 7; } main > #first-month { order: 8; }
 main > #brainlab { order: 9; } main > .faq { order: 10; } main > #enquiry { order: 11; }
 /* seams for FAQ before enquiry */
 main > .faq { background-color: #fbfaf3; background-image: linear-gradient(180deg, #eef4fb 0, rgba(238,244,251,0) 130px); }
 main > #enquiry { background-color: #e1f0e8; background-image: linear-gradient(180deg, #fbfaf3 0, rgba(251,250,243,0) 130px); }
 .gallery-card-bottom { justify-content: flex-end; } .gallery-card-bottom .gallery-consent + .gallery-arrow { margin-left: auto; }
+
+/* How it starts: four calm steps with a clear demo-class action */
+.start-section .intro { margin-bottom: 40px; }
+.start-steps { list-style: none; margin: 0 auto; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; counter-reset: none; position: relative; }
+.start-steps::before { content: ""; position: absolute; left: 12%; right: 12%; top: 29px; height: 2px; background: repeating-linear-gradient(90deg, #b9d3dc 0 8px, transparent 8px 16px); }
+.start-step { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; padding: 0 8px; }
+.start-num { position: relative; z-index: 1; width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; background: #157ca5; color: #fff; font: 800 24px Outfit, sans-serif; box-shadow: 0 0 0 7px #eef4fb, 0 10px 22px rgba(21,124,165,.22); }
+.start-step h3 { font: 800 19px/1.25 Outfit, sans-serif; margin: 4px 0 0; color: #17323c; letter-spacing: -.3px; }
+.start-step p { margin: 0; font-size: 14px; line-height: 1.7; color: #5b6e75; max-width: 240px; }
+.start-cta { margin-top: 44px; text-align: center; }
+.start-cta p { margin: 14px 0 0; font-size: 13px; color: #5b6e75; }
+@media (max-width: 900px) {
+  .start-steps { grid-template-columns: 1fr; gap: 0; max-width: 460px; }
+  .start-steps::before { left: 28px; right: auto; top: 30px; bottom: 30px; width: 2px; height: auto; background: repeating-linear-gradient(180deg, #b9d3dc 0 8px, transparent 8px 16px); }
+  .start-step { flex-direction: row; align-items: flex-start; text-align: left; gap: 18px; padding: 0 0 28px; }
+  .start-step:last-child { padding-bottom: 0; }
+  .start-step p { max-width: none; }
+  .start-num { flex: 0 0 58px; }
+  .start-cta { margin-top: 34px; }
+  .start-cta .btn { width: 100%; max-width: 460px; }
+}

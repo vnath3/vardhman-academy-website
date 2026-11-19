@@ -15,9 +15,6 @@ test('V2 has stable correct identity/grades, with the original reference present
   assert.match(html, /Classes 1–10/);
   assert.match(html, /Rushabh Mutha/);
   assert.doesNotMatch(html, /Vardhman|VARDHMAN|Classes? 5[–-]10|Classes 5 through 10|\bRushab\b/);
-  assert.match(concept, /for\(let i=1;i<=10;i\+\+\)/);
-  assert.match(concept, /Math.max\(1,Math.min\(10,g\)\)/);
-  assert.match(concept, /milestones=\{1:/);
   assert.doesNotMatch(enhancements, /if\(index<4\)|gradeBtns.slice\(0,4\)/);
   for (const file of ['base.css', 'v2.css', 'concept.js', 'v2.js', 'fonts.css']) assert.ok(html.includes(`./${file}`));
   assert.doesNotMatch(html, /https:\/\/fonts\.|wa\.me|youtube\.com|<form/);
