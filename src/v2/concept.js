@@ -473,3 +473,140 @@
   });
   select(0);
 })();
+
+// Motion pack: lively but quiet. Everything is gated by html.mx, which is set
+// only when IntersectionObserver exists and the visitor has NOT asked for
+// reduced motion, so content is never hidden when motion is off or JS fails.
+(function () {
+  try {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) return;
+    var doc = document.documentElement;
+    var $ = function (s, r) { return (r || document).querySelector(s); };
+    var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+    doc.classList.add('mx');
+    function seen(els, cb, threshold) {
+      if (!els.length) return;
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) { io.unobserve(e.target); cb(e.target); } });
+      }, { threshold: threshold || 0.35 });
+      els.forEach(function (el) { io.observe(el); });
+    }
+
+    // 1. Hero: headline rises word by word, a marker sweeps under the key line,
+    //    and the "I can do it." note writes itself.
+    var hero = $('.hero-parent');
+    // v2.js rewrites the hero headline after this script runs, so the word
+    // split happens once the DOM is complete (and only once).
+    function prepHero() {
+      var h1 = $('.hero-parent h1'), n = 0;
+      if (!h1 || $('.mx-w', h1)) { if (h1) h1.classList.add('mx-ready'); return; }
+      (function wrap(node, inEm) {
+        Array.prototype.slice.call(node.childNodes).forEach(function (child) {
+          if (child.nodeType === 3) {
+            var frag = document.createDocumentFragment();
+            child.textContent.split(/(\s+)/).forEach(function (part) {
+              if (!part) return;
+              if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
+              var span = document.createElement('span');
+              span.className = 'mx-w' + (inEm ? ' mx-em' : '');
+              span.style.setProperty('--i', n++);
+              span.textContent = part;
+              frag.appendChild(span);
+            });
+            node.replaceChild(frag, child);
+          } else if (child.nodeType === 1) wrap(child, inEm || child.tagName === 'EM');
+        });
+      })(h1, false);
+      $$('.mx-em', h1).forEach(function (w, k) { w.style.setProperty('--k', k); });
+      h1.classList.add('mx-ready');
+    }
+    var note = $('.mentor-handnote');
+    if (note && note.firstChild && note.firstChild.nodeType === 3) {
+      var write = document.createElement('span'); write.className = 'mx-write'; write.textContent = note.firstChild.textContent;
+      note.replaceChild(write, note.firstChild);
+    }
+    var started = false;
+    var start = function () {
+      if (started) return; started = true;
+      try { prepHero(); } catch (e) { var h = $('.hero-parent h1'); if (h) h.classList.add('mx-ready'); }
+      requestAnimationFrame(function () { if (hero) hero.classList.add('mx-go'); });
+    };
+    var afterDom = function (fn) { if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn); else fn(); };
+    afterDom(function () {
+      if (document.fonts && document.fonts.ready) { var t = setTimeout(start, 700); document.fonts.ready.then(function () { clearTimeout(t); start(); }); } else start();
+      setTimeout(function () { var h = $('.hero-parent h1'); if (h) h.classList.add('mx-ready'); }, 1800);
+    });
+
+    // 2. Results: percentages count up, a bar fills, cards rise in turn.
+    var cards = $$('#results .result-card').filter(function (card) {
+      var p = $('.result-percent', card), text = p && p.firstChild && p.firstChild.nodeType === 3 ? p.firstChild : null;
+      var m = text && /^(\d+(?:\.\d+)?)$/.exec(text.nodeValue.trim());
+      if (!m) return false;
+      card.__v = parseFloat(m[1]); card.__dec = (m[1].split('.')[1] || '').length; card.__t = text;
+      return true;
+    });
+    cards.forEach(function (card, i) {
+      card.style.setProperty('--d', (i % 3) * 90 + 'ms'); card.classList.add('mx-pre');
+      var bar = document.createElement('span'), fill = document.createElement('i');
+      bar.className = 'result-bar'; bar.setAttribute('aria-hidden', 'true'); fill.style.setProperty('--p', (card.__v / 100).toFixed(3));
+      bar.appendChild(fill); card.appendChild(bar);
+      card.__t.nodeValue = (0).toFixed(card.__dec);
+    });
+    seen(cards, function (card) {
+      card.classList.add('mx-in');
+      var start = null, dur = 1200, delay = parseInt(card.style.getPropertyValue('--d'), 10) || 0;
+      (function tick(now) {
+        if (start === null) start = now + delay;
+        var p = Math.min(1, Math.max(0, (now - start) / dur)), e = 1 - Math.pow(1 - p, 3);
+        card.__t.nodeValue = (card.__v * e).toFixed(card.__dec);
+        if (p < 1) requestAnimationFrame(tick); else card.__t.nodeValue = card.__v.toFixed(card.__dec);
+      })(performance.now());
+    }, 0.5);
+
+    // 3. How it starts: the path draws as you scroll, numbers pop, the button shimmers once.
+    var steps = $('.start-steps');
+    if (steps) {
+      $$('.start-step', steps).forEach(function (s, i) { s.style.setProperty('--i', i); s.classList.add('mx-pre'); });
+      seen($$('.start-step', steps), function (s) { s.classList.add('mx-in'); }, 0.6);
+      var ticking = false;
+      var update = function () {
+        ticking = false;
+        var r = steps.getBoundingClientRect(), vh = window.innerHeight;
+        var p = (vh * 0.78 - r.top) / (r.height * 0.9 + vh * 0.05);
+        steps.style.setProperty('--sp', Math.max(0, Math.min(1, p)).toFixed(3));
+      };
+      window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+      window.addEventListener('resize', update); update();
+      seen($$('.start-cta .btn'), function (b) { b.classList.add('mx-shine'); }, 0.9);
+    }
+
+    // 4. Rushabh Sir: the card settles in; the pills pop one by one.
+    var grid = $('.teacher-grid');
+    if (grid) { grid.classList.add('mx-pre'); seen([grid], function (el) { el.classList.add('mx-in'); }, 0.25); }
+    var facts = $('.teacher-facts');
+    if (facts) { $$('.pill', facts).forEach(function (p, i) { p.style.setProperty('--i', i); }); seen([facts], function (el) { el.classList.add('mx-in'); }, 0.6); }
+
+    // 5. FAQ answers glide open (measured heights so the motion is exact).
+    var sizeFaq = function () { $$('.faq-answer').forEach(function (a) { a.style.setProperty('--mx-h', (a.scrollHeight + 30) + 'px'); }); };
+    sizeFaq(); window.addEventListener('resize', sizeFaq);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(sizeFaq);
+
+    // 6. Enquiry: chips bounce, and a few sparkles when WhatsApp opens.
+    document.addEventListener('click', function (e) {
+      var chip = e.target.closest && e.target.closest('#classSelect .choice, #concernOptions .option');
+      if (chip) { chip.classList.remove('mx-tap'); void chip.offsetWidth; chip.classList.add('mx-tap'); }
+      var wa = e.target.closest && e.target.closest('#whatsappEnquiry');
+      if (wa && !wa.disabled && !wa.hidden) {
+        var r = wa.getBoundingClientRect(), layer = document.createElement('div'), marks = ['✦', '✧', '💛', '✨'];
+        layer.className = 'mx-burst'; layer.style.left = (r.left + r.width / 2) + 'px'; layer.style.top = (r.top + r.height / 2) + 'px';
+        for (var k = 0; k < 12; k++) {
+          var s = document.createElement('span'), a = (k / 12) * Math.PI * 2 + Math.random() * 0.5, d = 46 + Math.random() * 46;
+          s.textContent = marks[k % marks.length];
+          s.style.setProperty('--dx', Math.cos(a) * d + 'px'); s.style.setProperty('--dy', Math.sin(a) * d - 14 + 'px'); s.style.setProperty('--r', (Math.random() * 120 - 60) + 'deg');
+          layer.appendChild(s);
+        }
+        document.body.appendChild(layer); setTimeout(function () { layer.remove(); }, 1100);
+      }
+    });
+  } catch (err) { /* Motion is an enhancement; never block the page. */ }
+})();

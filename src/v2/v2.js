@@ -54,7 +54,7 @@
   const heroHeading=q('.hero-parent h1');
   if(heroHeading) heroHeading.innerHTML='Every child learns differently. <em>Every child deserves someone who understands.</em>';
   const heroBadge=q('.hero-parent .hero-badge');
-  if(heroBadge) heroBadge.innerHTML='<span class="sparkle">♡</span> Bansilal Nagar · Classes 1–10';
+  if(heroBadge){ heroBadge.innerHTML='<span class="sparkle">♡</span> Bansilal Nagar · Classes 1–10<span class="badge-arrow" aria-hidden="true">↗</span>'; if(heroBadge.id==='heroMapBadge') heroBadge.setAttribute('aria-label','Bansilal Nagar · Classes 1–10: open Vardhaman Academy\'s location on Google Maps'); }
   const heroLead=q('.hero-parent .lead');
   if(heroLead) heroLead.textContent='At Vardhaman Academy, Rushabh Sir helps children build understanding, confidence and stronger learning habits. Because every child deserves to feel seen.';
   const heroButton=q('.hero-parent .hero-actions .btn.primary');
