@@ -2,8 +2,9 @@ import assert from 'node:assert/strict';
 import { readFile, readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { root, readV2Manifest, readV2Settings, readV2Outcomes } from './contracts.mjs';
+import { root, readV2Manifest, readV2Settings, readV2Outcomes, readV2Results } from './contracts.mjs';
 import { planMedia, planOutcomes, v2Source } from './build-v2.mjs';
+import { planResults } from '../src/v2-results.mjs';
 import { renderSiteHtml, renderConceptScript, siteRuntime, robotsFile, productionHeaders } from '../src/v2-settings.mjs';
 
 export async function listFiles(directory, prefix = '') {
@@ -22,6 +23,7 @@ export async function verifyProduction() {
   const manifest = await readV2Manifest();
   const settings = await readV2Settings();
   const outcomesDoc = await readV2Outcomes();
+  const resultsRuntime = planResults(await readV2Results());
   const { runtime, files: mediaFiles, copies } = planMedia(manifest);
   const { runtime: outcomesRuntime, files: outcomesFiles, copies: outcomesCopies } = planOutcomes(outcomesDoc);
   const sourceFiles = ['index.html', 'base.css', 'v2.css', 'concept.js', 'v2.js', 'enquiry.js', 'dialogs.js', 'analytics.js', 'fonts.css',
@@ -32,7 +34,7 @@ export async function verifyProduction() {
   assert.deepEqual(actual, expected, 'Artifact must contain only V2 code, fonts and approved media; rebuild to remove stale files.');
   for (const file of sourceFiles) {
     const source = await readFile(path.join(v2Source, file));
-    const expectedBytes = file === 'index.html' ? Buffer.from(renderSiteHtml(source.toString('utf8'), settings, { media: runtime, outcomesMedia: outcomesRuntime }))
+    const expectedBytes = file === 'index.html' ? Buffer.from(renderSiteHtml(source.toString('utf8'), settings, { media: runtime, outcomesMedia: outcomesRuntime, results: resultsRuntime }))
       : file === 'concept.js' ? Buffer.from(renderConceptScript(source.toString('utf8'))) : source;
     assert.deepEqual(await readFile(path.join(output, file)), expectedBytes, `Source mismatch: ${file}`);
   }

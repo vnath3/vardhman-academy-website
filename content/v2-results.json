@@ -1,0 +1,237 @@
+{
+  "schema_version": "1.0",
+  "release_policy": "default_deny",
+  "required_verifications": [
+    "usage_rights",
+    "guardian_consent"
+  ],
+  "verified": {
+    "usage_rights": true,
+    "guardian_consent": true
+  },
+  "approval_record": {
+    "approved_by": "Academy owner via chat confirmation (relayed by the site maintainer)",
+    "approved_on": "2026-11-19",
+    "evidence": "Owner confirmed that the parents/guardians of every student listed here consented to their child's first name, last initial and percentage being published on the academy website. Figures were transcribed from the academy's own results posters (legacy-brand-poster-img-01 and legacy-results-poster-img-02); the owner is to verify spelling and percentages. No school names, ranks, photos or aggregate claims (e.g. '100% results', 'average 80%') are published."
+  },
+  "years": [
+    {
+      "year": "2025–26",
+      "students": [
+        {
+          "name": "Laukik K.",
+          "percent": "91.8",
+          "approval_status": "approved"
+        },
+        {
+          "name": "Saloni S.",
+          "percent": "91.0",
+          "approval_status": "approved"
+        },
+        {
+          "name": "Ranveer R.",
+          "percent": "90.2",
+          "approval_status": "approved"
+        },
+        {
+          "name": "Arnav D.",
+          "percent": "87.2",
+          "approval_status": "approved"
+        },
+        {
+          "name": "Darshita M.",
+          "percent": "86.0",
+          "approval_status": "approved"
+        },
+        {
+          "name": "Luvya T.",
+          "percent": "85.6",
+          "approval_status": "approved"
+        },
+        {
+          "name": "Sasha S.",
+          "percent": "85.2",
+          "approval_status": "approved"
+        },
+        {
+          "name": "Tanushka M.",
+          "percent": "81.0",
+          "approval_status": "approved"
+        },
+        {
+          "name": "Samruddhi B.",
+          "percent": "77.0",
+          "approval_status": "approved"
+        },
+        {
+          "name": "Mayank M.",
+          "percent": "76.0",
+          "approval_status": "approved"
+        }
+      ]
+    },
+    {
+      "year": "2024–25",
+      "students": [
+        {
+          "name": "Khushi B.",
+          "percent": "98.8",
+          "approval_status": "approved"
+        },
+        {
+          "name": "Arnav M.",
+          "percent": "97.6",
+          "approval_status": "approved"
+        },
+        {
+          "name": "Atharv P.",
+          "percent": "94.8",
+          "approval_status": "approved"
+        }
+      ]
+    },
+    {
+      "year": "2023–24",
+      "students": [
+        {
+          "name": "Aditya T.",
+          "percent": "98.0",
+          "approval_status": "approved",
+          "board": "CBSE"
+        },
+        {
+          "name": "Prathamesh K.",
+          "percent": "97.2",
+          "approval_status": "approved",
+          "board": "CBSE"
+        },
+        {
+          "name": "Yash J.",
+          "percent": "97.0",
+          "approval_status": "approved",
+          "board": "CBSE"
+        },
+        {
+          "name": "Kanishka D.",
+          "percent": "94",
+          "approval_status": "approved",
+          "board": "ICSE"
+        },
+        {
+          "name": "Avneesh S.",
+          "percent": "93",
+          "approval_status": "approved",
+          "board": "CBSE"
+        },
+        {
+          "name": "Ishan M.",
+          "percent": "92",
+          "approval_status": "approved",
+          "board": "CBSE"
+        },
+        {
+          "name": "Aditi G.",
+          "percent": "92",
+          "approval_status": "approved",
+          "board": "CBSE"
+        },
+        {
+          "name": "Teerth S.",
+          "percent": "89",
+          "approval_status": "approved",
+          "board": "CBSE"
+        },
+        {
+          "name": "Varad T.",
+          "percent": "89",
+          "approval_status": "approved",
+          "board": "CBSE"
+        },
+        {
+          "name": "Tushar C.",
+          "percent": "88",
+          "approval_status": "approved",
+          "board": "CBSE"
+        },
+        {
+          "name": "Arham P.",
+          "percent": "87",
+          "approval_status": "approved",
+          "board": "CBSE"
+        },
+        {
+          "name": "Sanvi T.",
+          "percent": "87",
+          "approval_status": "approved",
+          "board": "ICSE"
+        },
+        {
+          "name": "Gaurav R.",
+          "percent": "87",
+          "approval_status": "approved",
+          "board": "CBSE"
+        },
+        {
+          "name": "Poonam S.",
+          "percent": "86",
+          "approval_status": "approved",
+          "board": "CBSE"
+        },
+        {
+          "name": "Prathamesh A.",
+          "percent": "86",
+          "approval_status": "approved",
+          "board": "CBSE"
+        },
+        {
+          "name": "Tanishka D.",
+          "percent": "85",
+          "approval_status": "approved",
+          "board": "CBSE"
+        },
+        {
+          "name": "Bhavika B.",
+          "percent": "85",
+          "approval_status": "approved",
+          "board": "ICSE"
+        },
+        {
+          "name": "Piyush B.",
+          "percent": "84",
+          "approval_status": "approved",
+          "board": "CBSE"
+        },
+        {
+          "name": "Pratik C.",
+          "percent": "83",
+          "approval_status": "approved",
+          "board": "CBSE"
+        },
+        {
+          "name": "Unnati P.",
+          "percent": "82",
+          "approval_status": "approved",
+          "board": "CBSE"
+        },
+        {
+          "name": "Chaitanya S.",
+          "percent": "82",
+          "approval_status": "approved",
+          "board": "CBSE"
+        },
+        {
+          "name": "Shriyash T.",
+          "percent": "80",
+          "approval_status": "approved",
+          "board": "CBSE"
+        },
+        {
+          "name": "Sarthak M.",
+          "percent": "80",
+          "approval_status": "approved",
+          "board": "ICSE"
+        }
+      ]
+    }
+  ]
+}

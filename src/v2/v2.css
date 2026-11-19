@@ -540,3 +540,44 @@ main > .faq { background-color: #fbfaf3; background-image: linear-gradient(180de
   .footer-actions { flex-direction: column; align-items: stretch; }
   .footer-actions .footer-action { justify-content: center; }
 }
+
+/* ---- Results (year tabs, top scorers, full list) ---- */
+main > .v2-outcomes { order: 3; background-color: #fffdf8; background-image: linear-gradient(180deg, #fffaf0 0, rgba(255,250,240,0) 130px); }
+main > .v2-gallery { order: 4; background-image: linear-gradient(180deg, #fffdf8 0, rgba(255,253,248,0) 140px), linear-gradient(180deg, rgba(233,243,246,0) 55%, #f3f9fa 100%); }
+main > #journey { background-image: linear-gradient(180deg, #f3f9fa 0, rgba(243,249,250,0) 130px); }
+.results { margin-top: 30px; }
+.results-tabs { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 0 0 26px; }
+.results-tab { min-height: 44px; padding: 10px 22px; border-radius: 999px; border: 1px solid #cfe0e6; background: #fff; color: #245866; font: inherit; font-weight: 800; font-size: 14px; cursor: pointer; transition: background .2s, color .2s, border-color .2s; }
+.results-tab:hover { border-color: #2581a3; }
+.results-tab:focus-visible, .results-more summary:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+.results-tab[aria-selected="true"] { background: #166f92; border-color: #166f92; color: #fff; }
+.results-year-title { font: 800 22px Outfit, sans-serif; text-align: center; margin: 30px 0 16px; color: #142244; }
+.results.tabs-ready .results-year { display: none; }
+.results.tabs-ready .results-year.active { display: block; animation: card-entrance .45s ease both; }
+.results.tabs-ready .results-year-title { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.results-top { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.result-card { background: #fff; border: 1px solid #dfeaee; border-radius: 24px; padding: 26px 26px 24px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 10px 28px rgba(20,60,80,.06); }
+.result-percent { font: 800 48px/1 Outfit, sans-serif; color: #166f92; }
+.result-percent small { font-size: .5em; margin-left: 2px; }
+.result-name { font-weight: 800; color: #142244; font-size: 18px; }
+.result-board { align-self: flex-start; font-size: 11px; font-weight: 900; letter-spacing: 1.2px; color: #217f9c; background: #e6f3f7; border-radius: 999px; padding: 4px 10px; }
+.results-more { margin-top: 20px; text-align: center; }
+.results-more summary { display: inline-flex; align-items: center; min-height: 44px; padding: 10px 22px; border-radius: 999px; border: 1px solid #cfe0e6; background: #fff; color: #166f92; font-weight: 800; font-size: 14px; cursor: pointer; list-style: none; }
+.results-more summary::-webkit-details-marker { display: none; }
+.results-more summary::after { content: "▾"; margin-left: 8px; transition: transform .2s; }
+.results-more[open] summary::after { transform: rotate(180deg); }
+.results-list { list-style: none; margin: 18px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; text-align: left; }
+.results-list li { display: flex; gap: 10px; align-items: center; background: #fff; border: 1px solid #e3edf0; border-radius: 14px; padding: 12px 16px; }
+.results-list span { flex: 1; font-weight: 700; color: #142244; }
+.results-list b { color: #166f92; }
+.results-list i { font-style: normal; font-size: 10px; font-weight: 900; letter-spacing: 1px; color: #217f9c; }
+.alumni-head { text-align: center; margin: 64px 0 10px; }
+.alumni-head h3 { font: 800 28px Outfit, sans-serif; color: #142244; }
+@media (max-width: 780px) {
+  .results-top { grid-template-columns: 1fr; gap: 12px; }
+  .result-card { flex-direction: row; align-items: center; gap: 14px; padding: 16px 20px; border-radius: 20px; }
+  .result-percent { font-size: 34px; min-width: 96px; }
+  .result-board { margin-left: auto; align-self: center; }
+  .alumni-head { margin-top: 44px; }
+  .alumni-head h3 { font-size: 22px; }
+}

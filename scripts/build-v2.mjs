@@ -1,9 +1,10 @@
 import { cp, mkdir, readFile, writeFile, rm, realpath, access } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { root, readV2Manifest, readV2Settings, readV2Outcomes } from './contracts.mjs';
+import { root, readV2Manifest, readV2Settings, readV2Outcomes, readV2Results } from './contracts.mjs';
 import { planMedia } from '../src/v2-media.mjs';
 import { planOutcomes } from '../src/v2-outcomes.mjs';
+import { planResults } from '../src/v2-results.mjs';
 import { siteRuntime, renderSiteHtml, renderConceptScript, robotsFile, productionHeaders } from '../src/v2-settings.mjs';
 export { planMedia } from '../src/v2-media.mjs';
 export { planOutcomes } from '../src/v2-outcomes.mjs';
@@ -27,6 +28,7 @@ export async function buildV2({ privateReview = false } = {}) {
   const runtimeSettings = siteRuntime(settings, { privateReview });
   const plan = planMedia(manifest, { privateReview });
   const outcomesPlan = planOutcomes(outcomesDoc, { privateReview });
+  const resultsPlan = planResults(await readV2Results(), { privateReview });
   const archive = await realpath(path.join(root, 'media', 'vardhaman'));
   for (const asset of [...plan.copies, ...outcomesPlan.copies]) {
     const source = await realpath(path.join(root, asset.source_path));
@@ -40,7 +42,7 @@ export async function buildV2({ privateReview = false } = {}) {
     await cp(path.join(v2Source, file), path.join(output, file), { recursive: true });
   }
   await writeFile(path.join(output, 'concept.js'), renderConceptScript(await readFile(path.join(v2Source, 'concept.js'), 'utf8'), { privateReview }));
-  await writeFile(path.join(output, 'index.html'), renderSiteHtml(await readFile(path.join(v2Source, 'index.html'), 'utf8'), settings, { privateReview, media: planMedia(manifest).runtime, galleryMedia: plan.runtime, outcomesMedia: outcomesPlan.runtime }));
+  await writeFile(path.join(output, 'index.html'), renderSiteHtml(await readFile(path.join(v2Source, 'index.html'), 'utf8'), settings, { privateReview, media: planMedia(manifest).runtime, galleryMedia: plan.runtime, outcomesMedia: outcomesPlan.runtime, results: resultsPlan }));
   await writeFile(path.join(output, 'site-settings.js'), `window.VARDHAMAN_SITE = ${JSON.stringify(runtimeSettings).replaceAll('<', '\\u003c')};\n`);
   if (!privateReview) {
     await cp(path.join(v2Source, 'analytics.js'), path.join(output, 'analytics.js'));

@@ -446,3 +446,39 @@
   });
   menu.addEventListener('click', sync);
 })();
+
+// Results: year tabs (without JS every year simply shows in turn).
+(function () {
+  var root = document.getElementById('results');
+  if (!root) return;
+  var panels = Array.prototype.slice.call(root.querySelectorAll('.results-year'));
+  if (panels.length < 2) return;
+  var tabs = document.createElement('div');
+  tabs.className = 'results-tabs'; tabs.setAttribute('role', 'tablist'); tabs.setAttribute('aria-label', 'Results by year');
+  panels.forEach(function (panel, i) {
+    panel.id = 'results-panel-' + i; panel.setAttribute('role', 'tabpanel'); panel.setAttribute('aria-labelledby', 'results-tab-' + i);
+    var button = document.createElement('button');
+    button.type = 'button'; button.className = 'results-tab'; button.id = 'results-tab-' + i;
+    button.setAttribute('role', 'tab'); button.setAttribute('aria-controls', panel.id); button.textContent = panel.getAttribute('data-year');
+    tabs.appendChild(button);
+  });
+  root.insertBefore(tabs, root.firstChild); root.classList.add('tabs-ready');
+  var buttons = Array.prototype.slice.call(tabs.children);
+  function select(i, focus) {
+    panels.forEach(function (panel, j) { panel.classList.toggle('active', i === j); });
+    buttons.forEach(function (button, j) { button.setAttribute('aria-selected', String(i === j)); button.tabIndex = i === j ? 0 : -1; });
+    if (focus) buttons[i].focus();
+  }
+  buttons.forEach(function (button, i) {
+    button.addEventListener('click', function () {
+      select(i);
+      try { if (window.gtag) window.gtag('event', 'results_year', { year: panels[i].getAttribute('data-year') }); } catch (e) {}
+    });
+  });
+  tabs.addEventListener('keydown', function (e) {
+    var i = buttons.indexOf(document.activeElement); if (i < 0) return;
+    if (e.key === 'ArrowRight') { e.preventDefault(); select((i + 1) % buttons.length, true); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); select((i - 1 + buttons.length) % buttons.length, true); }
+  });
+  select(0);
+})();

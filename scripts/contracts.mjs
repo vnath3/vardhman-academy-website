@@ -17,3 +17,6 @@ export async function readContracts() {
     readFile(path.join(root, 'content', `${name}.json`), 'utf8').then(JSON.parse)));
   return { content, manifest };
 }
+export async function readV2Results() {
+  return JSON.parse(await readFile(path.join(root, 'content', 'v2-results.json'), 'utf8'));
+}

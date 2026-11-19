@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { renderResults } from './v2-results.mjs';
 
 // Real, owner-confirmed alumni outcomes — not illustrative stories. Each
 // entry needs its own consent/evidence record before it can reach
@@ -62,8 +63,8 @@ export function planOutcomes(doc, { privateReview = false } = {}) {
   return { runtime, copies: [...copies.values()], files: [...copies.keys()].map(file => file.slice('media/'.length)) };
 }
 
-export function renderOutcomes(outcomes = []) {
-  if (!outcomes.length) return '';
+export function renderOutcomes(outcomes = [], results = []) {
+  if (!outcomes.length && !results.length) return '';
   const escapeText = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
   const cards = outcomes.map(outcome => {
     const hero = outcome.media.find(item => item.role === 'hero') ?? outcome.media[0];
@@ -82,8 +83,15 @@ export function renderOutcomes(outcomes = []) {
       </div>
     </article>`;
   }).join('');
+  const resultsBlock = results.length ? renderResults(results) : '';
+  const alumni = outcomes.length ? `
+      <div class="alumni-head reveal"><h3>Where some of our students are today</h3></div>
+      <div class="outcome-grid">${cards}</div>` : '';
+  const heading = results.length
+    ? `<span class="eyebrow">Real results</span><h2 class="h2" id="outcomesTitle">Results our students are <span style="color:var(--blue)">proud of.</span></h2><p class="muted">Shared with each family's permission.</p>`
+    : `<span class="eyebrow">Real outcomes</span><h2 class="h2" id="outcomesTitle">Where some of our students <span style="color:var(--blue)">are today.</span></h2><p class="muted">Shared with each student's own permission.</p>`;
   return `<section class="v2-outcomes section-space" id="outcomes" aria-labelledby="outcomesTitle"><div class="container">
-      <div class="intro center reveal"><span class="eyebrow">Real outcomes</span><h2 class="h2" id="outcomesTitle">Where some of our students <span style="color:var(--blue)">are today.</span></h2><p class="muted">Shared with each student's own permission.</p></div>
-      <div class="outcome-grid">${cards}</div>
+      <div class="intro center reveal">${heading}</div>
+      ${resultsBlock}${alumni}
     </div></section>`;
 }
