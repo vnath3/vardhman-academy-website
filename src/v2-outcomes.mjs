@@ -88,8 +88,8 @@ export function renderOutcomes(outcomes = [], results = []) {
       <div class="alumni-head reveal"><h3>Where some of our students are today</h3></div>
       <div class="outcome-grid">${cards}</div>` : '';
   const heading = results.length
-    ? `<span class="eyebrow">Real results</span><h2 class="h2" id="outcomesTitle">Results our students are <span style="color:var(--blue)">proud of.</span></h2><p class="muted">Shared with each family's permission.</p>`
-    : `<span class="eyebrow">Real outcomes</span><h2 class="h2" id="outcomesTitle">Where some of our students <span style="color:var(--blue)">are today.</span></h2><p class="muted">Shared with each student's own permission.</p>`;
+    ? `<span class="eyebrow">Real results</span><h2 class="h2" id="outcomesTitle">Our students' <span style="color:var(--blue)">results.</span></h2>`
+    : `<span class="eyebrow">Real outcomes</span><h2 class="h2" id="outcomesTitle">Where some of our students <span style="color:var(--blue)">are today.</span></h2>`;
   return `<section class="v2-outcomes section-space" id="outcomes" aria-labelledby="outcomesTitle"><div class="container">
       <div class="intro center reveal">${heading}</div>
       ${resultsBlock}${alumni}

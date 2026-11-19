@@ -14,7 +14,7 @@ export function renderGallery({ gallery: media = [], privateReview = false } = {
         <div><span class="eyebrow">Learning has many moments</span><h2 class="h2" id="galleryTitle">Beyond books. <span style="color:var(--blue)">Into life.</span></h2></div>
         <p class="muted">From a spirited game of cricket to moments worth celebrating, here's a closer look at the people and experiences behind the academy.</p>
       </div>
-      <span class="gallery-chip">${privateReview ? '✦ Real media · Private concept review' : 'Life at Vardhaman · shared with each family\'s permission'}</span>
+      <span class="gallery-chip">${privateReview ? '✦ Real media · Private concept review' : 'Life at Vardhaman'}</span>
       <div hidden class="gallery-toolbar" aria-label="Filter gallery">
         <button class="gallery-tab" type="button" data-category="all" aria-pressed="true">All moments</button>
         <button class="gallery-tab" type="button" data-category="activities" aria-pressed="false">⚽ Sports & play</button>

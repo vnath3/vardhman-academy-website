@@ -43,7 +43,6 @@ gtag('config', 'G-4F7P27EQSF');
       else if (href === '#enquiry') kind = el.classList.contains('mobile-bottom') ? 'enquiry_bar' : 'enquiry_button';
       else if (id === 'whatsappEnquiry') kind = 'whatsapp_draft';
       else if (id === 'copyEnquiry') kind = 'copy_draft';
-      else if (id === 'classNext') kind = 'enquiry_step1_continue';
       if (kind) track('cta_click', { action: kind });
     }, true);
   } catch (e) {}

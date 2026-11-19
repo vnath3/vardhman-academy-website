@@ -12,10 +12,6 @@
     ['other', '💛', 'Something else — let me explain']
   ];
   let chosenClass = null, chosenConcern = null, message = '';
-  const steps = qa('.form-step');
-  const progress = q('#formProgress');
-  for (const [attribute, value] of Object.entries({ role: 'progressbar', 'aria-label': 'Enquiry progress', 'aria-valuemin': '1', 'aria-valuemax': '2', 'aria-valuenow': '1', 'aria-valuetext': 'Step 1 of 2' })) progress.setAttribute(attribute, value);
-  qa('#formProgress span').forEach(step => step.setAttribute('aria-hidden', 'true'));
   const whatsapp = q('#whatsappEnquiry');
   const availability = q('#whatsappAvailability');
   availability.textContent = settings.privateReview
@@ -72,21 +68,8 @@
     heroMapBadge.rel = 'noopener';
   }
 
-  function goStep(index) {
-    steps.forEach((step, position) => step.classList.toggle('active', index === position));
-    progress.setAttribute('aria-valuenow', String(index + 1));
-    progress.setAttribute('aria-valuetext', `Step ${index + 1} of 2`);
-    qa('#formProgress span').forEach((step, position) => {
-      step.classList.toggle('active', position <= index);
-    });
-    const heading = steps[index].querySelector('h3');
-    heading.tabIndex = -1;
-    heading.focus({ preventScroll: true });
-  }
-  // The review (draft + optional goal + send/copy) isn't its own screen —
-  // it reveals inline on the concern step the moment a concern is picked, so
-  // choosing a concern IS the action; there's no separate "next" tap. These
-  // controls are shown/hidden by revealReview(), not by which step is active.
+  // One screen, no "Continue" taps: pick a class and a concern (in any order)
+  // and the draft message plus Open WhatsApp / Copy appear right below.
   function buildMessage() {
     if (!chosenClass || !chosenConcern) return;
     const concern = concerns.find(item => item[0] === chosenConcern)[2];
@@ -95,6 +78,8 @@
     q('#enquirySummary').textContent = message;
   }
   function revealReview() {
+    if (!chosenClass || !chosenConcern) return;
+    const wasHidden = q('#reviewPanel').hidden;
     buildMessage();
     q('#reviewPanel').hidden = false;
     // Keep the draft out of link attributes: outbound-link analytics must not
@@ -104,6 +89,7 @@
     q('#copyEnquiry').hidden = false;
     q('#copyStatus').textContent = '';
     q('#whatsappStatus').textContent = '';
+    if (wasHidden) setTimeout(() => q('#reviewPanel').scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }), 60);
   }
   for (let grade = 1; grade <= 10; grade++) {
     const button = document.createElement('button');
@@ -112,7 +98,7 @@
     button.addEventListener('click', () => {
       chosenClass = grade;
       qa('#classSelect .choice').forEach(item => { item.classList.toggle('active', item === button); item.setAttribute('aria-pressed', String(item === button)); });
-      q('#classValidation').textContent = '';
+      revealReview();
     });
     q('#classSelect').append(button);
   }
@@ -125,13 +111,10 @@
     button.addEventListener('click', () => {
       chosenConcern = id;
       qa('#concernOptions .option').forEach(item => { item.classList.toggle('active', item === button); item.setAttribute('aria-pressed', String(item === button)); });
-      q('#concernValidation').textContent = '';
       revealReview();
     });
     q('#concernOptions').append(button);
   }
-  q('#classNext').addEventListener('click', () => chosenClass ? goStep(1) : q('#classValidation').textContent = 'Please choose a class to continue.');
-  qa('[data-back]').forEach(button => button.addEventListener('click', () => goStep(Number(button.dataset.back))));
   q('#childNote').addEventListener('input', () => {
     buildMessage();
     q('#copyStatus').textContent = '';
@@ -152,7 +135,7 @@
     }
   });
   whatsapp.addEventListener('click', event => {
-    if (!number || !message || whatsapp.disabled || !steps[1].classList.contains('active')) { event.preventDefault(); return; }
+    if (!number || !message || whatsapp.disabled || q('#reviewPanel').hidden) { event.preventDefault(); return; }
     window.open(`https://wa.me/${number}?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
     q('#whatsappStatus').textContent = 'Review and send your draft in WhatsApp. This page cannot confirm delivery.';
   });

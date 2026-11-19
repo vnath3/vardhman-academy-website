@@ -43,6 +43,8 @@ export async function buildV2({ privateReview = false } = {}) {
   }
   await writeFile(path.join(output, 'concept.js'), renderConceptScript(await readFile(path.join(v2Source, 'concept.js'), 'utf8'), { privateReview }));
   await writeFile(path.join(output, 'index.html'), renderSiteHtml(await readFile(path.join(v2Source, 'index.html'), 'utf8'), settings, { privateReview, media: planMedia(manifest).runtime, galleryMedia: plan.runtime, outcomesMedia: outcomesPlan.runtime, results: resultsPlan }));
+  await mkdir(path.join(output, 'consent'), { recursive: true });
+  await cp(path.join(v2Source, 'consent.html'), path.join(output, 'consent', 'index.html'));
   await writeFile(path.join(output, 'site-settings.js'), `window.VARDHAMAN_SITE = ${JSON.stringify(runtimeSettings).replaceAll('<', '\\u003c')};\n`);
   if (!privateReview) {
     await cp(path.join(v2Source, 'analytics.js'), path.join(output, 'analytics.js'));
