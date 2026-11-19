@@ -12,8 +12,8 @@
       "public": "HERO-A"
     },
     "mentor": {
-      "review": "IMG-12",
-      "public": "IMG-12"
+      "review": "IMG-20",
+      "public": "IMG-20"
     }
   },
   "assets": [
@@ -233,7 +233,7 @@
       "review_caption": "Learning sportsmanship one playful moment at a time.",
       "notes": "Alternate sports image.",
       "legacy_status": "guardian_consent_required",
-      "gallery_order": 6,
+      "gallery_order": 8,
       "contains_identifiable_students": true
     },
     {
@@ -267,7 +267,7 @@
       "review_caption": "An academy gathering; the legacy printed banner is not a current course list.",
       "notes": "Owner approved the historical event image and confirmed rights/guardian consent. The visible banner has outdated classes 1-12 and XI-XII; the existing historical-context caption must remain and is not a current course offer.",
       "legacy_status": "reference_only",
-      "gallery_order": 9,
+      "gallery_order": 11,
       "contains_identifiable_students": true
     },
     {
@@ -301,7 +301,7 @@
       "review_caption": "An award photograph awaiting the student’s approved story.",
       "notes": "Do not invent student name, placement, subject, year, award affiliation or academy attribution.",
       "legacy_status": "guardian_consent_and_achievement_verification_required",
-      "gallery_order": 3,
+      "gallery_order": 5,
       "contains_identifiable_students": true
     },
     {
@@ -335,7 +335,7 @@
       "review_caption": "An authentic certificate photograph; details pending verification.",
       "notes": "Certificate contains details. Verify story and obtain permission before web publication.",
       "legacy_status": "guardian_consent_and_achievement_verification_required",
-      "gallery_order": 4,
+      "gallery_order": 6,
       "contains_identifiable_students": true
     },
     {
@@ -367,7 +367,7 @@
       "review_caption": "Extended footage from the outdoor group activity.",
       "notes": "",
       "legacy_status": "guardian_consent_required",
-      "gallery_order": 7,
+      "gallery_order": 9,
       "duration_seconds": 57.4,
       "poster_id": "VID-02-POSTER",
       "contains_identifiable_students": true,
@@ -431,7 +431,7 @@
       "review_caption": "A lively tug-of-war moment during a group activity.",
       "notes": "",
       "legacy_status": "guardian_consent_required",
-      "gallery_order": 1,
+      "gallery_order": 2,
       "duration_seconds": 25.9,
       "poster_id": "VID-03-POSTER",
       "contains_identifiable_students": true,
@@ -497,7 +497,7 @@
       "review_caption": "A wider view of the group event outside the academy.",
       "notes": "Orientation reviewed at the beginning and near the end: the original recording turns sideways near its ending. Owner approved all supplied videos after this issue was disclosed. Original retained unchanged; no global rotation or trim applied.",
       "legacy_status": "guardian_consent_required",
-      "gallery_order": 5,
+      "gallery_order": 7,
       "duration_seconds": 53.7,
       "poster_id": "VID-04-POSTER",
       "contains_identifiable_students": true,
@@ -561,7 +561,7 @@
       "review_caption": "A short, joyful glimpse of students at play.",
       "notes": "",
       "legacy_status": "guardian_consent_required",
-      "gallery_order": 2,
+      "gallery_order": 3,
       "duration_seconds": 8.1,
       "poster_id": "VID-05-POSTER",
       "contains_identifiable_students": true,
@@ -625,7 +625,7 @@
       "review_caption": "A quick glimpse of a cricket game.",
       "notes": "",
       "legacy_status": "guardian_consent_required",
-      "gallery_order": 8,
+      "gallery_order": 10,
       "duration_seconds": 3.6,
       "poster_id": "VID-06-POSTER",
       "contains_identifiable_students": true,
@@ -699,6 +699,167 @@
         "display_background_position": "-0.203125px -0.0625px"
       },
       "contains_identifiable_students": false
+    },
+    {
+      "id": "IMG-20",
+      "type": "image",
+      "original_filename": "rushab-seminar-img-20.jpeg",
+      "supplied_filename": "WhatsApp Image 2026-10-31 at 12.45.00 PM (2).jpeg",
+      "source_path": "media/vardhaman/mentor/rushab-seminar-img-20.jpeg",
+      "production_path": "media/mentor/rushab-seminar-img-20.jpeg",
+      "section": "mentor",
+      "category": "mentor",
+      "approval_status": "approved",
+      "required_verifications": [
+        "usage_rights",
+        "guardian_consent"
+      ],
+      "verified": {
+        "usage_rights": true,
+        "guardian_consent": true
+      },
+      "approval_record": {
+        "approved_by": "Academy owner via chat confirmation",
+        "approved_on": "2026-11-19",
+        "evidence": "Owner approved this supplied media in chat on 2026-11-19 and confirmed guardian consent is held for the students shown."
+      },
+      "title": "Rushabh speaking with a microphone",
+      "alt": "Rushabh Sir speaking into a microphone and gesturing as he explains",
+      "caption": "Rushabh Sir at an external education seminar",
+      "review_caption": "Original unedited photo. Event was external; make no affiliation claim.",
+      "notes": "Original unedited photo. Event was external; make no affiliation claim.",
+      "legacy_status": "caption_and_rights_review",
+      "contains_identifiable_students": false
+    },
+    {
+      "id": "IMG-21",
+      "type": "image",
+      "original_filename": "celebration-img-21.jpeg",
+      "supplied_filename": "WhatsApp Image 2026-10-31 at 12.29.51 PM.jpeg",
+      "source_path": "media/vardhaman/gallery/celebration-img-21.jpeg",
+      "production_path": "media/gallery/celebration-img-21.jpeg",
+      "section": "gallery",
+      "category": "community",
+      "approval_status": "approved",
+      "required_verifications": [
+        "usage_rights",
+        "guardian_consent"
+      ],
+      "verified": {
+        "usage_rights": true,
+        "guardian_consent": true
+      },
+      "approval_record": {
+        "approved_by": "Academy owner via chat confirmation",
+        "approved_on": "2026-11-19",
+        "evidence": "Owner approved this supplied media in chat on 2026-11-19 and confirmed guardian consent is held for the students shown."
+      },
+      "title": "Celebrating together",
+      "alt": "A group selfie with students gathered around a cake",
+      "caption": "Celebrations are part of life at Vardhaman.",
+      "review_caption": "Celebrations are part of life at Vardhaman.",
+      "notes": "",
+      "legacy_status": "guardian_consent_required",
+      "gallery_order": 1,
+      "contains_identifiable_students": true
+    },
+    {
+      "id": "IMG-22",
+      "type": "image",
+      "original_filename": "celebration-img-22.jpeg",
+      "supplied_filename": "WhatsApp Image 2026-10-31 at 12.27.04 PM.jpeg",
+      "source_path": "media/vardhaman/gallery/celebration-img-22.jpeg",
+      "production_path": "media/gallery/celebration-img-22.jpeg",
+      "section": "gallery",
+      "category": "community",
+      "approval_status": "approved",
+      "required_verifications": [
+        "usage_rights",
+        "guardian_consent"
+      ],
+      "verified": {
+        "usage_rights": true,
+        "guardian_consent": true
+      },
+      "approval_record": {
+        "approved_by": "Academy owner via chat confirmation",
+        "approved_on": "2026-11-19",
+        "evidence": "Owner approved this supplied media in chat on 2026-11-19 and confirmed guardian consent is held for the students shown."
+      },
+      "title": "Cake and friends",
+      "alt": "Students and teachers standing behind a row of blue cakes",
+      "caption": "A small celebration with cake and friends.",
+      "review_caption": "A small celebration with cake and friends.",
+      "notes": "",
+      "legacy_status": "guardian_consent_required",
+      "gallery_order": 4,
+      "contains_identifiable_students": true
+    },
+    {
+      "id": "VID-07",
+      "type": "video",
+      "original_filename": "celebration-vid-07.mp4",
+      "supplied_filename": "WhatsApp Video 2026-10-31 at 12.27.05 PM.mp4",
+      "source_path": "media/vardhaman/video/celebration-vid-07.mp4",
+      "production_path": "media/video/celebration-vid-07.mp4",
+      "section": "gallery",
+      "category": "community",
+      "approval_status": "approved",
+      "required_verifications": [
+        "usage_rights",
+        "guardian_consent"
+      ],
+      "verified": {
+        "usage_rights": true,
+        "guardian_consent": true
+      },
+      "approval_record": {
+        "approved_by": "Academy owner via chat confirmation",
+        "approved_on": "2026-11-19",
+        "evidence": "Owner approved this supplied media in chat on 2026-11-19 and confirmed guardian consent is held for the students shown."
+      },
+      "title": "A celebration moment",
+      "alt": "A celebration with cake in a classroom",
+      "caption": "A moment of celebration.",
+      "review_caption": "A moment of celebration.",
+      "notes": "",
+      "legacy_status": "guardian_consent_required",
+      "gallery_order": 12,
+      "duration_seconds": 12.9,
+      "poster_id": "VID-07-POSTER",
+      "contains_identifiable_students": true,
+      "contains_student_voices": true
+    },
+    {
+      "id": "VID-07-POSTER",
+      "type": "image",
+      "original_filename": "vid-07.jpg",
+      "supplied_filename": "Frame taken from the supplied celebration video",
+      "source_path": "media/vardhaman/video-posters/vid-07.jpg",
+      "production_path": "media/video-posters/vid-07.jpg",
+      "section": "poster",
+      "category": "community",
+      "approval_status": "approved",
+      "required_verifications": [
+        "usage_rights",
+        "guardian_consent"
+      ],
+      "verified": {
+        "usage_rights": true,
+        "guardian_consent": true
+      },
+      "approval_record": {
+        "approved_by": "Academy owner via chat confirmation",
+        "approved_on": "2026-11-19",
+        "evidence": "Owner approved this supplied media in chat on 2026-11-19 and confirmed guardian consent is held for the students shown."
+      },
+      "title": "A celebration moment - video poster",
+      "alt": "A celebration moment - video thumbnail",
+      "caption": "Poster for A celebration moment.",
+      "notes": "",
+      "legacy_status": "guardian_consent_required",
+      "parent_id": "VID-07",
+      "contains_identifiable_students": true
     }
   ]
 }

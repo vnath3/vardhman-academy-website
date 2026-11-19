@@ -37,7 +37,7 @@ for (const asset of [...plan.copies, ...outcomes.copies]) {
   } else if (ext === '.png') {
     await sharp(src).resize({ width: 1000, withoutEnlargement: true }).png({ palette: true, quality: 70, effort: 8 }).toFile(tmp);
   } else {
-    await sharp(src).rotate().resize({ width: 1600, withoutEnlargement: true }).jpeg({ quality: 76, mozjpeg: true }).toFile(tmp);
+    await sharp(src).rotate().resize({ width: asset.production_path.startsWith('media/mentor/') ? 2400 : 1600, withoutEnlargement: true }).jpeg({ quality: 76, mozjpeg: true }).toFile(tmp);
   }
   if ((await size(tmp)) < original * 0.95) { await rename(tmp, dest); after += await size(dest); }
   else { await rm(tmp, { force: true }); await rm(dest, { force: true }); after += original; }

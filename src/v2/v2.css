@@ -93,7 +93,7 @@ body { background: #fbfbf7; }
   background: #dbe8df;
   overflow: hidden;
 }
-.mentor-event-photo { width: 100%; height: 100%; object-fit: cover; object-position: 25% center; display: block; }
+.mentor-event-photo { width: 100%; height: 100%; object-fit: cover; object-position: 13% center; display: block; }
 .teacher-photo-note { position: absolute; bottom: 16px; left: 16px; right: 16px; padding: 11px 14px; background: rgba(11,45,58,.87); border-radius: 12px; color: #fff; font-size: 12px; line-height: 1.5; }
 .teacher-icon, .teacher-bubble { display:none; }
 .teacher-art::before { content: none; }
