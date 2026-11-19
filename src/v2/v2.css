@@ -484,3 +484,27 @@ main > .faq { background-color: #fbfaf3; background-image: linear-gradient(180de
 @media (min-width: 1051px) {
   .site-header.scrolled .official-logo-crop { scale: .84; }
 }
+
+/* Spacing pass, batch 2 */
+.nowrap { white-space: nowrap; }
+#journey .h2 { text-wrap: balance; }
+@media (max-width: 780px) {
+  .gallery-tab { min-height: 44px; display: inline-flex; align-items: center; }
+  .footer-grid { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 28px; }
+  .footer-grid > div:first-child { grid-column: 1 / -1; }
+  .footer-links { gap: 12px; }
+}
+
+/* Spacing pass, batch 3: keep zoomed/parallax photos inside their frames */
+.teacher-art, .gallery-media { overflow: hidden; }
+/* Phones: pull the trust row up so the first screen shows headline, buttons and proof together */
+@media (max-width: 520px) {
+  .hero-parent { padding-top: 32px; }
+  .hero-parent .hero-copy > h1 { margin-top: 18px; margin-bottom: 18px; }
+  .hero-parent .hero-copy > .lead { margin-bottom: 22px; }
+  .hero-parent .hero-trust { margin-top: 24px; }
+}
+@media (max-width: 780px) {
+  .footer-links { gap: 2px; }
+  .footer-links a, .footer-links span { display: inline-flex; align-items: center; min-height: 40px; }
+}

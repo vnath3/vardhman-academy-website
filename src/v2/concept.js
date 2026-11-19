@@ -63,13 +63,16 @@
     })();
     const siteHeader=$('.site-header'), backToTop=$('#backToTop');
     let headerScrolled=false, backVisible=false;
+    let lastScrollY=0,scrollingUp=false;const mobileMQ=matchMedia('(max-width: 780px)');
     let scrollScheduled=false;window.addEventListener('scroll',()=>{if(scrollScheduled)return;scrollScheduled=true;requestAnimationFrame(()=>{
       const d=document.documentElement;
       $('#readingProgress').style.width=((d.scrollTop/(d.scrollHeight-d.clientHeight))*100||0)+'%';
       const y=scrollY;
       const scrolled=y>12;
       if(scrolled!==headerScrolled){siteHeader?.classList.toggle('scrolled',scrolled);headerScrolled=scrolled;}
-      const show=y>innerHeight*.8;
+      // On phones the button only appears while scrolling up, so it never sits over content that is being read.
+      if(Math.abs(y-lastScrollY)>4){scrollingUp=y<lastScrollY;lastScrollY=y;}
+      const show=y>innerHeight*.8&&(!mobileMQ.matches||scrollingUp);
       if(show!==backVisible){backToTop?.classList.toggle('visible',show);backToTop?.setAttribute('aria-hidden',String(!show));if(backToTop)backToTop.tabIndex=show?0:-1;backVisible=show;}
       heroRecede(y);
       if(window.__scrollFx)window.__scrollFx(y);
