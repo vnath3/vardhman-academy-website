@@ -339,13 +339,8 @@ main > .v2-outcomes { order: 4; }
    the kind of response a long mobile page needs so scrolling doesn't feel
    like dead space between sections. */
 .site-header { transition: box-shadow .25s ease, background .25s ease; }
-.site-header .nav { transition: height .25s ease; }
 .site-header.scrolled { box-shadow: 0 10px 28px rgba(20, 34, 65, .09); background: rgba(255, 255, 255, .97); }
-.site-header.scrolled .nav { height: 64px; }
 .site-header.scrolled .mark { transform: rotate(-8deg) scale(.88); }
-@media(max-width: 780px) {
-  .site-header.scrolled .nav { height: 58px; }
-}
 
 .nav-links a { position: relative; }
 .nav-links a.current { color: #1779a2; }
@@ -513,7 +508,6 @@ main > .faq { background-color: #fbfaf3; background-image: linear-gradient(180de
 @media (max-width: 780px) {
   .nav { height: 64px; }
   .nav-links { top: 100%; }
-  .site-header.scrolled .nav { height: 56px; }
 }
 /* Footer: the logo's own white backdrop becomes a deliberate rounded badge */
 .footer .logo { display: inline-flex; background: #fff; border-radius: 16px; padding: 6px 10px; overflow: hidden; min-width: 0; }
@@ -774,3 +768,32 @@ html.mx .teacher-grid.mx-in .mentor-event-photo { transform: none; filter: none;
 html.mx .teacher-grid.mx-pre .teacher-photo-note { transform: translateY(10px); }
 html.mx .teacher-grid.mx-in .teacher-photo-note { transform: none; transition: transform .9s cubic-bezier(.22,.61,.36,1) .5s; }
 html.mx-calm .teacher-grid.mx-pre .mentor-event-photo, html.mx-calm .teacher-grid.mx-pre .teacher-photo-note { transform: none; filter: none; }
+
+/* Compact footer: one tidy row on desktop, two short columns on phones */
+.footer { padding: 44px 0 18px; }
+.footer-grid { grid-template-columns: 1.5fr 1fr 1fr 1.2fr; gap: 36px; padding-bottom: 28px; align-items: start; }
+.footer-grid > div:first-child p { margin: 12px 0 14px; font-size: 14px; line-height: 1.6; max-width: 300px; }
+.footer h3.footer-h { margin: 0 0 12px; font-size: 13px; letter-spacing: .4px; }
+.footer-links { display: grid; gap: 8px; }
+.footer-links a, .footer-links span { min-height: 0; font-size: 14px; line-height: 1.4; }
+.footer-actions { margin-top: 10px; }
+.footer-bottom { padding-top: 16px; }
+@media (max-width: 1000px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px 24px; }
+  .footer-grid > div:first-child { grid-column: 1 / -1; }
+}
+@media (max-width: 780px) {
+  .footer { padding: 32px 0 88px; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 22px 18px; padding-bottom: 20px; }
+  .footer-grid > div:first-child, .footer-grid > div:nth-child(4) { grid-column: 1 / -1; }
+  .footer-grid > div:first-child p { margin: 10px 0 12px; max-width: none; }
+  .footer-links { gap: 0; }
+  .footer-links a, .footer-links span { display: flex; align-items: center; min-height: 36px; }
+  .footer-actions { flex-direction: row; align-items: center; }
+  .footer-actions .footer-action { flex: 1 1 140px; justify-content: center; }
+}
+@media (max-width: 780px) {
+  .footer-links a, .footer-links span { min-height: 34px; }
+  .footer-grid > div:nth-child(4) .footer-links span:nth-child(3) { display: none; }
+  .footer h3.footer-h { margin-bottom: 6px; }
+}

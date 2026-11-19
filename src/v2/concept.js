@@ -68,7 +68,7 @@
       const d=document.documentElement;
       $('#readingProgress').style.width=((d.scrollTop/(d.scrollHeight-d.clientHeight))*100||0)+'%';
       const y=scrollY;
-      const scrolled=y>12;
+      const scrolled=headerScrolled?y>4:y>28;
       if(scrolled!==headerScrolled){siteHeader?.classList.toggle('scrolled',scrolled);headerScrolled=scrolled;}
       // On phones the button only appears while scrolling up, so it never sits over content that is being read.
       if(Math.abs(y-lastScrollY)>4){scrollingUp=y<lastScrollY;lastScrollY=y;}
