@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { root, readV2Manifest, readV2Settings, readV2Outcomes, readV2Results } from './contracts.mjs';
 import { planMedia, planOutcomes, v2Source } from './build-v2.mjs';
 import { planResults } from '../src/v2-results.mjs';
-import { renderSiteHtml, renderConceptScript, siteRuntime, robotsFile, sitemapFile, productionHeaders } from '../src/v2-settings.mjs';
+import { renderSiteHtml, renderConceptScript, siteRuntime, robotsFile, sitemapFile, verificationFile, productionHeaders } from '../src/v2-settings.mjs';
 
 export async function listFiles(directory, prefix = '') {
   const files = [];
@@ -28,7 +28,7 @@ export async function verifyProduction() {
   const { runtime: outcomesRuntime, files: outcomesFiles, copies: outcomesCopies } = planOutcomes(outcomesDoc);
   const sourceFiles = ['index.html', 'base.css', 'v2.css', 'concept.js', 'v2.js', 'enquiry.js', 'dialogs.js', 'analytics.js', 'fonts.css',
     ...(await listFiles(path.join(v2Source, 'fonts'))).map(file => 'fonts/' + file)];
-  const expected = [...sourceFiles, 'consent/index.html', 'media-data.js', 'site-settings.js', 'robots.txt', ...(sitemapFile(settings) ? ['sitemap.xml'] : []), '_headers',
+  const expected = [...sourceFiles, 'consent/index.html', 'media-data.js', 'site-settings.js', 'robots.txt', ...(sitemapFile(settings) ? ['sitemap.xml'] : []), ...(verificationFile(settings) ? [verificationFile(settings).name] : []), '_headers',
     ...mediaFiles.map(file => 'media/' + file), ...outcomesFiles.map(file => 'media/' + file)].sort();
   const actual = await listFiles(output);
   assert.deepEqual(actual, expected, 'Artifact must contain only V2 code, fonts and approved media; rebuild to remove stale files.');
@@ -41,6 +41,7 @@ export async function verifyProduction() {
   assert.deepEqual(await readFile(path.join(output, 'consent', 'index.html')), await readFile(path.join(v2Source, 'consent.html')), 'Source mismatch: consent page');
   assert.equal(await readFile(path.join(output, 'site-settings.js'), 'utf8'), `window.VARDHAMAN_SITE = ${JSON.stringify(siteRuntime(settings)).replaceAll('<', '\\u003c')};\n`);
   assert.equal(await readFile(path.join(output, 'robots.txt'), 'utf8'), robotsFile(settings));
+  if (verificationFile(settings)) assert.equal(await readFile(path.join(output, verificationFile(settings).name), 'utf8'), verificationFile(settings).content);
   if (sitemapFile(settings)) assert.equal(await readFile(path.join(output, 'sitemap.xml'), 'utf8'), sitemapFile(settings));
   const data = await readFile(path.join(output, 'media-data.js'), 'utf8');
   assert.ok(data.startsWith('window.VARDHAMAN_MEDIA = ') && data.endsWith(';\n'));

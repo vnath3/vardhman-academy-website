@@ -26,6 +26,7 @@ export function validateSettings(settings) {
   assert.ok(site.protocol === 'https:' && !site.username && !site.password && !site.search && !site.hash && site.pathname === '/', 'Site URL must be an HTTPS origin with a trailing slash');
   for (const key of ['title', 'description']) assert.ok(typeof settings.seo?.[key] === 'string' && settings.seo[key].trim(), `Missing SEO ${key}`);
   assert.equal(typeof settings.seo.indexing_enabled, 'boolean');
+  if (settings.seo.google_site_verification !== undefined) assert.match(settings.seo.google_site_verification, /^google[0-9a-f]{16}\.html$/, 'Invalid Google verification file name');
   if (settings.seo.ai_training_crawlers !== undefined) assert.ok(['allow', 'block'].includes(settings.seo.ai_training_crawlers), 'seo.ai_training_crawlers must be "allow" or "block"');
   if (settings.seo.indexing_enabled) requireApproval(settings.seo.launch_approval, 'Indexing approval');
   if (settings.sections !== undefined) {
@@ -163,4 +164,9 @@ export function renderSiteHtml(source, settings, { privateReview = false, media,
   if (privateReview) html = html.replace(/  <!-- Google tag \(gtag.js\): production only -->[\s\S]*?  <!-- \/Google tag -->\r?\n/, '');
   html = html.replace('\n  <!-- structured-data -->', !privateReview && settings.seo.indexing_enabled ? '\n  ' + structuredData(settings, html, { image, logo: icon ? new URL(icon, settings.site_url).href : null }) : '');
   return html;
+}
+
+export function verificationFile(settings) {
+  const name = settings.seo.google_site_verification;
+  return name ? { name, content: `google-site-verification: ${name}` } : null;
 }
