@@ -581,3 +581,10 @@ main > #journey { background-image: linear-gradient(180deg, #f3f9fa 0, rgba(243,
   .alumni-head { margin-top: 44px; }
   .alumni-head h3 { font-size: 22px; }
 }
+
+/* Explicit, unique section order (no ties):
+   hero > trust > parents > mentor > results > [stories] > life > journey > enquiry > faq */
+main > .hero { order: 0; } main > .trust-strip { order: 1; } main > .parent-message { order: 2; }
+main > .teacher { order: 3; } main > .v2-outcomes { order: 4; } main > .stories { order: 5; }
+main > .v2-gallery { order: 6; } main > .features { order: 7; } main > #journey { order: 8; }
+main > #brainlab { order: 9; } main > #enquiry { order: 10; } main > .faq { order: 11; }

@@ -81,19 +81,28 @@
     if(backToTop)backToTop.addEventListener('click',()=>{
       window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
     });
-    // Scrollspy: highlight whichever section the nav is pointing at as it
-    // comes into view, so the nav itself gives feedback while scrolling.
-    if('IntersectionObserver' in window){
+    // Scrollspy: exactly one nav link is current, chosen from scroll position
+    // (the last linked section whose top has passed the reading line), so it
+    // is independent of DOM/visual order and never double-highlights.
+    {
       const navLinks=$$('#navLinks a[href^="#"]').filter(a=>a.getAttribute('href').length>1);
-      const linkFor=id=>navLinks.find(a=>a.getAttribute('href')==='#'+id);
-      const spySections=navLinks.map(a=>document.getElementById(a.getAttribute('href').slice(1))).filter(Boolean);
-      const spy=new IntersectionObserver(entries=>{
-        entries.forEach(entry=>{
-          const link=linkFor(entry.target.id);
-          if(link)link.classList.toggle('current',entry.isIntersecting);
-        });
-      },{rootMargin:'-45% 0px -50% 0px'});
-      spySections.forEach(section=>spy.observe(section));
+      const items=navLinks.map(a=>({a,el:document.getElementById(a.getAttribute('href').slice(1))})).filter(i=>i.el);
+      let currentLink=null,ticking=false;
+      const update=()=>{
+        ticking=false;
+        const line=(document.querySelector('.site-header')?.offsetHeight||72)+window.innerHeight*.28;
+        let best=null;
+        items.forEach(i=>{const r=i.el.getBoundingClientRect();if(r.top<=line&&r.bottom>line&&(!best||r.top>best.el.getBoundingClientRect().top))best=i;});
+        const next=best?best.a:null;
+        if(next===currentLink)return;
+        if(currentLink){currentLink.classList.remove('current');currentLink.removeAttribute('aria-current');}
+        if(next){next.classList.add('current');next.setAttribute('aria-current','true');}
+        currentLink=next;
+      };
+      const request=()=>{if(!ticking){ticking=true;requestAnimationFrame(update);}};
+      window.addEventListener('scroll',request,{passive:true});
+      window.addEventListener('resize',request);
+      update();
     }
     // Register after the final page/gallery layout. Text stays readable before
     // an entrance; only the parent underline is linked to scroll distance.
