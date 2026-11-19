@@ -3,6 +3,7 @@
 // small batches, timings that follow each school's schedule, demo class, fees discussed after understanding the child,
 // parent updates by calls, visit invitations and test results. No fees, ranks or outcome claims.
 import { robotsPolicy } from './v2-settings.mjs';
+import { MR, MR_CHROME } from './v2-pages-mr.mjs';
 
 const esc = value => String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const strip = value => value.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
@@ -146,11 +147,11 @@ export const PAGES = [
 ];
 
 const GUIDES = PAGES.filter(page => page.kind === 'guide');
-export const pageUrls = settings => ['classes', 'guides', ...PAGES.map(page => page.slug)].map(slug => new URL(slug + '/', settings.site_url).href);
+export const pageUrls = settings => ['classes', 'guides', ...PAGES.map(page => page.slug), ...MR_SLUGS.map(slug => 'mr/' + slug)].map(slug => new URL(slug + '/', settings.site_url).href);
 
-function head({ title, description, canonical, robots, prefix, jsonLd, privateReview, media }) {
+function head({ title, description, canonical, robots, prefix, jsonLd, privateReview, media, lang = 'en', alternates = '' }) {
   return `<!doctype html>
-<html lang="en">
+<html lang="${lang}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -158,9 +159,9 @@ function head({ title, description, canonical, robots, prefix, jsonLd, privateRe
   <meta name="theme-color" content="#faf7f0">
   <title>${esc(title)}</title>
   <meta name="description" content="${esc(description)}">
-  <link rel="canonical" href="${esc(canonical)}">
+  <link rel="canonical" href="${esc(canonical)}">${alternates}
   <meta property="og:type" content="website">
-  <meta property="og:locale" content="en_IN">
+  <meta property="og:locale" content="${lang === 'mr' ? 'mr_IN' : 'en_IN'}">
   <meta property="og:site_name" content="Vardhaman Academy">
   <meta property="og:title" content="${esc(title)}">
   <meta property="og:description" content="${esc(description)}">
@@ -196,42 +197,50 @@ export function renderConsent(source, media) {
 
 const ld = graph => `<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }).replaceAll('<', '\\u003c')}</script>`;
 
+export const MR_SLUGS = Object.keys(MR);
+export const mrPages = () => MR_SLUGS.map(slug => { const en = PAGES.find(p => p.slug === slug); return { ...en, ...MR[slug], slug: 'mr/' + slug, enSlug: slug, lang: 'mr', mr: null, faq: MR_CHROME.faqItems, related: MR_SLUGS.filter(x => x !== slug).map(x => 'mr/' + x) }; });
+
 export function renderPage(page, settings, { privateReview = false, media = null } = {}) {
+  const lang = page.lang || 'en';
+  const mr = lang === 'mr';
+  const T = mr ? MR_CHROME : null;
   const depth = page.slug.split('/').length;
   const prefix = '../'.repeat(depth);
   const canonical = new URL(page.slug + '/', settings.site_url).href;
   const robots = robotsPolicy(settings, { privateReview });
-  const crumbs = [['Home', settings.site_url], ...(page.kind === 'guide' ? [['Guides', new URL('guides/', settings.site_url).href]] : []), [page.nav, canonical]];
+  const enSlug = page.enSlug || page.slug;
+  const alternates = MR[enSlug] ? `\n  <link rel="alternate" hreflang="en" href="${esc(new URL(enSlug + '/', settings.site_url).href)}">\n  <link rel="alternate" hreflang="mr" href="${esc(new URL('mr/' + enSlug + '/', settings.site_url).href)}">\n  <link rel="alternate" hreflang="x-default" href="${esc(new URL(enSlug + '/', settings.site_url).href)}">` : '';
+  const crumbs = [[mr ? T.home : 'Home', settings.site_url], ...(page.kind === 'guide' ? [['Guides', new URL('guides/', settings.site_url).href]] : []), [page.nav, canonical]];
   const graph = [
     { '@type': 'BreadcrumbList', itemListElement: crumbs.map(([name, item], i) => ({ '@type': 'ListItem', position: i + 1, name, item })) },
     page.kind === 'guide'
       ? { '@type': 'Article', headline: strip(page.h1), description: page.description, datePublished: DATE, dateModified: DATE, mainEntityOfPage: canonical, author: { '@type': 'Organization', name: 'Vardhaman Academy' }, publisher: { '@type': 'Organization', name: 'Vardhaman Academy' } }
-      : { '@type': 'WebPage', name: page.title, description: page.description, url: canonical, isPartOf: { '@id': settings.site_url + '#organization' } },
+      : { '@type': 'WebPage', inLanguage: lang, name: page.title, description: page.description, url: canonical, isPartOf: { '@id': settings.site_url + '#organization' } },
     ...(page.faq?.length ? [{ '@type': 'FAQPage', mainEntity: page.faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) }] : [])
   ];
   const related = (page.related || []).map(slug => {
-    const target = PAGES.find(p => p.slug === slug);
+    const target = mr ? { nav: MR[slug.slice(3)].nav } : PAGES.find(p => p.slug === slug);
     return `<a class="related-link" href="${prefix}${slug}/">${esc(target.nav)} →</a>`;
   }).join('');
   const body = `<body class="consent-page content-page">
-  <header class="site-header"><nav class="container nav" aria-label="Main navigation">${logoMarkup(media, prefix)}<a class="btn primary nav-cta" href="${prefix}index.html#enquiry">Tell us about your child</a></nav></header>
+  <header class="site-header"><nav class="container nav" aria-label="Main navigation">${logoMarkup(media, prefix)}<a class="btn primary nav-cta" href="${prefix}index.html#enquiry">${mr ? T.cta : 'Tell us about your child'}</a></nav></header>
   <main id="main" class="consent-main">
     <div class="container consent-wrap">
-      <nav class="crumbs" aria-label="Breadcrumb"><a href="${prefix}index.html">Home</a> / ${page.kind === 'guide' ? `<a href="${prefix}guides/">Guides</a> / ` : ''}<span>${esc(page.nav)}</span></nav>
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="${prefix}index.html">${mr ? T.home : 'Home'}</a> / ${page.kind === 'guide' ? `<a href="${prefix}guides/">Guides</a> / ` : ''}<span>${esc(page.nav)}</span></nav>
       <h1 class="h2">${page.h1}</h1>
       <p class="lead-in">${esc(page.intro)}</p>
       ${page.sections.map(([heading, html]) => `<h2>${esc(heading)}</h2>\n      ${html}`).join('\n      ')}
       ${page.mr ? `<p class="mr-note" lang="mr">${esc(page.mr)}</p>` : ''}
-      ${page.faq?.length ? `<h2>Common questions</h2>\n      ${page.faq.map(([q, a]) => `<h3 class="faq-q">${esc(q)}</h3><p>${esc(a)}</p>`).join('\n      ')}` : ''}
-      <div class="page-cta"><strong>Want to see how it works for your child?</strong><p>Tell us the class and what worries you. We will help you start with a demo class.</p><a class="btn primary" href="${prefix}index.html#enquiry">Tell us about your child ↓</a></div>
-      ${related ? `<h2>Keep reading</h2><div class="related">${related}</div>` : ''}
+      ${page.faq?.length ? `<h2>${mr ? T.faq : 'Common questions'}</h2>\n      ${page.faq.map(([q, a]) => `<h3 class="faq-q">${esc(q)}</h3><p>${esc(a)}</p>`).join('\n      ')}` : ''}
+      <div class="page-cta"><strong>${mr ? T.ctaHeading : 'Want to see how it works for your child?'}</strong><p>${mr ? T.ctaText : 'Tell us the class and what worries you. We will help you start with a demo class.'}</p><a class="btn primary" href="${prefix}index.html#enquiry">${mr ? T.cta : 'Tell us about your child'} ↓</a></div>
+      ${related ? `<h2>${mr ? T.more : 'Keep reading'}</h2><div class="related">${related}</div>` : ''}
     </div>
   </main>
-  <footer class="footer"><div class="container"><div class="footer-bottom"><span>© Vardhaman Academy</span><a href="${prefix}index.html">Home</a><a href="${prefix}consent/">Consent &amp; privacy</a></div></div></footer>
+  <footer class="footer"><div class="container"><div class="footer-bottom"><span>© Vardhaman Academy</span><a href="${prefix}index.html">Home</a><a href="${prefix}consent/">Consent &amp; privacy</a>${MR[enSlug] ? `<a href="${prefix}${mr ? '' : 'mr/'}${enSlug}/" hreflang="${mr ? 'en' : 'mr'}" lang="${mr ? 'en' : 'mr'}">${mr ? 'English' : 'मराठी'}</a>` : ''}</div></div></footer>
 </body>
 </html>
 `;
-  return head({ title: page.title, description: page.description, canonical, robots, prefix, jsonLd: ld(graph), privateReview, media }) + '\n' + body;
+  return head({ title: page.title, description: page.description, canonical, robots, prefix, jsonLd: ld(graph), privateReview, media, lang, alternates }) + '\n' + body;
 }
 
 export function renderClassesIndex(settings, { privateReview = false, media = null } = {}) {

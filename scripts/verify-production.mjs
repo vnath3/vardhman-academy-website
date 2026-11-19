@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { root, readV2Manifest, readV2Settings, readV2Outcomes, readV2Results } from './contracts.mjs';
 import { planMedia, planOutcomes, v2Source } from './build-v2.mjs';
 import { planResults } from '../src/v2-results.mjs';
-import { PAGES, renderPage, renderGuidesIndex, renderClassesIndex, renderConsent } from '../src/v2-pages.mjs';
+import { PAGES, mrPages, renderPage, renderGuidesIndex, renderClassesIndex, renderConsent } from '../src/v2-pages.mjs';
 import { renderSiteHtml, renderConceptScript, siteRuntime, robotsFile, sitemapFile, verificationFile, productionHeaders } from '../src/v2-settings.mjs';
 
 export async function listFiles(directory, prefix = '') {
@@ -29,7 +29,7 @@ export async function verifyProduction() {
   const { runtime: outcomesRuntime, files: outcomesFiles, copies: outcomesCopies } = planOutcomes(outcomesDoc);
   const sourceFiles = ['index.html', 'base.css', 'v2.css', 'concept.js', 'v2.js', 'enquiry.js', 'dialogs.js', 'analytics.js', 'fonts.css', 'favicon.ico', 'favicon.png', 'share-card.jpg', 'icon-192.png', 'apple-touch-icon.png',
     ...(await listFiles(path.join(v2Source, 'fonts'))).map(file => 'fonts/' + file)];
-  const expected = [...sourceFiles, 'consent/index.html', ...PAGES.map(page => page.slug + '/index.html'), 'guides/index.html', 'classes/index.html', 'media-data.js', 'site-settings.js', 'robots.txt', ...(sitemapFile(settings) ? ['sitemap.xml'] : []), ...(verificationFile(settings) ? [verificationFile(settings).name] : []), '_headers',
+  const expected = [...sourceFiles, 'consent/index.html', ...[...PAGES, ...mrPages()].map(page => page.slug + '/index.html'), 'guides/index.html', 'classes/index.html', 'media-data.js', 'site-settings.js', 'robots.txt', ...(sitemapFile(settings) ? ['sitemap.xml'] : []), ...(verificationFile(settings) ? [verificationFile(settings).name] : []), '_headers',
     ...mediaFiles.map(file => 'media/' + file), ...outcomesFiles.map(file => 'media/' + file)].sort();
   const actual = await listFiles(output);
   assert.deepEqual(actual, expected, 'Artifact must contain only V2 code, fonts and approved media; rebuild to remove stale files.');
@@ -56,7 +56,7 @@ export async function verifyProduction() {
     assert.ok((await readFile(path.join(output, asset.production_path))).equals(expectedMedia), `Media mismatch: ${asset.id}`);
   }
   assert.equal(await readFile(path.join(output, '_headers'), 'utf8'), productionHeaders(await readFile(path.join(root, 'config', 'production-headers.txt'), 'utf8'), settings));
-  for (const page of PAGES) assert.equal(await readFile(path.join(output, page.slug, 'index.html'), 'utf8'), renderPage(page, settings, { media: runtime }), `Page mismatch: ${page.slug}`);
+  for (const page of [...PAGES, ...mrPages()]) assert.equal(await readFile(path.join(output, page.slug, 'index.html'), 'utf8'), renderPage(page, settings, { media: runtime }), `Page mismatch: ${page.slug}`);
   assert.equal(await readFile(path.join(output, 'classes', 'index.html'), 'utf8'), renderClassesIndex(settings, { media: runtime }), 'Page mismatch: classes');
   assert.equal(await readFile(path.join(output, 'guides', 'index.html'), 'utf8'), renderGuidesIndex(settings, { media: runtime }), 'Page mismatch: guides');
   const checkUrl = async (url, from) => {
@@ -71,7 +71,7 @@ export async function verifyProduction() {
   };
   const html = await readFile(path.join(output, 'index.html'), 'utf8');
   for (const match of html.matchAll(/(?:src|href)="([^"]+)"/g)) await checkUrl(match[1], 'index.html');
-  for (const file of [...PAGES.map(page => page.slug + '/index.html'), 'guides/index.html', 'classes/index.html']) {
+  for (const file of [...[...PAGES, ...mrPages()].map(page => page.slug + '/index.html'), 'guides/index.html', 'classes/index.html']) {
     const pageHtml = await readFile(path.join(output, file), 'utf8');
     for (const match of pageHtml.matchAll(/(?:src|href)="([^"]+)"/g)) if (!match[1].startsWith(settings.site_url)) await checkUrl(match[1], file);
   }
