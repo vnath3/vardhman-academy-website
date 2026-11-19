@@ -146,7 +146,7 @@ export const PAGES = [
 ];
 
 const GUIDES = PAGES.filter(page => page.kind === 'guide');
-export const pageUrls = settings => ['guides', ...PAGES.map(page => page.slug)].map(slug => new URL(slug + '/', settings.site_url).href);
+export const pageUrls = settings => ['classes', 'guides', ...PAGES.map(page => page.slug)].map(slug => new URL(slug + '/', settings.site_url).href);
 
 function head({ title, description, canonical, robots, prefix, jsonLd, privateReview, media }) {
   return `<!doctype html>
@@ -165,6 +165,8 @@ function head({ title, description, canonical, robots, prefix, jsonLd, privateRe
   <meta property="og:title" content="${esc(title)}">
   <meta property="og:description" content="${esc(description)}">
   <meta property="og:url" content="${esc(canonical)}">
+  <meta property="og:image" content="${esc(new URL('/share-card.jpg', canonical).href)}">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="${prefix}favicon.ico" sizes="any">
   <link rel="icon" type="image/png" href="${prefix}favicon.png" sizes="48x48">
   <link rel="icon" type="image/png" href="${prefix}icon-192.png" sizes="192x192">
@@ -232,23 +234,29 @@ export function renderPage(page, settings, { privateReview = false, media = null
   return head({ title: page.title, description: page.description, canonical, robots, prefix, jsonLd: ld(graph), privateReview, media }) + '\n' + body;
 }
 
+export function renderClassesIndex(settings, { privateReview = false, media = null } = {}) {
+  return renderIndex({ settings, privateReview, media, slug: 'classes', crumb: 'Classes', title: 'Classes 1-10 Tuition in Bansilal Nagar | Vardhaman Academy', description: 'Find the right class: tuition for Classes 1-4, 5-7 and 8-10 at Vardhaman Academy, Bansilal Nagar. Small batches, English and Marathi.', h1: 'Find the right <em>class</em> for your child', lead: 'Pick your child\'s stage. Every page explains how we work, and a demo class is available.', items: PAGES.filter(p => ['classes-1-4', 'classes-5-7', 'classes-8-10', 'tuition-bansilal-nagar', 'demo-class'].includes(p.slug)).map(p => [p.slug, strip(p.h1), p.description]) });
+}
+
 export function renderGuidesIndex(settings, { privateReview = false, media = null } = {}) {
+  return renderIndex({ settings, privateReview, media, slug: 'guides', crumb: 'Guides', title: 'Parent Guides | Vardhaman Academy, Bansilal Nagar', description: 'Short, practical guides for parents of Class 1–10 students from Vardhaman Academy, Bansilal Nagar.', h1: 'Guides for <em>parents</em>', lead: 'Short, practical reading for parents of students in Classes 1–10.', items: GUIDES.map(g => [g.slug, strip(g.h1), g.description]) });
+}
+
+function renderIndex({ settings, privateReview, media, slug, crumb, title, description, h1, lead, items }) {
   const prefix = '../';
-  const canonical = new URL('guides/', settings.site_url).href;
-  const title = 'Parent Guides | Vardhaman Academy, Bansilal Nagar';
-  const description = 'Short, practical guides for parents of Class 1–10 students from Vardhaman Academy, Bansilal Nagar.';
+  const canonical = new URL(slug + '/', settings.site_url).href;
   const graph = [{ '@type': 'CollectionPage', name: title, description, url: canonical }];
-  const items = GUIDES.map(guide => `<li><a href="${prefix}${guide.slug}/"><strong>${esc(strip(guide.h1))}</strong></a><p>${esc(guide.description)}</p></li>`).join('\n        ');
+  const list = items.map(([target, heading, text]) => `<li><a href="${prefix}${target}/"><strong>${esc(heading)}</strong></a><p>${esc(text)}</p></li>`).join('\n        ');
   return head({ title, description, canonical, robots: robotsPolicy(settings, { privateReview }), prefix, jsonLd: ld(graph), privateReview, media }) + `
 <body class="consent-page content-page">
   <header class="site-header"><nav class="container nav" aria-label="Main navigation">${logoMarkup(media, prefix)}<a class="btn primary nav-cta" href="${prefix}index.html#enquiry">Tell us about your child</a></nav></header>
   <main id="main" class="consent-main">
     <div class="container consent-wrap">
-      <nav class="crumbs" aria-label="Breadcrumb"><a href="${prefix}index.html">Home</a> / <span>Guides</span></nav>
-      <h1 class="h2">Guides for <em>parents</em></h1>
-      <p class="lead-in">Short, practical reading for parents of students in Classes 1–10.</p>
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="${prefix}index.html">Home</a> / <span>${esc(crumb)}</span></nav>
+      <h1 class="h2">${h1}</h1>
+      <p class="lead-in">${esc(lead)}</p>
       <ul class="guide-list">
-        ${items}
+        ${list}
       </ul>
     </div>
   </main>

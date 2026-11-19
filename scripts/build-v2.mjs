@@ -2,7 +2,7 @@ import { cp, mkdir, readFile, writeFile, rm, realpath, access } from 'node:fs/pr
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { root, readV2Manifest, readV2Settings, readV2Outcomes, readV2Results } from './contracts.mjs';
-import { PAGES, renderPage, renderGuidesIndex, renderConsent } from '../src/v2-pages.mjs';
+import { PAGES, renderPage, renderGuidesIndex, renderClassesIndex, renderConsent } from '../src/v2-pages.mjs';
 import { planMedia } from '../src/v2-media.mjs';
 import { planOutcomes } from '../src/v2-outcomes.mjs';
 import { planResults } from '../src/v2-results.mjs';
@@ -39,7 +39,7 @@ export async function buildV2({ privateReview = false } = {}) {
   // Both paths are fixed generated directories inside this checkout.
   await rm(output, { recursive: true, force: true });
   await mkdir(output, { recursive: true });
-  for (const file of ['base.css', 'v2.css', 'v2.js', 'enquiry.js', 'dialogs.js', 'fonts.css', 'fonts', 'favicon.ico', 'favicon.png', 'icon-192.png', 'apple-touch-icon.png']) {
+  for (const file of ['base.css', 'v2.css', 'v2.js', 'enquiry.js', 'dialogs.js', 'fonts.css', 'fonts', 'favicon.ico', 'favicon.png', 'share-card.jpg', 'icon-192.png', 'apple-touch-icon.png']) {
     await cp(path.join(v2Source, file), path.join(output, file), { recursive: true });
   }
   await writeFile(path.join(output, 'concept.js'), renderConceptScript(await readFile(path.join(v2Source, 'concept.js'), 'utf8'), { privateReview }));
@@ -50,6 +50,8 @@ export async function buildV2({ privateReview = false } = {}) {
     await mkdir(path.join(output, page.slug), { recursive: true });
     await writeFile(path.join(output, page.slug, 'index.html'), renderPage(page, settings, { privateReview, media: planMedia(manifest).runtime }));
   }
+  await mkdir(path.join(output, 'classes'), { recursive: true });
+  await writeFile(path.join(output, 'classes', 'index.html'), renderClassesIndex(settings, { privateReview, media: planMedia(manifest).runtime }));
   await mkdir(path.join(output, 'guides'), { recursive: true });
   await writeFile(path.join(output, 'guides', 'index.html'), renderGuidesIndex(settings, { privateReview, media: planMedia(manifest).runtime }));
   await writeFile(path.join(output, 'site-settings.js'), `window.VARDHAMAN_SITE = ${JSON.stringify(runtimeSettings).replaceAll('<', '\\u003c')};\n`);
