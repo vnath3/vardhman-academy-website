@@ -93,7 +93,7 @@ body { background: #fbfbf7; }
   background: #dbe8df;
   overflow: hidden;
 }
-.mentor-event-photo { width: 100%; height: 100%; object-fit: cover; object-position: 30% center; display: block; }
+.mentor-event-photo { width: 100%; height: 100%; object-fit: cover; object-position: 25% center; display: block; }
 .teacher-photo-note { position: absolute; bottom: 16px; left: 16px; right: 16px; padding: 11px 14px; background: rgba(11,45,58,.87); border-radius: 12px; color: #fff; font-size: 12px; line-height: 1.5; }
 .teacher-icon, .teacher-bubble { display:none; }
 .teacher-art::before { content: none; }
@@ -426,7 +426,7 @@ main > .faq { background-color: #fbfaf3; background-image: linear-gradient(180de
 
 /* Photos drift slower than their frame. Individual transform properties,
    so they never fight the existing hover/reveal transforms. */
-.px { translate: 0 var(--py, 0px); scale: 1.12; }
+.px { translate: 0 var(--py, 0px); scale: 1.06; }
 .outcome-hero { overflow: hidden; }
 
 /* ---- Gallery carousel: auto-drifts left to right, swipeable, snaps ---- */
