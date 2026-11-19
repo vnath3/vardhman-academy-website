@@ -583,8 +583,11 @@ main > #journey { background-image: linear-gradient(180deg, #f3f9fa 0, rgba(243,
 }
 
 /* Explicit, unique section order (no ties):
-   hero > trust > parents > mentor > results > [stories] > life > journey > enquiry > faq */
+   hero > trust > parents > mentor > results > [stories] > life > journey > faq > enquiry */
 main > .hero { order: 0; } main > .trust-strip { order: 1; } main > .parent-message { order: 2; }
 main > .teacher { order: 3; } main > .v2-outcomes { order: 4; } main > .stories { order: 5; }
 main > .v2-gallery { order: 6; } main > .features { order: 7; } main > #journey { order: 8; }
-main > #brainlab { order: 9; } main > #enquiry { order: 10; } main > .faq { order: 11; }
+main > #brainlab { order: 9; } main > .faq { order: 10; } main > #enquiry { order: 11; }
+/* seams for FAQ before enquiry */
+main > .faq { background-color: #fbfaf3; background-image: linear-gradient(180deg, #eef4fb 0, rgba(238,244,251,0) 130px); }
+main > #enquiry { background-color: #e1f0e8; background-image: linear-gradient(180deg, #fbfaf3 0, rgba(251,250,243,0) 130px); }
