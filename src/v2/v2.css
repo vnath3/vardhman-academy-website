@@ -465,3 +465,22 @@ main > .faq { background-color: #fbfaf3; background-image: linear-gradient(180de
 .footer h3.footer-h { font: 800 14px Outfit; margin: 0 0 24px; color: inherit; }
 .gallery-dots button { position: relative; }
 .gallery-dots button::after { content: ""; position: absolute; inset: -9px -5px; }
+
+/* Spacing pass, batch 1: tighter section rhythm, outcomes card proportions, logo fits the scrolled header */
+.section-space { padding: 72px 0; }
+.teacher { padding: 20px 0 56px; }
+.v2-gallery { padding: 72px 0 76px; }
+@media (max-width: 780px) {
+  .section-space { padding: 48px 0; }
+  .teacher { padding: 16px 0 40px; }
+  .v2-gallery { padding: 52px 0 56px; }
+}
+/* A single outcome reads as a feature card: photo beside the story on wide screens, never a full-width billboard. */
+@media (min-width: 900px) {
+  .outcome-card:only-child { flex-direction: row; align-items: stretch; }
+  .outcome-card:only-child .outcome-hero { aspect-ratio: auto; flex: 0 0 46%; min-height: 440px; }
+  .outcome-card:only-child .outcome-body { flex: 1; justify-content: center; padding: 40px 44px; }
+}
+@media (min-width: 1051px) {
+  .site-header.scrolled .official-logo-crop { scale: .84; }
+}
