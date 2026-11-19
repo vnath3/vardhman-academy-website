@@ -382,14 +382,14 @@ main > .v2-outcomes { order: 4; }
 /* Hero entrance on load: copy rises in a stagger, the portrait settles in.
    Handnote / nameplate keep their own rotation, so they only fade. */
 @keyframes hero-rise { from { opacity: 0; transform: translate3d(0,22px,0); } to { opacity: 1; transform: none; } }
-@keyframes hero-settle { from { opacity: 0; transform: scale(.94); } to { opacity: 1; transform: none; } }
+@keyframes hero-settle { from { transform: translate3d(0, 14px, 0) scale(.97); } to { transform: none; } }
 @keyframes hero-fade { from { opacity: 0; } to { opacity: 1; } }
 .hero-parent .hero-copy > * { animation: hero-rise 700ms cubic-bezier(.22,.61,.36,1) backwards; }
 .hero-parent .hero-copy > :nth-child(2) { animation-delay: 90ms; }
 .hero-parent .hero-copy > :nth-child(3) { animation-delay: 180ms; }
 .hero-parent .hero-copy > :nth-child(4) { animation-delay: 270ms; }
 .hero-parent .hero-copy > :nth-child(5) { animation-delay: 360ms; }
-.hero-parent .portrait-shell { animation: hero-settle 900ms cubic-bezier(.22,.61,.36,1) 150ms backwards; }
+.hero-parent .portrait-shell { animation: hero-settle 550ms cubic-bezier(.22,.61,.36,1) backwards; }
 .hero-parent .mentor-handnote, .hero-parent .mentor-nameplate, .hero-parent .mentor-heart { animation: hero-fade 700ms ease-out 650ms backwards; }
 
 /* Hero recedes as you scroll away: copy lifts off faster than the page,

@@ -6,6 +6,7 @@ import path from 'node:path';
 import { buildV2, v2Source, v2MediaPaths } from '../scripts/build-v2.mjs';
 import { createV2Server } from '../scripts/serve-v2.mjs';
 import { root } from '../scripts/build.mjs';
+import { readV2Manifest } from '../scripts/contracts.mjs';
 
 test('V2 has stable correct identity/grades, with the original reference presentation layers', async () => {
   const html = await readFile(path.join(v2Source, 'index.html'), 'utf8');
@@ -30,7 +31,7 @@ test('V2 source preserves illustrative stories, demo enquiry, exact logo crop an
   assert.match(styles, /background-position: -152px -20px/);
   assert.match(styles, /background-size: 580px 580px/);
   assert.match(script, /Rushabh Sir at an external education seminar/);
-  for (const file of v2MediaPaths) await stat(path.join(root, 'media', 'vardhaman', file));
+  for (const asset of (await readV2Manifest()).assets) await stat(path.join(root, asset.source_path));
   assert.match(styles, /prefers-reduced-motion/);
 });
 

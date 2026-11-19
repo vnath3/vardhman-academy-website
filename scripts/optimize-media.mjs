@@ -34,10 +34,13 @@ for (const asset of [...plan.copies, ...outcomes.copies]) {
       '-vf', "scale='min(854,iw)':-2,fps=30", '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '33',
       '-pix_fmt', 'yuv420p', '-movflags', '+faststart', '-c:a', 'aac', '-b:a', '96k', tmp], { stdio: 'inherit' });
     if (r.status !== 0) throw new Error('ffmpeg failed: ' + asset.id);
+  } else if (ext === '.png' && /\.jpe?g$/i.test(dest)) {
+    // Photographic PNG delivered as JPEG (paths in the manifest say so).
+    await sharp(src).resize({ width: 1000, withoutEnlargement: true }).flatten({ background: '#f7faf5' }).jpeg({ quality: 80, mozjpeg: true }).toFile(tmp);
   } else if (ext === '.png') {
     await sharp(src).resize({ width: 1000, withoutEnlargement: true }).png({ palette: true, quality: 70, effort: 8 }).toFile(tmp);
   } else {
-    await sharp(src).rotate().resize({ width: asset.production_path.startsWith('media/mentor/') ? 2400 : 1600, withoutEnlargement: true }).jpeg({ quality: 76, mozjpeg: true }).toFile(tmp);
+    await sharp(src).rotate().resize({ width: asset.production_path.startsWith('media/mentor/') ? 2000 : 1600, withoutEnlargement: true }).jpeg({ quality: 76, mozjpeg: true }).toFile(tmp);
   }
   if ((await size(tmp)) < original * 0.95) { await rename(tmp, dest); after += await size(dest); }
   else { await rm(tmp, { force: true }); await rm(dest, { force: true }); after += original; }

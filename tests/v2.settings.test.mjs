@@ -42,7 +42,7 @@ test('canonical, sharing and favicon use configured origin and already-approved 
   const config = structuredClone(settings); config.seo.indexing_enabled = false;
   const html = renderSiteHtml(source, config, { media });
   assert.match(html, /rel="canonical" href="https:\/\/va-academy.netlify.app\/"/);
-  assert.match(html, /property="og:image" content="https:\/\/va-academy.netlify.app\/media\/hero\/rushab-warm-hero-v1.png"/);
+  assert.match(html, /property="og:image" content="https:\/\/va-academy.netlify.app\/media\/hero\/rushab-warm-hero-v1.jpeg"/);
   assert.match(html, /rel="icon" type="image\/png" href=".\/favicon.png"/);
   assert.match(html, /rel="apple-touch-icon" href=".\/apple-touch-icon.png"/);
   assert.doesNotMatch(renderSiteHtml(source, config, { media: {} }), /og:image/);
