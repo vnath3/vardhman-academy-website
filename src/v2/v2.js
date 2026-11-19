@@ -58,7 +58,7 @@
   const heroLead=q('.hero-parent .lead');
   if(heroLead) heroLead.textContent='At Vardhaman Academy, Rushabh Sir helps children build understanding, confidence and stronger learning habits. Because every child deserves to feel seen.';
   const heroButton=q('.hero-parent .hero-actions .btn.primary');
-  if(heroButton) heroButton.innerHTML='Tell us about your child <span class="arrow">↗</span>';
+  if(heroButton) heroButton.innerHTML='Tell us about your child <span class="arrow">↓</span>';
   const heroTrust=q('.hero-parent .hero-trust p');
   if(heroTrust) heroTrust.innerHTML='<strong>5,000+ students taught</strong><br>Classes 1–10 · Bansilal Nagar';
 

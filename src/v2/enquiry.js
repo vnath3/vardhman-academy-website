@@ -28,18 +28,39 @@
   // draft link (content/v2-settings.json) — nothing new to approve, just
   // shown in the open instead of only inside a wa.me href.
   const footerContact = q('#footerContact');
-  if (footerContact && number) {
+  if (number) {
     const national = /^91(\d{10})$/.exec(number)?.[1];
     const readable = national ? `+91 ${national.slice(0, 5)} ${national.slice(5)}` : `+${number}`;
-    const call = document.createElement('a');
-    call.href = `tel:+${number}`;
-    call.textContent = `📞 ${readable}`;
-    const chat = document.createElement('a');
-    chat.href = `https://wa.me/${number}`;
-    chat.target = '_blank';
-    chat.rel = 'noopener';
-    chat.textContent = '💬 WhatsApp';
-    footerContact.append(call, document.createTextNode(' · '), chat);
+    // Phones: a one-tap call icon beside the menu button (same approved number).
+    const navCall = q('#navCall');
+    if (navCall) {
+      navCall.href = `tel:+${number}`;
+      navCall.hidden = false;
+    }
+    if (footerContact) {
+      const call = document.createElement('a');
+      call.className = 'footer-action';
+      call.href = `tel:+${number}`;
+      call.textContent = `Call ${readable}`;
+      const chat = document.createElement('a');
+      chat.className = 'footer-action';
+      chat.href = `https://wa.me/${number}`;
+      chat.target = '_blank';
+      chat.rel = 'noopener';
+      chat.textContent = '💬 WhatsApp us';
+      footerContact.append(call, chat);
+    }
+  }
+
+  // Footer directions link uses the same owner-approved map link as the hero badge.
+  const footerMap = q('#footerMap');
+  if (footerMap && typeof settings.mapUrl === 'string' && /^https:/.test(settings.mapUrl)) {
+    const directions = document.createElement('a');
+    directions.href = settings.mapUrl;
+    directions.target = '_blank';
+    directions.rel = 'noopener';
+    directions.textContent = 'Get directions ↗';
+    footerMap.append(directions);
   }
 
   // Hero locality badge opens the owner-approved map link (content/v2-settings.json).

@@ -508,3 +508,35 @@ main > .faq { background-color: #fbfaf3; background-image: linear-gradient(180de
   .footer-links { gap: 2px; }
   .footer-links a, .footer-links span { display: inline-flex; align-items: center; min-height: 40px; }
 }
+
+/* Header and footer pass */
+.skip-link { position: fixed; left: 12px; top: -64px; z-index: 2000; background: #142244; color: #fff; padding: 12px 18px; border-radius: 12px; font-weight: 700; text-decoration: none; transition: top .15s ease; }
+.skip-link:focus { top: 12px; outline: 3px solid #f6c453; outline-offset: 2px; }
+#main:focus { outline: none; }
+.nav-call { display: none; }
+@media (max-width: 1050px) {
+  .nav-links { top: 100%; }
+  .nav-call:not([hidden]) { display: grid; place-items: center; margin-left: auto; width: 42px; height: 42px; border-radius: 12px; background: #167da5; color: #fff; font-size: 18px; text-decoration: none; flex: none; }
+  .nav-call:not([hidden]) + .mobile-toggle { margin-left: 10px; }
+}
+@media (max-width: 780px) {
+  .nav { height: 64px; }
+  .nav-links { top: 100%; }
+  .site-header.scrolled .nav { height: 56px; }
+}
+/* Footer: the logo's own white backdrop becomes a deliberate rounded badge */
+.footer .logo { display: inline-flex; background: #fff; border-radius: 16px; padding: 6px 10px; overflow: hidden; min-width: 0; }
+.footer .official-logo-crop { scale: 1; margin-right: 0; border-radius: 10px; }
+.footer-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.footer .footer-action { display: inline-flex; align-items: center; min-height: 44px; padding: 10px 16px; border-radius: 999px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.22); color: #fff; font-size: 13px; font-weight: 700; text-decoration: none; }
+.footer .footer-action:hover, .footer .footer-action:focus-visible { background: rgba(255,255,255,.2); }
+.footer-links a, #footerMap a { color: #d6e2f5; }
+#footerMap a { font-size: 13px; text-decoration: underline; text-underline-offset: 3px; }
+.footer .footer-privacy { margin: 14px 0 0; max-width: 640px; font-size: 11px; color: #9aa7c4; line-height: 1.6; text-align: left; }
+@media (max-width: 780px) {
+  .footer { padding: 44px 0 85px; }
+  .footer-grid { padding-bottom: 28px; }
+  .footer p { margin-top: 14px; }
+  .footer-actions { flex-direction: column; align-items: stretch; }
+  .footer-actions .footer-action { justify-content: center; }
+}

@@ -13,7 +13,7 @@ function requireApproval(record, label) {
 // Hero, enquiry, header and footer are core and cannot be flagged.
 export const SECTION_FLAGS = {
   trust_strip: [], parent_message: ['parents'], journey: ['journey'], brainlab: ['brainlab'], approach: ['approach'],
-  mentor: ['about'], gallery: ['life-at-vardhaman'], outcomes: ['outcomes'], faq: []
+  mentor: ['about'], gallery: ['life-at-vardhaman'], outcomes: ['outcomes'], faq: ['faq']
 };
 
 export function sectionEnabled(settings, key) {

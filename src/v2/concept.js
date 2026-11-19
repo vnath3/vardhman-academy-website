@@ -419,3 +419,30 @@
   document.addEventListener('DOMContentLoaded',()=>window.__scrollFx(scrollY));
   window.__scrollFx(scrollY);
 })();
+
+// Mobile menu polish: label follows state, Escape / outside tap close it, focus moves in and back out.
+(function () {
+  var toggle = document.getElementById('mobileToggle'), menu = document.getElementById('navLinks');
+  if (!toggle || !menu) return;
+  function sync() {
+    var open = menu.classList.contains('open');
+    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  }
+  toggle.addEventListener('click', function () {
+    sync();
+    if (menu.classList.contains('open')) { var first = menu.querySelector('a'); if (first) first.focus({ preventScroll: true }); }
+  });
+  function close(returnFocus) {
+    if (!menu.classList.contains('open')) return;
+    menu.classList.remove('open');
+    toggle.setAttribute('aria-expanded', 'false'); toggle.textContent = '☰'; sync();
+    if (returnFocus) toggle.focus();
+  }
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(true); });
+  document.addEventListener('click', function (e) {
+    if (!menu.classList.contains('open')) return;
+    if (menu.contains(e.target) || toggle.contains(e.target)) return;
+    close(false);
+  });
+  menu.addEventListener('click', sync);
+})();
