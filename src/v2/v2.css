@@ -758,3 +758,11 @@ html.mx-calm .faq-answer { transition-duration: .01s, .2s, .01s, 0s; }
 @media(max-width:520px) { .content-page .nav-cta { padding: 10px 14px; font-size: 13px; } .content-page .logo .brand small { display: none; } }
 .content-page h1.h2 { letter-spacing: -.6px; word-spacing: .06em; }
 .content-page h1 em { padding: 0 .1em; }
+.content-page .logo, .consent-page .logo { min-width: 0; }
+.content-page .logo .official-logo-crop, .consent-page .logo .official-logo-crop { margin-right: 0; }
+@media(max-width:780px) { .content-page .logo .official-logo-crop, .consent-page .logo .official-logo-crop { scale: .87; margin-right: -36px; } }
+@media(max-width:520px) { .content-page .logo .official-logo-crop, .consent-page .logo .official-logo-crop { scale: .7; margin-right: -84px; } }
+/* Match the home-page headline style */
+.content-page h1.h2 { font: 900 clamp(34px, 6.4vw, 54px)/1.1 Outfit; letter-spacing: -1px; color: #17323c; }
+.content-page h1 em { color: #1a7e9d; font-style: normal; background: linear-gradient(transparent 86%, #e7dfaa 86%); padding: 0 .08em; }
+.content-page h1 em { white-space: nowrap; }

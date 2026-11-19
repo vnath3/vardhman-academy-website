@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { root, readV2Manifest, readV2Settings, readV2Outcomes, readV2Results } from './contracts.mjs';
 import { planMedia, planOutcomes, v2Source } from './build-v2.mjs';
 import { planResults } from '../src/v2-results.mjs';
-import { PAGES, renderPage, renderGuidesIndex } from '../src/v2-pages.mjs';
+import { PAGES, renderPage, renderGuidesIndex, renderConsent } from '../src/v2-pages.mjs';
 import { renderSiteHtml, renderConceptScript, siteRuntime, robotsFile, sitemapFile, verificationFile, productionHeaders } from '../src/v2-settings.mjs';
 
 export async function listFiles(directory, prefix = '') {
@@ -39,7 +39,7 @@ export async function verifyProduction() {
       : file === 'concept.js' ? Buffer.from(renderConceptScript(source.toString('utf8'))) : source;
     assert.deepEqual(await readFile(path.join(output, file)), expectedBytes, `Source mismatch: ${file}`);
   }
-  assert.deepEqual(await readFile(path.join(output, 'consent', 'index.html')), await readFile(path.join(v2Source, 'consent.html')), 'Source mismatch: consent page');
+  assert.equal(await readFile(path.join(output, 'consent', 'index.html'), 'utf8'), renderConsent(await readFile(path.join(v2Source, 'consent.html'), 'utf8'), runtime), 'Source mismatch: consent page');
   assert.equal(await readFile(path.join(output, 'site-settings.js'), 'utf8'), `window.VARDHAMAN_SITE = ${JSON.stringify(siteRuntime(settings)).replaceAll('<', '\\u003c')};\n`);
   assert.equal(await readFile(path.join(output, 'robots.txt'), 'utf8'), robotsFile(settings));
   if (verificationFile(settings)) assert.equal(await readFile(path.join(output, verificationFile(settings).name), 'utf8'), verificationFile(settings).content);
@@ -56,8 +56,8 @@ export async function verifyProduction() {
     assert.ok((await readFile(path.join(output, asset.production_path))).equals(expectedMedia), `Media mismatch: ${asset.id}`);
   }
   assert.equal(await readFile(path.join(output, '_headers'), 'utf8'), productionHeaders(await readFile(path.join(root, 'config', 'production-headers.txt'), 'utf8'), settings));
-  for (const page of PAGES) assert.equal(await readFile(path.join(output, page.slug, 'index.html'), 'utf8'), renderPage(page, settings), `Page mismatch: ${page.slug}`);
-  assert.equal(await readFile(path.join(output, 'guides', 'index.html'), 'utf8'), renderGuidesIndex(settings), 'Page mismatch: guides');
+  for (const page of PAGES) assert.equal(await readFile(path.join(output, page.slug, 'index.html'), 'utf8'), renderPage(page, settings, { media: runtime }), `Page mismatch: ${page.slug}`);
+  assert.equal(await readFile(path.join(output, 'guides', 'index.html'), 'utf8'), renderGuidesIndex(settings, { media: runtime }), 'Page mismatch: guides');
   const checkUrl = async (url, from) => {
     if (url.startsWith('#')) return;
     if (from === 'index.html' && url === settings.site_url) return;

@@ -148,7 +148,7 @@ export const PAGES = [
 const GUIDES = PAGES.filter(page => page.kind === 'guide');
 export const pageUrls = settings => ['guides', ...PAGES.map(page => page.slug)].map(slug => new URL(slug + '/', settings.site_url).href);
 
-function head({ title, description, canonical, robots, prefix, jsonLd, privateReview }) {
+function head({ title, description, canonical, robots, prefix, jsonLd, privateReview, media }) {
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -170,13 +170,27 @@ function head({ title, description, canonical, robots, prefix, jsonLd, privateRe
   <link rel="stylesheet" href="${prefix}v2.css">${privateReview ? '' : `
   <script defer src="${prefix}analytics.js"></script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-4F7P27EQSF"></script>`}
+  ${logoStyle(media, prefix)}
   ${jsonLd}
 </head>`;
 }
 
+export function logoStyle(media, prefix) {
+  if (!media?.logo) return '';
+  const layout = media.logoLayout;
+  return `<style>:root{--v2-logo-image:url("${prefix}${media.logo}")${layout ? `;--v2-logo-size:${layout.size};--v2-logo-position:${layout.position}` : ''}}</style>`;
+}
+const logoMarkup = (media, prefix) => media?.logo
+  ? `<a href="${prefix}index.html" class="logo" aria-label="Vardhaman Academy home"><span class="official-logo-crop" role="img" aria-label="Vardhaman Academy"></span></a>`
+  : `<a href="${prefix}index.html" class="logo logo-text-fallback" aria-label="Vardhaman Academy home"><span class="mark">V.</span><span class="brand">VARDHAMAN ACADEMY</span></a>`;
+
+export function renderConsent(source, media) {
+  return source.replace('<!-- logo-style -->', logoStyle(media, '../')).replace('<!-- logo-link -->', logoMarkup(media, '../'));
+}
+
 const ld = graph => `<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }).replaceAll('<', '\\u003c')}</script>`;
 
-export function renderPage(page, settings, { privateReview = false } = {}) {
+export function renderPage(page, settings, { privateReview = false, media = null } = {}) {
   const depth = page.slug.split('/').length;
   const prefix = '../'.repeat(depth);
   const canonical = new URL(page.slug + '/', settings.site_url).href;
@@ -194,7 +208,7 @@ export function renderPage(page, settings, { privateReview = false } = {}) {
     return `<a class="related-link" href="${prefix}${slug}/">${esc(target.nav)} →</a>`;
   }).join('');
   const body = `<body class="consent-page content-page">
-  <header class="site-header"><nav class="container nav" aria-label="Main navigation"><a href="${prefix}index.html" class="logo" aria-label="Vardhaman Academy home"><span class="mark">V.</span><span class="brand">VARDHAMAN ACADEMY<small>Guided by care. Growing with confidence.</small></span></a><a class="btn primary nav-cta" href="${prefix}index.html#enquiry">Tell us about your child</a></nav></header>
+  <header class="site-header"><nav class="container nav" aria-label="Main navigation">${logoMarkup(media, prefix)}<a class="btn primary nav-cta" href="${prefix}index.html#enquiry">Tell us about your child</a></nav></header>
   <main id="main" class="consent-main">
     <div class="container consent-wrap">
       <nav class="crumbs" aria-label="Breadcrumb"><a href="${prefix}index.html">Home</a> / ${page.kind === 'guide' ? `<a href="${prefix}guides/">Guides</a> / ` : ''}<span>${esc(page.nav)}</span></nav>
@@ -211,19 +225,19 @@ export function renderPage(page, settings, { privateReview = false } = {}) {
 </body>
 </html>
 `;
-  return head({ title: page.title, description: page.description, canonical, robots, prefix, jsonLd: ld(graph), privateReview }) + '\n' + body;
+  return head({ title: page.title, description: page.description, canonical, robots, prefix, jsonLd: ld(graph), privateReview, media }) + '\n' + body;
 }
 
-export function renderGuidesIndex(settings, { privateReview = false } = {}) {
+export function renderGuidesIndex(settings, { privateReview = false, media = null } = {}) {
   const prefix = '../';
   const canonical = new URL('guides/', settings.site_url).href;
   const title = 'Parent Guides | Vardhaman Academy, Bansilal Nagar';
   const description = 'Short, practical guides for parents of Class 1–10 students from Vardhaman Academy, Bansilal Nagar.';
   const graph = [{ '@type': 'CollectionPage', name: title, description, url: canonical }];
   const items = GUIDES.map(guide => `<li><a href="${prefix}${guide.slug}/"><strong>${esc(strip(guide.h1))}</strong></a><p>${esc(guide.description)}</p></li>`).join('\n        ');
-  return head({ title, description, canonical, robots: robotsPolicy(settings, { privateReview }), prefix, jsonLd: ld(graph), privateReview }) + `
+  return head({ title, description, canonical, robots: robotsPolicy(settings, { privateReview }), prefix, jsonLd: ld(graph), privateReview, media }) + `
 <body class="consent-page content-page">
-  <header class="site-header"><nav class="container nav" aria-label="Main navigation"><a href="${prefix}index.html" class="logo" aria-label="Vardhaman Academy home"><span class="mark">V.</span><span class="brand">VARDHAMAN ACADEMY<small>Guided by care. Growing with confidence.</small></span></a><a class="btn primary nav-cta" href="${prefix}index.html#enquiry">Tell us about your child</a></nav></header>
+  <header class="site-header"><nav class="container nav" aria-label="Main navigation">${logoMarkup(media, prefix)}<a class="btn primary nav-cta" href="${prefix}index.html#enquiry">Tell us about your child</a></nav></header>
   <main id="main" class="consent-main">
     <div class="container consent-wrap">
       <nav class="crumbs" aria-label="Breadcrumb"><a href="${prefix}index.html">Home</a> / <span>Guides</span></nav>
