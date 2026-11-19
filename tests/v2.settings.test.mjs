@@ -68,7 +68,7 @@ test('approved mentor media is rendered in HTML and missing permissions produce 
   const html = renderSiteHtml(source, settings, { media });
   assert.match(html, /class="mentor-portrait" src=".\/media\/hero\//);
   assert.match(html, /class="mentor-event-photo" src=".\/media\/mentor\//);
-  assert.match(html, /External event, not hosted by Vardhaman Academy/);
+  assert.match(html, /Rushabh Sir at an external education seminar/);
   const denied = renderSiteHtml(source, settings, { media: {} });
   assert.doesNotMatch(denied, /class="mentor-portrait"|class="mentor-event-photo"|will appear|photo belongs here/);
   assert.match(denied, /Rushabh Mutha · Vardhaman Academy/);

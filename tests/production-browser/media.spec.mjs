@@ -81,7 +81,7 @@ for (const width of [1440, 390]) {
     await page.goto('/');
     await expect(page.locator('.gallery-card')).toHaveCount(2);
     await expect(page.locator('[data-injected]')).toHaveCount(0);
-    await expect(page.locator('.gallery-consent').first()).toHaveText('Shared with permission');
+    await expect(page.locator('.gallery-chip')).toContainText('shared with each family');
     for (const [category, count] of [['activities', 1], ['community', 1], ['achievements', 0], ['all', 2]]) {
       await page.locator(`.gallery-tab[data-category="${category}"]`).click();
       await expect(page.locator('.gallery-card:visible')).toHaveCount(Math.min(count,width <= 520 ? 1 : 3));

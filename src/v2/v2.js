@@ -73,7 +73,7 @@
 
   const teacherArt=q('.teacher-art');
   if(teacherArt && mediaConfig.mentor) {
-    if(!teacherArt.querySelector('.mentor-event-photo')) teacherArt.innerHTML=`<img class="mentor-event-photo" src="${mediaConfig.mentor}" alt="${escapeText(mediaConfig.mentorAlt || 'Rushabh Sir speaking during an external educational seminar')}" loading="lazy"><div class="teacher-photo-note">${escapeText(mediaConfig.mentorCaption || 'A real educational seminar appearance · External event, not hosted by Vardhaman Academy')}</div>`;
+    if(!teacherArt.querySelector('.mentor-event-photo')) teacherArt.innerHTML=`<img class="mentor-event-photo" src="${mediaConfig.mentor}" alt="${escapeText(mediaConfig.mentorAlt || 'Rushabh Sir speaking during an external educational seminar')}" loading="lazy"><div class="teacher-photo-note">${escapeText(mediaConfig.mentorCaption || 'Rushabh Sir at an external education seminar')}</div>`;
   } else if(teacherArt) teacherArt.innerHTML='<span class="portrait-note">Rushabh Mutha · Vardhaman Academy</span>';
   const teacherEyebrow=q('.teacher-copy .eyebrow');
   if(teacherEyebrow) teacherEyebrow.textContent='The heart of Vardhaman';
@@ -216,9 +216,6 @@
 
   } // end gallery (section can be flagged off)
 
-  // Footer semantics and the FAQ are kept aligned with the confirmed grades.
-  const faq=qa('.faq-answer').find(el=>el.textContent.includes('Classes 1 through 10'));
-  if(faq)faq.textContent='Vardhaman Academy currently supports Classes 1 through 10.';
 
   // A simple safeguard to detect accidental public promotion of unapproved media.
   document.documentElement.dataset.mediaReview=privateReview?'private-only':'approved-only';

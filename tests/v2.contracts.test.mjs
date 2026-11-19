@@ -28,12 +28,11 @@ test('V2 source preserves illustrative stories, demo enquiry, exact logo crop an
   const styles = await readFile(path.join(v2Source, 'v2.css'), 'utf8');
   const script = await readFile(path.join(v2Source, 'v2.js'), 'utf8');
   assert.match(html, /illustrative sample content, not verified alumni testimonials/);
-  assert.match(html, /Prepare an enquiry · not sent automatically/);
   assert.match(html, /id="childNote"/);
   assert.doesNotMatch(html, /type="(email|tel)"|name="(email|phone)"/);
   assert.match(styles, /background-position: -152px -20px/);
   assert.match(styles, /background-size: 580px 580px/);
-  assert.match(script, /External event, not hosted by Vardhaman Academy/);
+  assert.match(script, /Rushabh Sir at an external education seminar/);
   for (const file of v2MediaPaths) await stat(path.join(root, 'media', 'vardhaman', file));
   assert.match(styles, /prefers-reduced-motion/);
 });

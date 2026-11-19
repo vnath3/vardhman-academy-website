@@ -30,7 +30,7 @@ for (const width of [1440, 768, 390, 320]) {
     expect(await page.locator('body').innerText()).not.toMatch(/\bRushab\b|Classes 5–10/);
     await expect(page.locator('.teacher-copy h2')).toContainText('Rushabh Sir');
     await expect(page).toHaveTitle(/Classes 1–10/);
-    await expect(page.locator('.teacher-photo-note')).toContainText('External event, not hosted by Vardhaman Academy');
+    await expect(page.locator('.teacher-photo-note')).toContainText('Rushabh Sir at an external education seminar');
     await expect(page.locator('.portrait-monogram')).toHaveCount(0);
     await expect(page.locator('.v2-review-flag')).toHaveCount(0);
     await expect(page.locator('.gallery-footnote')).toHaveCount(0);
