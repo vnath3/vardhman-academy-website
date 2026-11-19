@@ -51,17 +51,6 @@
   notice.textContent='V2 owner review · Real student media included for private evaluation · Not cleared for public release';
   if (privateReview) header?.before(notice);
 
-  const heroHeading=q('.hero-parent h1');
-  if(heroHeading) heroHeading.innerHTML='Every child learns differently. <em>Every child deserves someone who understands.</em>';
-  const heroBadge=q('.hero-parent .hero-badge');
-  if(heroBadge){ heroBadge.innerHTML='<span class="sparkle">♡</span> Bansilal Nagar · Classes 1–10<span class="badge-arrow" aria-hidden="true">↗</span>'; if(heroBadge.id==='heroMapBadge') heroBadge.setAttribute('aria-label','Bansilal Nagar · Classes 1–10: open Vardhaman Academy\'s location on Google Maps'); }
-  const heroLead=q('.hero-parent .lead');
-  if(heroLead) heroLead.textContent='At Vardhaman Academy, Rushabh Sir helps children build understanding, confidence and stronger learning habits. Because every child deserves to feel seen.';
-  const heroButton=q('.hero-parent .hero-actions .btn.primary');
-  if(heroButton) heroButton.innerHTML='Tell us about your child <span class="arrow">↓</span>';
-  const heroTrust=q('.hero-parent .hero-trust p');
-  if(heroTrust) heroTrust.innerHTML='<strong>5,000+ students taught</strong><br>Classes 1–10 · Bansilal Nagar';
-
   const portrait=q('.portrait-field');
   if(portrait && mediaConfig.hero) {
     if(!portrait.querySelector('.mentor-portrait')) portrait.innerHTML=`<img class="mentor-portrait" src="${mediaConfig.hero}" alt="${escapeText(mediaConfig.heroAlt || 'Rushabh Sir speaking with a microphone in a warm Vardhaman-themed portrait')}" loading="eager" fetchpriority="high">`;

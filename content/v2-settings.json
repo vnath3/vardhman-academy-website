@@ -2,10 +2,11 @@
   "schema_version": "1.0",
   "site_url": "https://va-academy.netlify.app/",
   "seo": {
-    "title": "Vardhaman Academy | Classes 1–10 in Bansilal Nagar",
-    "description": "Meet Rushabh Sir at Vardhaman Academy in Bansilal Nagar, Chhatrapati Sambhajinagar. Explore Classes 1–10 and prepare a parent enquiry.",
+    "title": "Vardhaman Academy – Tuition for Classes 1–10 in Bansilal Nagar",
+    "description": "Small-batch tuition for Classes 1–10 (CBSE, SSC, ICSE) in Bansilal Nagar, Chhatrapati Sambhajinagar. Taught in English and Marathi. Book a demo class.",
     "indexing_enabled": false,
-    "launch_approval": null
+    "launch_approval": null,
+    "ai_training_crawlers": "block"
   },
   "enquiry": {
     "whatsapp_number": "918830499339",

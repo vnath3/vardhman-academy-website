@@ -26,6 +26,7 @@ export function validateSettings(settings) {
   assert.ok(site.protocol === 'https:' && !site.username && !site.password && !site.search && !site.hash && site.pathname === '/', 'Site URL must be an HTTPS origin with a trailing slash');
   for (const key of ['title', 'description']) assert.ok(typeof settings.seo?.[key] === 'string' && settings.seo[key].trim(), `Missing SEO ${key}`);
   assert.equal(typeof settings.seo.indexing_enabled, 'boolean');
+  if (settings.seo.ai_training_crawlers !== undefined) assert.ok(['allow', 'block'].includes(settings.seo.ai_training_crawlers), 'seo.ai_training_crawlers must be "allow" or "block"');
   if (settings.seo.indexing_enabled) requireApproval(settings.seo.launch_approval, 'Indexing approval');
   if (settings.sections !== undefined) {
     for (const [key, value] of Object.entries(settings.sections)) {
@@ -70,8 +71,52 @@ export function productionHeaders(template, settings, options = {}) {
   return template.replace(/X-Robots-Tag: [^\r\n]+/, 'X-Robots-Tag: ' + robotsPolicy(settings, options));
 }
 
+const AI_SEARCH_BOTS = ['OAI-SearchBot', 'ChatGPT-User', 'Claude-SearchBot', 'Claude-User', 'PerplexityBot', 'Perplexity-User'];
+const AI_TRAINING_BOTS = ['GPTBot', 'ClaudeBot', 'Google-Extended', 'Applebot-Extended', 'CCBot'];
+
 export function robotsFile(settings, options = {}) {
-  return `User-agent: *\n${robotsPolicy(settings, options).startsWith('noindex') ? 'Disallow: /' : 'Allow: /'}\n`;
+  if (robotsPolicy(settings, options).startsWith('noindex')) return 'User-agent: *\nDisallow: /\n';
+  const group = (agents, rule) => agents.map(agent => `User-agent: ${agent}`).join('\n') + `\n${rule}\n`;
+  const training = settings.seo.ai_training_crawlers === 'allow' ? 'Allow: /' : 'Disallow: /';
+  return [
+    'User-agent: *\nAllow: /\n',
+    '# AI search and answer assistants: allowed, so families can find and be pointed to the academy',
+    group(AI_SEARCH_BOTS, 'Allow: /'),
+    `# AI model-training crawlers (${settings.seo.ai_training_crawlers === 'allow' ? 'allowed' : 'opted out'}; this does not affect Google Search or AI search results)`,
+    group(AI_TRAINING_BOTS, training),
+    `Sitemap: ${new URL('sitemap.xml', settings.site_url).href}\n`
+  ].join('\n');
+}
+
+export function sitemapFile(settings, options = {}) {
+  if (robotsPolicy(settings, options).startsWith('noindex')) return null;
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url><loc>${escape(settings.site_url)}</loc></url>\n</urlset>\n`;
+}
+
+// Structured data only ships when the site is public, and is built from the same
+// approved settings and the page's own FAQ markup so it can never disagree with the page.
+export function structuredData(settings, html, { image = null, logo = null } = {}) {
+  const phone = settings.enquiry?.number_approved && /^[1-9]\d{7,14}$/.test(settings.enquiry.whatsapp_number || '') ? '+' + settings.enquiry.whatsapp_number : null;
+  const text = value => value.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/\s+/g, ' ').trim();
+  const organization = {
+    '@type': ['EducationalOrganization', 'LocalBusiness'],
+    '@id': settings.site_url + '#organization',
+    name: 'Vardhaman Academy',
+    url: settings.site_url,
+    description: settings.seo.description,
+    ...(image ? { image } : {}),
+    ...(logo ? { logo } : {}),
+    ...(phone ? { telephone: phone } : {}),
+    address: { '@type': 'PostalAddress', addressLocality: 'Bansilal Nagar, Chhatrapati Sambhajinagar', addressRegion: 'Maharashtra', addressCountry: 'IN' },
+    areaServed: { '@type': 'City', name: 'Chhatrapati Sambhajinagar' },
+    knowsLanguage: ['English', 'Marathi'],
+    ...(settings.location?.map_approved ? { hasMap: settings.location.map_url } : {}),
+    founder: { '@type': 'Person', name: 'Rushabh Mutha', jobTitle: 'Teacher and mentor' }
+  };
+  const faqItems = [...html.matchAll(/<div class="faq-item[^"]*"><button[^>]*>([\s\S]*?)<span class="plus">[\s\S]*?<\/span><\/button><div class="faq-answer">([\s\S]*?)<\/div><\/div>/g)]
+    .map(match => ({ '@type': 'Question', name: text(match[1]), acceptedAnswer: { '@type': 'Answer', text: text(match[2]) } }));
+  const graph = [organization, ...(faqItems.length ? [{ '@type': 'FAQPage', mainEntity: faqItems }] : [])];
+  return `<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }).replaceAll('<', '\\u003c')}</script>`;
 }
 
 export function renderConceptScript(source, { privateReview = false } = {}) {
@@ -99,7 +144,7 @@ export function renderSiteHtml(source, settings, { privateReview = false, media,
     ...(image ? [`<meta property="og:image" content="${escape(image)}">`, `<meta property="og:image:alt" content="${escape(media.heroAlt)}">`] : []),
     ...(icon ? [`<link rel="icon" type="image/png" href="${escape(icon)}">`] : [])
   ].join('\n  ');
-  html = html.replace('<!-- site-metadata -->', metadata);
+  html = html.replace('<!-- site-metadata -->', metadata + '\n  <!-- structured-data -->');
   html = html.replace('<!-- gallery-section -->', sectionEnabled(settings, 'gallery') ? renderGallery(galleryMedia) : '');
   html = html.replace('<!-- outcomes-section -->', sectionEnabled(settings, 'outcomes') ? renderOutcomes(outcomesMedia, results) : '');
   html = html.replace('<!-- hero-media -->', media?.hero
@@ -116,5 +161,6 @@ export function renderSiteHtml(source, settings, { privateReview = false, media,
   if (!privateReview) html = html.replace(/\s*<!-- private-preview:start -->[\s\S]*?<!-- private-preview:end -->/g, '')
     .replace(/<a\b[^>]*href="#stories"[^>]*>[\s\S]*?<\/a>/g, '');
   if (privateReview) html = html.replace(/  <!-- Google tag \(gtag.js\): production only -->[\s\S]*?  <!-- \/Google tag -->\r?\n/, '');
+  html = html.replace('\n  <!-- structured-data -->', !privateReview && settings.seo.indexing_enabled ? '\n  ' + structuredData(settings, html, { image, logo: icon ? new URL(icon, settings.site_url).href : null }) : '');
   return html;
 }

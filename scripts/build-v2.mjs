@@ -5,7 +5,7 @@ import { root, readV2Manifest, readV2Settings, readV2Outcomes, readV2Results } f
 import { planMedia } from '../src/v2-media.mjs';
 import { planOutcomes } from '../src/v2-outcomes.mjs';
 import { planResults } from '../src/v2-results.mjs';
-import { siteRuntime, renderSiteHtml, renderConceptScript, robotsFile, productionHeaders } from '../src/v2-settings.mjs';
+import { siteRuntime, renderSiteHtml, renderConceptScript, robotsFile, sitemapFile, productionHeaders } from '../src/v2-settings.mjs';
 export { planMedia } from '../src/v2-media.mjs';
 export { planOutcomes } from '../src/v2-outcomes.mjs';
 
@@ -52,6 +52,8 @@ export async function buildV2({ privateReview = false } = {}) {
   await writeFile(path.join(output, 'media-data.js'),
     `window.VARDHAMAN_MEDIA = ${JSON.stringify(plan.runtime).replaceAll('<', '\\u003c')};\n`);
   await writeFile(path.join(output, 'robots.txt'), robotsFile(settings, { privateReview }));
+  const sitemap = sitemapFile(settings, { privateReview });
+  if (sitemap) await writeFile(path.join(output, 'sitemap.xml'), sitemap);
   if (privateReview) await writeFile(path.join(output, 'media-review.html'), renderMediaReview(manifest));
   if (!privateReview) {
     for (const asset of [...plan.copies, ...outcomesPlan.copies]) {
