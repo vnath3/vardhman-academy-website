@@ -1,3 +1,4 @@
+import { pageUrls } from './v2-pages.mjs';
 import assert from 'node:assert/strict';
 import { renderGallery } from './v2-gallery.mjs';
 import { renderOutcomes } from './v2-outcomes.mjs';
@@ -91,7 +92,7 @@ export function robotsFile(settings, options = {}) {
 
 export function sitemapFile(settings, options = {}) {
   if (robotsPolicy(settings, options).startsWith('noindex')) return null;
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url><loc>${escape(settings.site_url)}</loc></url>\n</urlset>\n`;
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  ${[settings.site_url, ...pageUrls(settings)].map(url => `  <url><loc>${escape(url)}</loc></url>`).join('\n').trimStart()}\n</urlset>\n`;
 }
 
 // Structured data only ships when the site is public, and is built from the same

@@ -2,6 +2,7 @@ import { cp, mkdir, readFile, writeFile, rm, realpath, access } from 'node:fs/pr
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { root, readV2Manifest, readV2Settings, readV2Outcomes, readV2Results } from './contracts.mjs';
+import { PAGES, renderPage, renderGuidesIndex } from '../src/v2-pages.mjs';
 import { planMedia } from '../src/v2-media.mjs';
 import { planOutcomes } from '../src/v2-outcomes.mjs';
 import { planResults } from '../src/v2-results.mjs';
@@ -45,6 +46,12 @@ export async function buildV2({ privateReview = false } = {}) {
   await writeFile(path.join(output, 'index.html'), renderSiteHtml(await readFile(path.join(v2Source, 'index.html'), 'utf8'), settings, { privateReview, media: planMedia(manifest).runtime, galleryMedia: plan.runtime, outcomesMedia: outcomesPlan.runtime, results: resultsPlan }));
   await mkdir(path.join(output, 'consent'), { recursive: true });
   await cp(path.join(v2Source, 'consent.html'), path.join(output, 'consent', 'index.html'));
+  for (const page of PAGES) {
+    await mkdir(path.join(output, page.slug), { recursive: true });
+    await writeFile(path.join(output, page.slug, 'index.html'), renderPage(page, settings, { privateReview }));
+  }
+  await mkdir(path.join(output, 'guides'), { recursive: true });
+  await writeFile(path.join(output, 'guides', 'index.html'), renderGuidesIndex(settings, { privateReview }));
   await writeFile(path.join(output, 'site-settings.js'), `window.VARDHAMAN_SITE = ${JSON.stringify(runtimeSettings).replaceAll('<', '\\u003c')};\n`);
   if (!privateReview) {
     await cp(path.join(v2Source, 'analytics.js'), path.join(output, 'analytics.js'));

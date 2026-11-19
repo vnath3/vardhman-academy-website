@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { root, readV2Manifest, readV2Settings, readV2Outcomes, readV2Results } from './contracts.mjs';
 import { planMedia, planOutcomes, v2Source } from './build-v2.mjs';
 import { planResults } from '../src/v2-results.mjs';
+import { PAGES, renderPage, renderGuidesIndex } from '../src/v2-pages.mjs';
 import { renderSiteHtml, renderConceptScript, siteRuntime, robotsFile, sitemapFile, verificationFile, productionHeaders } from '../src/v2-settings.mjs';
 
 export async function listFiles(directory, prefix = '') {
@@ -28,7 +29,7 @@ export async function verifyProduction() {
   const { runtime: outcomesRuntime, files: outcomesFiles, copies: outcomesCopies } = planOutcomes(outcomesDoc);
   const sourceFiles = ['index.html', 'base.css', 'v2.css', 'concept.js', 'v2.js', 'enquiry.js', 'dialogs.js', 'analytics.js', 'fonts.css',
     ...(await listFiles(path.join(v2Source, 'fonts'))).map(file => 'fonts/' + file)];
-  const expected = [...sourceFiles, 'consent/index.html', 'media-data.js', 'site-settings.js', 'robots.txt', ...(sitemapFile(settings) ? ['sitemap.xml'] : []), ...(verificationFile(settings) ? [verificationFile(settings).name] : []), '_headers',
+  const expected = [...sourceFiles, 'consent/index.html', ...PAGES.map(page => page.slug + '/index.html'), 'guides/index.html', 'media-data.js', 'site-settings.js', 'robots.txt', ...(sitemapFile(settings) ? ['sitemap.xml'] : []), ...(verificationFile(settings) ? [verificationFile(settings).name] : []), '_headers',
     ...mediaFiles.map(file => 'media/' + file), ...outcomesFiles.map(file => 'media/' + file)].sort();
   const actual = await listFiles(output);
   assert.deepEqual(actual, expected, 'Artifact must contain only V2 code, fonts and approved media; rebuild to remove stale files.');
@@ -55,10 +56,12 @@ export async function verifyProduction() {
     assert.ok((await readFile(path.join(output, asset.production_path))).equals(expectedMedia), `Media mismatch: ${asset.id}`);
   }
   assert.equal(await readFile(path.join(output, '_headers'), 'utf8'), productionHeaders(await readFile(path.join(root, 'config', 'production-headers.txt'), 'utf8'), settings));
+  for (const page of PAGES) assert.equal(await readFile(path.join(output, page.slug, 'index.html'), 'utf8'), renderPage(page, settings), `Page mismatch: ${page.slug}`);
+  assert.equal(await readFile(path.join(output, 'guides', 'index.html'), 'utf8'), renderGuidesIndex(settings), 'Page mismatch: guides');
   const checkUrl = async (url, from) => {
     if (url.startsWith('#')) return;
     if (from === 'index.html' && url === settings.site_url) return;
-    if (from === 'index.html' && url === 'https://www.googletagmanager.com/gtag/js?id=G-4F7P27EQSF') return;
+    if (url === 'https://www.googletagmanager.com/gtag/js?id=G-4F7P27EQSF') return;
     assert.doesNotMatch(url, /^(?:[a-z]+:|\/\/)/i, `Unexpected external dependency: ${url}`);
     const target = path.resolve(output, path.dirname(from), url.split(/[?#]/)[0]);
     assert.ok(target.startsWith(output + path.sep), `Asset escaped dist: ${url}`);
@@ -67,6 +70,10 @@ export async function verifyProduction() {
   };
   const html = await readFile(path.join(output, 'index.html'), 'utf8');
   for (const match of html.matchAll(/(?:src|href)="([^"]+)"/g)) await checkUrl(match[1], 'index.html');
+  for (const file of [...PAGES.map(page => page.slug + '/index.html'), 'guides/index.html']) {
+    const pageHtml = await readFile(path.join(output, file), 'utf8');
+    for (const match of pageHtml.matchAll(/(?:src|href)="([^"]+)"/g)) if (!match[1].startsWith(settings.site_url)) await checkUrl(match[1], file);
+  }
   const consentHtml = await readFile(path.join(output, 'consent', 'index.html'), 'utf8');
   for (const match of consentHtml.matchAll(/(?:src|href)="([^"]+)"/g)) await checkUrl(match[1], 'consent/index.html');
   for (const file of ['base.css', 'v2.css', 'fonts.css']) {
