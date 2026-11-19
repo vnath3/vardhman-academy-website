@@ -703,3 +703,23 @@ html.mx #whatsappEnquiry:not([hidden]):not(:disabled) { animation: mx-halo 1.6s 
 .gallery-dots button::before { content: ""; display: block; width: 8px; height: 8px; border-radius: 999px; background: #c5d6d6; transition: width .3s ease, background .3s ease; }
 .gallery-dots button.active::before { width: 26px; background: #1779a2; }
 @media(max-width: 520px) { .gallery-dots button::before { width: 6px; height: 6px; } .gallery-dots button.active::before { width: 20px; } .gallery-dots button.active { width: 38px; } }
+
+/* Calm mode (visitor prefers reduced motion): fades and reveals only, no movement or loops */
+html.mx-calm .hero-parent h1 .mx-w { transform: none; }
+html.mx-calm .hero-parent.mx-go h1 .mx-w { animation-duration: .6s; animation-delay: calc(var(--i) * 45ms + 60ms); }
+html.mx-calm .hero-parent .mentor-heart { animation: hero-fade 700ms ease-out 650ms backwards; }
+html.mx-calm .result-card.mx-pre { opacity: 0; transform: none; }
+html.mx-calm .result-card.mx-in { opacity: 1; transition: opacity .6s ease var(--d, 0ms); }
+html.mx-calm .start-step.mx-pre .start-num, html.mx-calm .start-step.mx-pre h3, html.mx-calm .start-step.mx-pre p { opacity: 0; transform: none; }
+html.mx-calm .start-step.mx-in .start-num { animation: hero-fade .6s ease calc(var(--i) * 110ms) both; }
+html.mx-calm .start-step.mx-in h3, html.mx-calm .start-step.mx-in p { opacity: 1; transition: opacity .5s ease calc(var(--i) * 110ms + 150ms); }
+html.mx-calm .start-step.mx-in .start-num::after { animation: none; }
+html.mx-calm .start-steps::after { transform: none; }
+html.mx-calm .btn.mx-shine::after { display: none; }
+html.mx-calm .teacher-grid.mx-pre, html.mx-calm .teacher-grid.mx-in { transform: none; }
+html.mx-calm .teacher-facts .pill, html.mx-calm .teacher-facts.mx-in .pill { transform: none; transition: none; }
+html.mx-calm .gallery-play::after { animation: none; display: none; }
+html.mx-calm .gallery-card:hover { transform: none; }
+html.mx-calm #reviewPanel:not([hidden]) { animation: hero-fade .4s ease; }
+html.mx-calm #whatsappEnquiry:not([hidden]):not(:disabled) { animation: none; }
+html.mx-calm .faq-answer { transition-duration: .01s, .2s, .01s, 0s; }

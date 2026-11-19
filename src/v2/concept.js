@@ -479,8 +479,13 @@
 // reduced motion, so content is never hidden when motion is off or JS fails.
 (function () {
   try {
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) return;
+    if (!('IntersectionObserver' in window)) return;
+    // Visitors who asked for reduced motion (often a Windows/battery-saver setting
+    // they never chose) get "calm" mode: fades, count-ups and reveals, but no
+    // movement, bounces, tilting, sparkles or looping effects.
+    var calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
     var doc = document.documentElement;
+    if (calm) doc.classList.add('mx-calm');
     var $ = function (s, r) { return (r || document).querySelector(s); };
     var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
     doc.classList.add('mx');
@@ -594,9 +599,9 @@
     // 6. Enquiry: chips bounce, and a few sparkles when WhatsApp opens.
     document.addEventListener('click', function (e) {
       var chip = e.target.closest && e.target.closest('#classSelect .choice, #concernOptions .option');
-      if (chip) { chip.classList.remove('mx-tap'); void chip.offsetWidth; chip.classList.add('mx-tap'); }
+      if (chip && !calm) { chip.classList.remove('mx-tap'); void chip.offsetWidth; chip.classList.add('mx-tap'); }
       var wa = e.target.closest && e.target.closest('#whatsappEnquiry');
-      if (wa && !wa.disabled && !wa.hidden) {
+      if (wa && !wa.disabled && !wa.hidden && !calm) {
         var r = wa.getBoundingClientRect(), layer = document.createElement('div'), marks = ['✦', '✧', '💛', '✨'];
         layer.className = 'mx-burst'; layer.style.left = (r.left + r.width / 2) + 'px'; layer.style.top = (r.top + r.height / 2) + 'px';
         for (var k = 0; k < 12; k++) {
