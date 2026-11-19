@@ -213,7 +213,7 @@
       "production_path": "media/gallery/cricket-img-16.jpeg",
       "section": "gallery",
       "category": "activities",
-      "approval_status": "approved",
+      "approval_status": "rejected",
       "required_verifications": [
         "usage_rights",
         "guardian_consent"
@@ -231,7 +231,7 @@
       "alt": "Students gathered on a cricket field",
       "caption": "Learning sportsmanship one playful moment at a time.",
       "review_caption": "Learning sportsmanship one playful moment at a time.",
-      "notes": "Alternate sports image.",
+      "notes": "Removed from the public gallery on 2026-11-19: near-duplicate of IMG-14.",
       "legacy_status": "guardian_consent_required",
       "gallery_order": 8,
       "contains_identifiable_students": true
@@ -267,7 +267,7 @@
       "review_caption": "An academy gathering; the legacy printed banner is not a current course list.",
       "notes": "Owner approved the historical event image and confirmed rights/guardian consent. The visible banner has outdated classes 1-12 and XI-XII; the existing historical-context caption must remain and is not a current course offer.",
       "legacy_status": "reference_only",
-      "gallery_order": 11,
+      "gallery_order": 10,
       "contains_identifiable_students": true
     },
     {
@@ -367,7 +367,7 @@
       "review_caption": "Extended footage from the outdoor group activity.",
       "notes": "",
       "legacy_status": "guardian_consent_required",
-      "gallery_order": 9,
+      "gallery_order": 8,
       "duration_seconds": 57.4,
       "poster_id": "VID-02-POSTER",
       "contains_identifiable_students": true,
@@ -625,7 +625,7 @@
       "review_caption": "A quick glimpse of a cricket game.",
       "notes": "",
       "legacy_status": "guardian_consent_required",
-      "gallery_order": 10,
+      "gallery_order": 9,
       "duration_seconds": 3.6,
       "poster_id": "VID-06-POSTER",
       "contains_identifiable_students": true,
@@ -824,7 +824,7 @@
       "review_caption": "A moment of celebration.",
       "notes": "",
       "legacy_status": "guardian_consent_required",
-      "gallery_order": 12,
+      "gallery_order": 11,
       "duration_seconds": 12.9,
       "poster_id": "VID-07-POSTER",
       "contains_identifiable_students": true,
