@@ -73,3 +73,24 @@ test('approved mentor media is rendered in HTML and missing permissions produce 
   assert.doesNotMatch(denied, /class="mentor-portrait"|class="mentor-event-photo"|will appear|photo belongs here/);
   assert.match(denied, /Rushabh Mutha · Vardhaman Academy/);
 });
+
+test('section flags remove disabled sections and their links, and reject unknown or non-boolean flags', async () => {
+  const source = await readFile(path.join(root, 'src/v2/index.html'), 'utf8');
+  const media = planMedia(await readV2Manifest()).runtime;
+  const config = structuredClone(settings);
+  config.sections = { ...config.sections, brainlab: true, approach: true, faq: true };
+  const on = renderSiteHtml(source, config, { media });
+  assert.match(on, /id="brainlab"/); assert.match(on, /id="approach"/); assert.match(on, /href="#brainlab"/);
+  assert.doesNotMatch(on, /<!-- \/?section:/);
+  config.sections.brainlab = false; config.sections.approach = false;
+  const off = renderSiteHtml(source, config, { media });
+  assert.doesNotMatch(off, /id="brainlab"|id="approach"|href="#brainlab"|href="#approach"|<!-- \/?section:/);
+  assert.match(off, /id="journey"/); assert.match(off, /id="enquiry"/);
+  const gone = structuredClone(config); gone.sections.gallery = false;
+  assert.doesNotMatch(renderSiteHtml(source, gone, { media }), /id="life-at-vardhaman"/);
+  const bad = structuredClone(settings); bad.sections = { hero: false };
+  assert.throws(() => validateSettings(bad), /Unknown section flag/);
+  bad.sections = { faq: 'no' };
+  assert.throws(() => validateSettings(bad), /must be a boolean/);
+  assert.equal(settings.sections.brainlab, false); assert.equal(settings.sections.approach, false);
+});

@@ -8,6 +8,18 @@ function requireApproval(record, label) {
   assert.match(record.approved_on, /^\d{4}-\d{2}-\d{2}$/, `${label}: invalid date`);
 }
 
+// Section flags: build-time visibility of optional page sections. A disabled
+// section is not shipped at all (markup, nav and footer links are removed).
+// Hero, enquiry, header and footer are core and cannot be flagged.
+export const SECTION_FLAGS = {
+  trust_strip: [], parent_message: ['parents'], journey: ['journey'], brainlab: ['brainlab'], approach: ['approach'],
+  mentor: ['about'], gallery: ['life-at-vardhaman'], outcomes: ['outcomes'], faq: []
+};
+
+export function sectionEnabled(settings, key) {
+  return settings.sections?.[key] !== false;
+}
+
 export function validateSettings(settings) {
   assert.equal(settings.schema_version, '1.0');
   const site = new URL(settings.site_url);
@@ -15,6 +27,12 @@ export function validateSettings(settings) {
   for (const key of ['title', 'description']) assert.ok(typeof settings.seo?.[key] === 'string' && settings.seo[key].trim(), `Missing SEO ${key}`);
   assert.equal(typeof settings.seo.indexing_enabled, 'boolean');
   if (settings.seo.indexing_enabled) requireApproval(settings.seo.launch_approval, 'Indexing approval');
+  if (settings.sections !== undefined) {
+    for (const [key, value] of Object.entries(settings.sections)) {
+      assert.ok(key in SECTION_FLAGS, `Unknown section flag: ${key}`);
+      assert.equal(typeof value, 'boolean', `Section flag ${key} must be a boolean`);
+    }
+  }
   assert.equal(typeof settings.enquiry?.number_approved, 'boolean');
   const number = settings.enquiry.whatsapp_number;
   if (number !== null) assert.ok(typeof number === 'string' && /^[1-9]\d{7,14}$/.test(number), 'WhatsApp number must contain 8–15 international digits, without +, spaces or punctuation');
@@ -82,14 +100,19 @@ export function renderSiteHtml(source, settings, { privateReview = false, media,
     ...(icon ? [`<link rel="icon" type="image/png" href="${escape(icon)}">`] : [])
   ].join('\n  ');
   html = html.replace('<!-- site-metadata -->', metadata);
-  html = html.replace('<!-- gallery-section -->', renderGallery(galleryMedia));
-  html = html.replace('<!-- outcomes-section -->', renderOutcomes(outcomesMedia));
+  html = html.replace('<!-- gallery-section -->', sectionEnabled(settings, 'gallery') ? renderGallery(galleryMedia) : '');
+  html = html.replace('<!-- outcomes-section -->', sectionEnabled(settings, 'outcomes') ? renderOutcomes(outcomesMedia) : '');
   html = html.replace('<!-- hero-media -->', media?.hero
     ? `<img class="mentor-portrait" src="${escape(media.hero)}" alt="${escape(media.heroAlt)}" loading="eager" fetchpriority="high">`
     : '<span class="portrait-note">Rushabh Mutha · Vardhaman Academy</span>');
   html = html.replace('<!-- seminar-media -->', media?.mentor
     ? `<img class="mentor-event-photo" src="${escape(media.mentor)}" alt="${escape(media.mentorAlt)}" loading="lazy"><div class="teacher-photo-note">${escape(media.mentorCaption)}</div>`
     : '<span class="portrait-note">Rushabh Mutha · Vardhaman Academy</span>');
+  for (const [key, anchors] of Object.entries(SECTION_FLAGS)) {
+    const block = new RegExp(`[ \\t]*<!-- section:${key} -->\\r?\\n?([\\s\\S]*?)[ \\t]*<!-- /section:${key} -->\\r?\\n?`);
+    html = html.replace(block, sectionEnabled(settings, key) ? '$1' : '');
+    if (!sectionEnabled(settings, key)) for (const id of anchors) html = html.replace(new RegExp(`<a\\b[^>]*href="#${id}"[^>]*>[\\s\\S]*?<\\/a>`, 'g'), '');
+  }
   if (!privateReview) html = html.replace(/\s*<!-- private-preview:start -->[\s\S]*?<!-- private-preview:end -->/g, '')
     .replace(/<a\b[^>]*href="#stories"[^>]*>[\s\S]*?<\/a>/g, '');
   if (privateReview) html = html.replace(/  <!-- Google tag \(gtag.js\): production only -->[\s\S]*?  <!-- \/Google tag -->\r?\n/, '');

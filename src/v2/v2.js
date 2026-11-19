@@ -101,6 +101,7 @@
 
   // Enhance the build-rendered gallery; links also open originals without JS.
   const gallery=q('#life-at-vardhaman');
+  if(gallery){
   const media=mediaConfig.gallery;
   const empty=gallery.querySelector('.gallery-empty');
   gallery.querySelector('.gallery-toolbar').hidden=false;
@@ -212,6 +213,8 @@
   q('.media-modal-close')?.addEventListener('click',closeMedia);
   modal.addEventListener('click',e=>{if(e.target===modal)closeMedia();});
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('open'))closeMedia();});
+
+  } // end gallery (section can be flagged off)
 
   // Footer semantics and the FAQ are kept aligned with the confirmed grades.
   const faq=qa('.faq-answer').find(el=>el.textContent.includes('Classes 1 through 10'));
