@@ -43,8 +43,9 @@ test('canonical, sharing and favicon use configured origin and already-approved 
   const html = renderSiteHtml(source, config, { media });
   assert.match(html, /rel="canonical" href="https:\/\/va-academy.netlify.app\/"/);
   assert.match(html, /property="og:image" content="https:\/\/va-academy.netlify.app\/media\/hero\/rushab-warm-hero-v1.png"/);
-  assert.match(html, /rel="icon" type="image\/png" href=".\/media\/brand\/vardhaman-logo.png"/);
-  assert.doesNotMatch(renderSiteHtml(source, config, { media: {} }), /og:image|rel="icon"/);
+  assert.match(html, /rel="icon" type="image\/png" href=".\/favicon.png"/);
+  assert.match(html, /rel="apple-touch-icon" href=".\/apple-touch-icon.png"/);
+  assert.doesNotMatch(renderSiteHtml(source, config, { media: {} }), /og:image/);
   assert.doesNotMatch(renderSiteHtml(source, config, { privateReview: true, media }), /googletagmanager|analytics\.js/);
   config.seo.title = 'Academy "quoted" <script>';
   assert.match(renderSiteHtml(source, config), /Academy &quot;quoted&quot; &lt;script&gt;/);

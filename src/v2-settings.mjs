@@ -144,7 +144,10 @@ export function renderSiteHtml(source, settings, { privateReview = false, media,
     `<meta property="og:url" content="${escape(settings.site_url)}">`,
     `<meta name="twitter:card" content="${image ? 'summary_large_image' : 'summary'}">`,
     ...(image ? [`<meta property="og:image" content="${escape(image)}">`, `<meta property="og:image:alt" content="${escape(media.heroAlt)}">`] : []),
-    ...(icon ? [`<link rel="icon" type="image/png" href="${escape(icon)}">`] : [])
+    `<link rel="icon" href="./favicon.ico" sizes="any">`,
+    `<link rel="icon" type="image/png" href="./favicon.png" sizes="48x48">`,
+    `<link rel="icon" type="image/png" href="./icon-192.png" sizes="192x192">`,
+    `<link rel="apple-touch-icon" href="./apple-touch-icon.png">`
   ].join('\n  ');
   html = html.replace('<!-- site-metadata -->', metadata + '\n  <!-- structured-data -->');
   html = html.replace('<!-- gallery-section -->', sectionEnabled(settings, 'gallery') ? renderGallery(galleryMedia) : '');

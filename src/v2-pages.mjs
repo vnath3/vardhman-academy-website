@@ -165,6 +165,10 @@ function head({ title, description, canonical, robots, prefix, jsonLd, privateRe
   <meta property="og:title" content="${esc(title)}">
   <meta property="og:description" content="${esc(description)}">
   <meta property="og:url" content="${esc(canonical)}">
+  <link rel="icon" href="${prefix}favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" href="${prefix}favicon.png" sizes="48x48">
+  <link rel="icon" type="image/png" href="${prefix}icon-192.png" sizes="192x192">
+  <link rel="apple-touch-icon" href="${prefix}apple-touch-icon.png">
   <link rel="stylesheet" href="${prefix}fonts.css">
   <link rel="stylesheet" href="${prefix}base.css">
   <link rel="stylesheet" href="${prefix}v2.css">${privateReview ? '' : `

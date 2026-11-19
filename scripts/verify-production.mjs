@@ -27,7 +27,7 @@ export async function verifyProduction() {
   const resultsRuntime = planResults(await readV2Results());
   const { runtime, files: mediaFiles, copies } = planMedia(manifest);
   const { runtime: outcomesRuntime, files: outcomesFiles, copies: outcomesCopies } = planOutcomes(outcomesDoc);
-  const sourceFiles = ['index.html', 'base.css', 'v2.css', 'concept.js', 'v2.js', 'enquiry.js', 'dialogs.js', 'analytics.js', 'fonts.css',
+  const sourceFiles = ['index.html', 'base.css', 'v2.css', 'concept.js', 'v2.js', 'enquiry.js', 'dialogs.js', 'analytics.js', 'fonts.css', 'favicon.ico', 'favicon.png', 'icon-192.png', 'apple-touch-icon.png',
     ...(await listFiles(path.join(v2Source, 'fonts'))).map(file => 'fonts/' + file)];
   const expected = [...sourceFiles, 'consent/index.html', ...PAGES.map(page => page.slug + '/index.html'), 'guides/index.html', 'media-data.js', 'site-settings.js', 'robots.txt', ...(sitemapFile(settings) ? ['sitemap.xml'] : []), ...(verificationFile(settings) ? [verificationFile(settings).name] : []), '_headers',
     ...mediaFiles.map(file => 'media/' + file), ...outcomesFiles.map(file => 'media/' + file)].sort();
