@@ -16,14 +16,14 @@
 
   const T = mr ? {
     eyebrow: 'वर्धमान अकॅडमी', title: 'डेमो क्लास बुक करा', sub: 'तुमचा नंबर द्या. आम्ही तुम्हाला परत कॉल करू.',
-    name: 'पालकांचे नाव', phone: 'मोबाइल नंबर', cls: 'मुलाचा वर्ग', submit: 'मला कॉल करा', sending: 'पाठवत आहे…',
+    name: 'पालकांचे नाव', phone: 'मोबाइल नंबर', cls: 'तुमचे मूल कोणत्या वर्गात आहे?', hName: 'पालकांचे नाव लिहा', hPhone: '10 अंकी मोबाइल नंबर लिहा (6–9 ने सुरू होणारा)', hClass: 'मुलाचा वर्ग निवडा', submit: 'मला कॉल करा', sending: 'पाठवत आहे…',
     note: 'सबमिट केल्यावर वर्धमान अकॅडमी ट्यूशनबद्दल तुमच्याशी संपर्क साधू शकते.', privacy: 'संमती व गोपनीयता',
     eName: 'कृपया पालकांचे नाव लिहा.', ePhone: 'कृपया 10 अंकी मोबाइल नंबर लिहा.', eClass: 'कृपया मुलाचा वर्ग निवडा.',
     eSend: 'पाठवता आली नाही. कृपया पुन्हा प्रयत्न करा.', thanks: 'धन्यवाद!', thanksText: 'तुमचा नंबर मिळाला आहे. आम्ही लवकरच कॉल करू.',
     wa: 'किंवा WhatsApp वर संदेश पाठवा', waText: 'नमस्कार, मी ट्यूशनबद्दल कॉल बॅकसाठी विनंती केली आहे.', close: 'बंद करा'
   } : {
     eyebrow: 'Vardhaman Academy', title: 'Book a demo class', sub: 'Leave your number and we will call you back.',
-    name: 'Parent’s name', phone: 'Mobile number', cls: 'Child’s class', submit: 'Request a call back', sending: 'Sending…',
+    name: 'Parent’s name', phone: 'Mobile number', cls: 'Which class is your child in?', hName: 'Enter the parent’s name', hPhone: 'Enter a 10-digit mobile number (starts with 6–9)', hClass: 'Choose your child’s class', submit: 'Request a call back', sending: 'Sending…',
     note: 'By submitting, you agree that Vardhaman Academy may contact you about tuition.', privacy: 'Consent & privacy',
     eName: 'Please enter the parent’s name.', ePhone: 'Please enter a valid 10-digit mobile number.', eClass: 'Please choose your child’s class.',
     eSend: 'Could not send. Please try again.', thanks: 'Thank you!', thanksText: 'We have your number and will call you soon.',
@@ -46,7 +46,7 @@
     try { fetch(eventsUrl, { method: 'POST', body: data, keepalive: true, headers: { 'content-type': 'text/plain' } }); } catch (e) {}
   };
 
-  let pop = null, form = null, thanks = null, error = null, button = null, openedBy = '', viewSent = false, escBound = false;
+  let pop = null, form = null, thanks = null, error = null, button = null, hint = null, openedBy = '', viewSent = false, escBound = false;
 
   function build() {
     if (pop) return;
@@ -67,13 +67,13 @@
           '<label class="lead-label" for="leadName">' + T.name + '</label>' +
           '<input class="lead-input" id="leadName" name="name" type="text" autocomplete="name" maxlength="60" enterkeyhint="next">' +
           '<label class="lead-label" for="leadPhone">' + T.phone + '</label>' +
-          '<div class="lead-phone"><span aria-hidden="true">+91</span><input class="lead-input" id="leadPhone" name="phone" type="tel" inputmode="numeric" autocomplete="tel-national" maxlength="14" enterkeyhint="done"></div>' +
-          '<fieldset class="lead-class"><legend class="lead-label">' + T.cls + '</legend><div class="lead-pills">' +
+          '<div class="lead-phone"><span aria-hidden="true">+91</span><input class="lead-input" id="leadPhone" name="phone" type="tel" inputmode="numeric" autocomplete="tel-national" enterkeyhint="done" placeholder="98765 43210"></div>' +
+          '<fieldset class="lead-class"><legend class="lead-label lead-label-strong">' + T.cls + ' <span class="lead-req" aria-hidden="true">*</span></legend><div class="lead-pills">' +
             ['1-4|1–4', '5-7|5–7', '8-10|8–10'].map(o => { const p = o.split('|'); return '<label><input type="radio" name="class_band" value="' + p[0] + '"><span>' + p[1] + '</span></label>'; }).join('') +
           '</div></fieldset>' +
           '<input class="lead-hp" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">' +
-          '<p class="lead-error" role="alert"></p>' +
-          '<button type="submit" class="btn primary lead-submit">' + T.submit + '</button>' +
+          '<p class="lead-hint" aria-live="polite"></p><p class="lead-error" role="alert"></p>' +
+          '<button type="submit" class="btn primary lead-submit" disabled>' + T.submit + '</button>' +
           '<p class="lead-note">' + T.note + ' <a href="' + consentUrl + '">' + T.privacy + '</a></p>' +
         '</form>' +
         '<div class="lead-thanks" hidden tabindex="-1"><span class="lead-tick" aria-hidden="true">✓</span><h2 class="lead-title">' + T.thanks + '</h2><p class="lead-sub">' + T.thanksText + '</p></div>' +
@@ -83,20 +83,46 @@
     thanks = pop.querySelector('.lead-thanks');
     error = pop.querySelector('.lead-error');
     button = pop.querySelector('.lead-submit');
+    hint = pop.querySelector('.lead-hint');
     pop.querySelector('.lead-x').addEventListener('click', () => close());
     pop.addEventListener('click', event => { if (event.target === pop) close(); });
     form.addEventListener('submit', submit);
+    // Mobile number: digits only, at most 10. Pasted +91 / 0 prefixes are removed.
+    form.elements.phone.addEventListener('input', () => {
+      let digits = form.elements.phone.value.replace(/\D/g, '');
+      if (digits.length === 12 && digits.startsWith('91')) digits = digits.slice(2);
+      else if (digits.length === 11 && digits.startsWith('0')) digits = digits.slice(1);
+      digits = digits.slice(0, 10);
+      if (form.elements.phone.value !== digits) form.elements.phone.value = digits;
+    });
+    // The button stays disabled until name, number and class are all valid; the line above it says what is missing.
+    form.addEventListener('input', refresh);
+    form.addEventListener('change', refresh);
     if (!escBound) { document.addEventListener('keydown', event => { if (event.key === 'Escape' && isOpen()) close(); }); escBound = true; }
   }
 
   const isOpen = () => !!pop && pop.classList.contains('open');
+
+  function missing() {
+    const f = form.elements;
+    if (f.name.value.trim().length < 2) return T.hName;
+    if (!/^[6-9]\d{9}$/.test(f.phone.value)) return T.hPhone;
+    if (!form.querySelector('input[name=class_band]:checked')) return T.hClass;
+    return '';
+  }
+  function refresh() {
+    const why = missing();
+    button.disabled = !!why;
+    hint.textContent = why;
+    if (!why) error.textContent = '';
+  }
 
   function open(trigger, returnTo) {
     build();
     if (isOpen()) return;
     openedBy = trigger;
     form.hidden = false; thanks.hidden = true; error.textContent = '';
-    button.disabled = false; button.textContent = T.submit;
+    button.textContent = T.submit; refresh();
     pop.classList.add('open');
     document.documentElement.classList.add('lead-lock');
     if (window.VardhamanDialogs) window.VardhamanDialogs.open(pop, returnTo || null);
@@ -119,7 +145,7 @@
     const fields = form.elements, picked = form.querySelector('input[name=class_band]:checked');
     const phone = fields.phone.value.replace(/[\s-]/g, '');
     if (fields.name.value.trim().length < 2) { error.textContent = T.eName; fields.name.focus(); return; }
-    if (!/^(?:\+?91|0)?[6-9]\d{9}$/.test(phone)) { error.textContent = T.ePhone; fields.phone.focus(); return; }
+    if (!/^[6-9]\d{9}$/.test(phone)) { error.textContent = T.ePhone; fields.phone.focus(); return; }
     if (!picked) { error.textContent = T.eClass; return; }
     const params = new URLSearchParams(location.search);
     let referrer = '';
@@ -146,7 +172,7 @@
         }
         thanks.focus();
       })
-      .catch(() => { error.textContent = T.eSend; button.disabled = false; button.textContent = T.submit; });
+      .catch(() => { error.textContent = T.eSend; button.textContent = T.submit; refresh(); });
   }
 
   // 1) Every enquiry button, in any page, opens this same popup.
