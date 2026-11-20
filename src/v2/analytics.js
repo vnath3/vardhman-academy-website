@@ -40,7 +40,7 @@ gtag('config', 'G-4F7P27EQSF');
       if (/wa\.me|whatsapp/i.test(href)) kind = 'whatsapp';
       else if (/^tel:/i.test(href)) kind = 'call';
       else if (/maps/i.test(href)) kind = 'map';
-      else if (href === '#enquiry') kind = el.classList.contains('mobile-bottom') ? 'enquiry_bar' : 'enquiry_button';
+      else if (/(^|\/|\.html)#enquiry$/.test(href)) kind = el.classList.contains('mobile-bottom') ? 'enquiry_bar' : 'enquiry_button';
       else if (id === 'whatsappEnquiry') kind = 'whatsapp_draft';
       else if (id === 'copyEnquiry') kind = 'copy_draft';
       if (kind) track('cta_click', { action: kind });
