@@ -52,6 +52,14 @@ export function validateSettings(settings) {
       requireApproval(settings.location.approval_record, 'Map link approval');
     }
   }
+  if (settings.leads !== undefined) {
+    assert.equal(typeof settings.leads.approved, 'boolean', 'leads.approved must be a boolean');
+    for (const key of ['api_url', 'event_url']) {
+      const url = new URL(settings.leads[key]);
+      assert.ok(url.protocol === 'https:' && !url.username && !url.password && !url.search && !url.hash, `leads.${key} must be a plain HTTPS URL`);
+    }
+    if (settings.leads.approved) requireApproval(settings.leads.approval_record, 'Lead capture approval');
+  }
   return settings;
 }
 
@@ -60,7 +68,9 @@ export function siteRuntime(settings, { privateReview = false } = {}) {
   return {
     privateReview,
     whatsappNumber: !privateReview && settings.enquiry.number_approved ? settings.enquiry.whatsapp_number : null,
-    mapUrl: !privateReview && settings.location?.map_approved ? settings.location.map_url : null
+    mapUrl: !privateReview && settings.location?.map_approved ? settings.location.map_url : null,
+    leadsApi: !privateReview && settings.leads?.approved ? settings.leads.api_url : null,
+    leadsEvents: !privateReview && settings.leads?.approved ? settings.leads.event_url : null
   };
 }
 

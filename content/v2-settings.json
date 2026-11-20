@@ -41,5 +41,15 @@
     "gallery": true,
     "outcomes": true,
     "faq": true
+  },
+  "leads": {
+    "api_url": "https://vaadmin.netlify.app/api/lead",
+    "event_url": "https://vaadmin.netlify.app/api/event",
+    "approved": true,
+    "approval_record": {
+      "approved_by": "Vivek (site owner)",
+      "approved_on": "2026-11-21",
+      "evidence": "Owner asked in chat on 2026-11-21 for a popup lead form on the website that stores parent enquiries (name, mobile, class) in the academy's private leads sheet. Consent wording on /consent/ awaits the academy owner's review."
+    }
   }
 }

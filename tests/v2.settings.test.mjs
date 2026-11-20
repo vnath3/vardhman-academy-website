@@ -94,3 +94,16 @@ test('section flags remove disabled sections and their links, and reject unknown
   assert.throws(() => validateSettings(bad), /must be a boolean/);
   assert.equal(settings.sections.brainlab, false); assert.equal(settings.sections.approach, false);
 });
+
+test('lead capture is only exposed to the browser when approved, and never in private review', () => {
+  const config = structuredClone(settings);
+  config.leads = { api_url: 'https://leads.example.com/api/lead', event_url: 'https://leads.example.com/api/event', approved: false, approval_record: null };
+  assert.equal(siteRuntime(config).leadsApi, null);
+  config.leads.approved = true;
+  assert.throws(() => siteRuntime(config), /Lead capture approval/);
+  config.leads.approval_record = approval;
+  assert.equal(siteRuntime(config).leadsApi, 'https://leads.example.com/api/lead');
+  assert.equal(siteRuntime(config, { privateReview: true }).leadsApi, null);
+  config.leads.api_url = 'http://leads.example.com/api/lead';
+  assert.throws(() => siteRuntime(config), /plain HTTPS URL/);
+});

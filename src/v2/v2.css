@@ -797,3 +797,51 @@ html.mx-calm .teacher-grid.mx-pre .mentor-event-photo, html.mx-calm .teacher-gri
   .footer-grid > div:nth-child(4) .footer-links span:nth-child(3) { display: none; }
   .footer h3.footer-h { margin-bottom: 6px; }
 }
+
+/* Lead popup: one component opened by every "Book a demo class" button (src/v2/popup.js). */
+html.lead-lock { overflow: hidden; }
+.lead-pop { position: fixed; inset: 0; z-index: 160; display: none; align-items: center; justify-content: center; padding: 18px; background: rgba(7,24,34,.7); backdrop-filter: blur(6px); }
+.lead-pop.open { display: flex; }
+.lead-card { position: relative; width: min(440px, 100%); max-height: 94vh; overflow: auto; background: #fffefa; border: 1px solid var(--line); border-radius: 24px; padding: 30px 26px 24px; box-shadow: 0 30px 70px rgba(7,24,34,.35); animation: lead-in .28s ease-out; }
+@keyframes lead-in { from { opacity: 0; transform: translateY(14px) scale(.98); } to { opacity: 1; transform: none; } }
+.lead-x { position: absolute; top: 12px; right: 12px; width: 40px; height: 40px; border: 0; border-radius: 50%; background: #eef4f0; color: var(--ink); font-size: 24px; line-height: 1; cursor: pointer; }
+.lead-x:hover { background: #e2ece6; }
+.lead-title { margin: 10px 0 4px; font: 800 28px/1.15 Outfit, system-ui, sans-serif; letter-spacing: -.6px; color: var(--ink); }
+.lead-sub { margin: 0 0 8px; color: #4a6169; font-size: 15px; line-height: 1.5; }
+.lead-label { display: block; margin: 14px 0 6px; padding: 0; font-size: 13px; font-weight: 800; color: var(--ink); }
+.lead-class { border: 0; margin: 0; padding: 0; min-width: 0; }
+.lead-input { width: 100%; box-sizing: border-box; font: inherit; font-size: 16px; padding: 13px 14px; border: 1.5px solid #cfdcd5; border-radius: 13px; background: #fff; color: var(--ink); }
+.lead-input:focus { outline: 3px solid #bfe3f0; border-color: #167da5; }
+.lead-phone { display: flex; gap: 8px; }
+.lead-phone span { display: flex; align-items: center; padding: 0 13px; border: 1.5px solid #cfdcd5; border-radius: 13px; background: #f1f6f3; font-weight: 800; color: var(--ink); }
+.lead-pills { display: flex; gap: 8px; }
+.lead-pills label { flex: 1; position: relative; }
+.lead-pills input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.lead-pills span { display: block; text-align: center; padding: 13px 0; border: 1.5px solid #cfdcd5; border-radius: 13px; background: #fff; font-weight: 800; color: var(--ink); transition: background .15s, border-color .15s, color .15s; }
+.lead-pills input:checked + span { background: #167da5; border-color: #167da5; color: #fff; }
+.lead-pills input:focus-visible + span { outline: 3px solid #bfe3f0; outline-offset: 2px; }
+.lead-hp { position: absolute !important; left: -9999px !important; width: 0; height: 0; opacity: 0; }
+.lead-error { min-height: 0; margin: 10px 0 0; color: #ad334a; font-size: 14px; font-weight: 700; }
+.lead-error:empty { display: none; }
+.lead-submit { width: 100%; justify-content: center; margin-top: 16px; padding: 15px 18px; font-size: 17px; background: #157ca5; }
+.lead-submit[disabled] { opacity: .65; cursor: wait; }
+.lead-note { margin: 12px 0 0; font-size: 12.5px; line-height: 1.5; color: #526379; }
+.lead-note a { color: #126c8d; }
+.lead-thanks { text-align: center; padding: 10px 0 4px; }
+.lead-thanks:focus { outline: none; }
+.lead-tick { display: inline-grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: #d7ede7; color: #157ca5; font-size: 28px; font-weight: 800; }
+.lead-wa { display: inline-block; margin-top: 8px; padding: 11px 20px; border: 1.5px solid #157ca5; border-radius: 999px; color: #126c8d; font-weight: 800; text-decoration: none; }
+.lead-wa:hover { background: #eef7fa; }
+@media (max-width: 520px) {
+  .lead-pop { align-items: flex-end; padding: 0; }
+  .lead-card { width: 100%; border-radius: 24px 24px 0 0; padding: 28px 20px calc(20px + env(safe-area-inset-bottom)); animation-name: lead-up; }
+  @keyframes lead-up { from { transform: translateY(40px); opacity: .6; } to { transform: none; opacity: 1; } }
+  .lead-title { font-size: 25px; }
+}
+@media (prefers-reduced-motion: reduce) { .lead-card { animation: none; } }
+
+/* The enquiry section is now a calm single call to action. */
+.enquiry-cta { text-align: left; }
+.enquiry-cta .btn { margin-top: 6px; }
+.enquiry-alt { margin-top: 16px; font-size: 13px; color: #526379; }
+.enquiry-alt a { color: #126c8d; font-weight: 700; }

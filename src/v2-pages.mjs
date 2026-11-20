@@ -223,7 +223,7 @@ export function renderPage(page, settings, { privateReview = false, media = null
     return `<a class="related-link" href="${prefix}${slug}/">${esc(target.nav)} →</a>`;
   }).join('');
   const body = `<body class="consent-page content-page">
-  <header class="site-header"><nav class="container nav" aria-label="Main navigation">${logoMarkup(media, prefix)}<a class="btn primary nav-cta" href="${prefix}index.html#enquiry">${mr ? T.cta : 'Tell us about your child'}</a></nav></header>
+  <header class="site-header"><nav class="container nav" aria-label="Main navigation">${logoMarkup(media, prefix)}<a class="btn primary nav-cta" href="${prefix}index.html#enquiry">${mr ? T.cta : 'Book a demo class'}</a></nav></header>
   <main id="main" class="consent-main">
     <div class="container consent-wrap">
       <nav class="crumbs" aria-label="Breadcrumb"><a href="${prefix}index.html">${mr ? T.home : 'Home'}</a> / ${page.kind === 'guide' ? `<a href="${prefix}guides/">Guides</a> / ` : ''}<span>${esc(page.nav)}</span></nav>
@@ -232,11 +232,14 @@ export function renderPage(page, settings, { privateReview = false, media = null
       ${page.sections.map(([heading, html]) => `<h2>${esc(heading)}</h2>\n      ${html}`).join('\n      ')}
       ${page.mr ? `<p class="mr-note" lang="mr">${esc(page.mr)}</p>` : ''}
       ${page.faq?.length ? `<h2>${mr ? T.faq : 'Common questions'}</h2>\n      ${page.faq.map(([q, a]) => `<h3 class="faq-q">${esc(q)}</h3><p>${esc(a)}</p>`).join('\n      ')}` : ''}
-      <div class="page-cta"><strong>${mr ? T.ctaHeading : 'Want to see how it works for your child?'}</strong><p>${mr ? T.ctaText : 'Tell us the class and what worries you. We will help you start with a demo class.'}</p><a class="btn primary" href="${prefix}index.html#enquiry">${mr ? T.cta : 'Tell us about your child'} ↓</a></div>
+      <div class="page-cta"><strong>${mr ? T.ctaHeading : 'Want to see how it works for your child?'}</strong><p>${mr ? T.ctaText : 'Tell us the class and what worries you. We will help you start with a demo class.'}</p><a class="btn primary" href="${prefix}index.html#enquiry">${mr ? T.cta : 'Book a demo class'}</a></div>
       ${related ? `<h2>${mr ? T.more : 'Keep reading'}</h2><div class="related">${related}</div>` : ''}
     </div>
   </main>
   <footer class="footer"><div class="container"><div class="footer-bottom"><span>© Vardhaman Academy</span><a href="${prefix}index.html">Home</a><a href="${prefix}consent/">Consent &amp; privacy</a>${MR[enSlug] ? `<a href="${prefix}${mr ? '' : 'mr/'}${enSlug}/" hreflang="${mr ? 'en' : 'mr'}" lang="${mr ? 'en' : 'mr'}">${mr ? 'English' : 'मराठी'}</a>` : ''}</div></div></footer>
+  <script src="${prefix}site-settings.js"></script>
+  <script src="${prefix}dialogs.js"></script>
+  <script src="${prefix}popup.js"></script>
 </body>
 </html>
 `;
@@ -258,7 +261,7 @@ function renderIndex({ settings, privateReview, media, slug, crumb, title, descr
   const list = items.map(([target, heading, text]) => `<li><a href="${prefix}${target}/"><strong>${esc(heading)}</strong></a><p>${esc(text)}</p></li>`).join('\n        ');
   return head({ title, description, canonical, robots: robotsPolicy(settings, { privateReview }), prefix, jsonLd: ld(graph), privateReview, media }) + `
 <body class="consent-page content-page">
-  <header class="site-header"><nav class="container nav" aria-label="Main navigation">${logoMarkup(media, prefix)}<a class="btn primary nav-cta" href="${prefix}index.html#enquiry">Tell us about your child</a></nav></header>
+  <header class="site-header"><nav class="container nav" aria-label="Main navigation">${logoMarkup(media, prefix)}<a class="btn primary nav-cta" href="${prefix}index.html#enquiry">Book a demo class</a></nav></header>
   <main id="main" class="consent-main">
     <div class="container consent-wrap">
       <nav class="crumbs" aria-label="Breadcrumb"><a href="${prefix}index.html">Home</a> / <span>${esc(crumb)}</span></nav>
@@ -270,6 +273,9 @@ function renderIndex({ settings, privateReview, media, slug, crumb, title, descr
     </div>
   </main>
   <footer class="footer"><div class="container"><div class="footer-bottom"><span>© Vardhaman Academy</span><a href="${prefix}index.html">Home</a><a href="${prefix}consent/">Consent &amp; privacy</a></div></div></footer>
+  <script src="${prefix}site-settings.js"></script>
+  <script src="${prefix}dialogs.js"></script>
+  <script src="${prefix}popup.js"></script>
 </body>
 </html>
 `;
