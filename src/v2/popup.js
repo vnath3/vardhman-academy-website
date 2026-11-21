@@ -128,7 +128,7 @@
     if (window.VardhamanDialogs) window.VardhamanDialogs.open(pop, returnTo || null);
     else { pop.setAttribute('aria-hidden', 'false'); pop.querySelector('.lead-x').focus(); }
     gtagEvent('lead_popup_open', { trigger });
-    if (!viewSent) { viewSent = true; beacon({ type: 'form_view' }); }
+    if (!viewSent) { viewSent = true; beacon({ type: 'form_view', action: openedBy }); }
   }
 
   function close() {
@@ -153,6 +153,8 @@
     const body = {
       name: fields.name.value, phone: fields.phone.value, class_band: picked.value, website: fields.website.value,
       source: (location.pathname || '/') + ' · ' + openedBy,
+      device: /iPad|Tablet/i.test(navigator.userAgent) || (Math.min(screen.width, screen.height) >= 600 && matchMedia('(pointer:coarse)').matches) ? 'tablet' : (matchMedia('(pointer:coarse)').matches || innerWidth < 768 ? 'mobile' : 'desktop'),
+      trigger: openedBy,
       utm_source: params.get('utm_source') || referrer, utm_medium: params.get('utm_medium') || '', utm_campaign: params.get('utm_campaign') || ''
     };
     button.disabled = true; button.textContent = T.sending;
