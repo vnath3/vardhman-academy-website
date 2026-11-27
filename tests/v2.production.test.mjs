@@ -23,7 +23,7 @@ const approve = asset => {
 
 test('manifest inventories every supplied original and preserves the authentic logo pixels without the flyer', async () => {
   validateV2Manifest(manifest);
-  assert.equal(manifest.assets.filter(asset => !asset.derivation).length, 25);
+  assert.equal(manifest.assets.filter(asset => !asset.derivation).length, 26);
   for (const asset of manifest.assets) {
     await access(path.join(root, asset.source_path));
     if (!asset.derivation) {

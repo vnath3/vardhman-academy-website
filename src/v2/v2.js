@@ -56,7 +56,7 @@
     if(!portrait.querySelector('.mentor-portrait')) portrait.innerHTML=`<img class="mentor-portrait" src="${mediaConfig.hero}" alt="${escapeText(mediaConfig.heroAlt || 'Rushabh Sir speaking with a microphone in a warm Vardhaman-themed portrait')}" loading="eager" fetchpriority="high">`;
   } else portrait?.classList.add('media-placeholder');
   const heroArt=q('.mentor-hero');
-  if(heroArt) heroArt.setAttribute('aria-label',mediaConfig.hero ? 'Portrait of Rushabh Sir' : 'Rushabh Mutha, Vardhaman Academy');
+  if(heroArt) heroArt.setAttribute('aria-label',mediaConfig.hero ? 'Rushabh Sir and Sunveen Ma\'am' : 'Rushabh Mutha, Vardhaman Academy');
   const plate=q('.mentor-nameplate span');
   if(plate) plate.textContent='Vardhaman Academy';
 
