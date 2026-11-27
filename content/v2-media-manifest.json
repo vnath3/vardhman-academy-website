@@ -8,12 +8,12 @@
       "public": "LOGO-V2"
     },
     "hero": {
-      "review": "HERO-B",
-      "public": "HERO-B"
+      "review": "HERO-A",
+      "public": "HERO-A"
     },
     "mentor": {
-      "review": "IMG-20",
-      "public": "IMG-20"
+      "review": "HERO-B",
+      "public": "HERO-B"
     }
   },
   "assets": [
@@ -113,12 +113,12 @@
     {
       "id": "HERO-B",
       "type": "image",
-      "original_filename": "rushabh-sunveen-hero.jpeg",
+      "original_filename": "rushabh-sunveen.jpeg",
       "supplied_filename": "WhatsApp Image 2026-11-25 at 1.44.50 PM.jpeg",
-      "source_path": "media/vardhaman/hero/rushabh-sunveen-hero.jpeg",
-      "production_path": "media/hero/rushabh-sunveen-hero.jpeg",
-      "section": "hero",
-      "category": "hero",
+      "source_path": "media/vardhaman/mentor/rushabh-sunveen.jpeg",
+      "production_path": "media/mentor/rushabh-sunveen.jpeg",
+      "section": "mentor",
+      "category": "mentor",
       "approval_status": "approved",
       "required_verifications": [
         "usage_rights",
@@ -131,13 +131,13 @@
       "approval_record": {
         "approved_by": "Vivek (site owner), relaying the academy's request",
         "approved_on": "2026-11-27",
-        "evidence": "The academy supplied this photo of Rushabh Sir and Sunveen Ma'am and asked for it as the home page hero; the site owner approved the plan and wording in chat on 2026-11-27. Both teachers' consent to publication to be confirmed by the academy."
+        "evidence": "The academy supplied this photo of Rushabh Sir and Sunveen Ma'am for the 'The heart of Vardhaman' section; the site owner approved in chat on 2026-11-27. Both teachers' consent to publication to be confirmed by the academy."
       },
       "title": "Rushabh Sir and Sunveen Ma'am",
       "alt": "Rushabh Sir and Sunveen Ma'am, the teachers of Vardhaman Academy, standing together and smiling",
       "caption": "Rushabh Sir and Sunveen Ma'am",
       "review_caption": "Supplied photo, cropped to the two teachers (1150x1370) from the 1932x2576 original. No retouching.",
-      "notes": "Replaces HERO-A as the home page hero. Crop only; no edits.",
+      "notes": "Replaces the seminar photo in the mentor section. Crop only; no edits.",
       "legacy_status": "approved",
       "contains_identifiable_students": false
     },
